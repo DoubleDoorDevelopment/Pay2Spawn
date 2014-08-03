@@ -1,7 +1,7 @@
 Pay2Spawn
 =========
 
-Screw or help your favourite streamer!
+Screw or help your favourite streamer!<br>
 The continuation of the [CCM project](https://github.com/CCM-Modding/Pay2Spawn).
 
 This repo is for Pay2spawn for Minecraft 1.7.10 and onwards.
