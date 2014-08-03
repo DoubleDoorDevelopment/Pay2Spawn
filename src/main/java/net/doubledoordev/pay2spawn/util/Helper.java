@@ -1,0 +1,373 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2013 Dries K. Aka Dries007 and the CCM modding crew.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package net.doubledoordev.pay2spawn.util;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import net.doubledoordev.pay2spawn.util.shapes.PointI;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MathHelper;
+import org.lwjgl.opengl.GL11;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static net.doubledoordev.pay2spawn.util.Constants.RANDOM;
+
+/**
+ * Static helper functions with no other home
+ *
+ * @author Dries007
+ */
+public class Helper
+{
+    public static final String  FORMAT_WITH_DELIMITER = "((?<=\u00a7[0123456789AaBbCcDdEeFfKkLlMmNnOoRr])|(?=\u00a7[0123456789AaBbCcDdEeFfKkLlMmNnOoRr]))";
+    public static final Pattern DOUBLE_QUOTES         = Pattern.compile("\"(.*)\"");
+
+    /**
+     * Convert & into § if the next char is a chat formatter char
+     *
+     * @param message the message to be converted
+     *
+     * @return the converted message
+     */
+    public static String formatColors(String message)
+    {
+        char[] b = message.toCharArray();
+        for (int i = 0; i < b.length - 1; i++)
+        {
+            if (b[i] == '&' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i + 1]) > -1)
+            {
+                b[i] = '\u00a7';
+                b[i + 1] = Character.toLowerCase(b[i + 1]);
+            }
+        }
+        return new String(b);
+    }
+
+    /**
+     * Print a message client side
+     *
+     * @param message the message to be displayed
+     */
+    public static void msg(String message)
+    {
+        System.out.println("P2S client message: " + message);
+        if (Minecraft.getMinecraft().thePlayer != null) Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(message));
+    }
+
+    /**
+     * Fill in variables from a donation
+     *
+     * @param format   text that needs var replacing
+     * @param donation the donation data
+     *
+     * @return the fully var-replaced string
+     */
+    public static String formatText(String format, Donation donation, Reward reward)
+    {
+        format = format.replace("$name", donation.username);
+        format = format.replace("$amount", donation.amount + "");
+        format = format.replace("$note", donation.note);
+        if (Minecraft.getMinecraft().thePlayer != null) format = format.replace("$streamer", Minecraft.getMinecraft().thePlayer.getCommandSenderName());
+
+        if (reward != null)
+        {
+            format = format.replace("$reward_message", reward.getMessage());
+            format = format.replace("$reward_name", reward.getName());
+            format = format.replace("$reward_amount", reward.getAmount() + "");
+            format = format.replace("$reward_countdown", reward.getCountdown() + "");
+        }
+
+        return format;
+    }
+
+    /**
+     * Fill in variables from a donation
+     *
+     * @param dataToFormat data to be formatted
+     * @param donation     the donation data
+     *
+     * @return the fully var-replaced JsonElement
+     */
+    public static JsonElement formatText(JsonElement dataToFormat, Donation donation, Reward reward)
+    {
+        if (dataToFormat.isJsonPrimitive() && dataToFormat.getAsJsonPrimitive().isString())
+        {
+            return new JsonPrimitive(Helper.formatText(dataToFormat.getAsString(), donation, reward));
+        }
+        if (dataToFormat.isJsonArray())
+        {
+            JsonArray out = new JsonArray();
+            for (JsonElement element : dataToFormat.getAsJsonArray())
+            {
+                out.add(formatText(element, donation, reward));
+            }
+            return out;
+        }
+        if (dataToFormat.isJsonObject())
+        {
+            JsonObject out = new JsonObject();
+            for (Map.Entry<String, JsonElement> entity : dataToFormat.getAsJsonObject().entrySet())
+            {
+                out.add(entity.getKey(), Helper.formatText(entity.getValue(), donation, reward));
+            }
+            return out;
+        }
+        return dataToFormat;
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static boolean isDouble(String text)
+    {
+        try
+        {
+            Double.parseDouble(text);
+            return true;
+        }
+        catch (NumberFormatException e)
+        {
+            return false;
+        }
+    }
+
+    public static void addWithEmptyLines(ArrayList<String> list, String header)
+    {
+        String[] lines = header.split("\\\\n");
+        int i = 0;
+        for (String s : lines)
+            list.add(i++, s);
+    }
+
+    public static String removeQuotes(String s)
+    {
+        Matcher m = DOUBLE_QUOTES.matcher(s);
+        if (m.matches()) return m.group(1);
+        else return s;
+    }
+
+    public static boolean rndSpawnPoint(ArrayList<PointD> pointDs, Entity entity)
+    {
+        Collections.shuffle(pointDs, RANDOM);
+        for (PointD p : pointDs)
+        {
+            Collections.shuffle(pointDs, RANDOM);
+            if (p.canSpawn(entity))
+            {
+                p.setPosition(entity);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static String readUrl(URL url) throws IOException
+    {
+        BufferedReader reader = null;
+        StringBuilder buffer = new StringBuilder();
+
+        try
+        {
+            reader = new BufferedReader(new InputStreamReader(url.openStream()));
+
+            int read;
+            char[] chars = new char[1024];
+            while ((read = reader.read(chars)) != -1) buffer.append(chars, 0, read);
+        }
+        finally
+        {
+            if (reader != null) reader.close();
+        }
+        return buffer.toString();
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static boolean isInt(String text)
+    {
+        try
+        {
+            Integer.parseInt(text);
+            return true;
+        }
+        catch (NumberFormatException e)
+        {
+            return false;
+        }
+    }
+
+    public static double findMax(Collection<Double> vals)
+    {
+        double max = Double.MIN_VALUE;
+
+        for (double d : vals)
+        {
+            if (d > max) max = d;
+        }
+
+        return max;
+    }
+
+    public static void sendChatToPlayer(ICommandSender player, String message, EnumChatFormatting chatFormatting)
+    {
+        player.addChatMessage(new ChatComponentText(message).setChatStyle(new ChatStyle().setColor(chatFormatting)));
+    }
+
+    public static void sendChatToPlayer(EntityPlayer player, String message)
+    {
+        player.addChatMessage(new ChatComponentText(message));
+    }
+
+    public static int round(double d)
+    {
+        return MathHelper.floor_double(d);
+
+    }
+
+    public static void renderPoint(PointI p, Tessellator tess, double r, double g, double b)
+    {
+        GL11.glColor3d(r, g, b);
+        renderPoint(p, tess);
+    }
+
+    public static void renderPoint(PointI p, Tessellator tess)
+    {
+        renderPoint(tess, p.getX(), p.getY(), p.getZ());
+    }
+
+    public static void renderPoint(Tessellator tess, int x, int y, int z)
+    {
+        GL11.glPushMatrix();
+        GL11.glTranslated(x, y, z);
+        GL11.glScalef(1.01f, 1.01f, 1.01f);
+        tess.startDrawing(GL11.GL_LINES);
+
+        // FRONT
+        tess.addVertex(0, 0, 0);
+        tess.addVertex(0, 1, 0);
+
+        tess.addVertex(0, 1, 0);
+        tess.addVertex(1, 1, 0);
+
+        tess.addVertex(1, 1, 0);
+        tess.addVertex(1, 0, 0);
+
+        tess.addVertex(1, 0, 0);
+        tess.addVertex(0, 0, 0);
+
+        // BACK
+        tess.addVertex(0, 0, -1);
+        tess.addVertex(0, 1, -1);
+        tess.addVertex(0, 0, -1);
+        tess.addVertex(1, 0, -1);
+        tess.addVertex(1, 0, -1);
+        tess.addVertex(1, 1, -1);
+        tess.addVertex(0, 1, -1);
+        tess.addVertex(1, 1, -1);
+
+        // betweens.
+        tess.addVertex(0, 0, 0);
+        tess.addVertex(0, 0, -1);
+
+        tess.addVertex(0, 1, 0);
+        tess.addVertex(0, 1, -1);
+
+        tess.addVertex(1, 0, 0);
+        tess.addVertex(1, 0, -1);
+
+        tess.addVertex(1, 1, 0);
+        tess.addVertex(1, 1, -1);
+
+        tess.draw();
+        GL11.glPopMatrix();
+    }
+
+    public static final class TableData
+    {
+        public  String            header;
+        public  ArrayList<String> strings;
+        private int               width;
+
+        public TableData(String header, ArrayList<String> data)
+        {
+            this.header = header;
+            this.strings = data;
+            width = header.length();
+
+            updateWidth();
+        }
+
+        private void updateWidth()
+        {
+            for (String string : strings) if (width < string.length()) width = string.length();
+        }
+    }
+
+    public static String makeTable(TableData... datas)
+    {
+        int size = 0;
+        for (TableData data : datas) size += data.width * data.strings.size();
+        StringBuilder stringBuilder = new StringBuilder(size);
+
+        for (TableData data : datas) stringBuilder.append('|').append(' ').append(data.header).append(new String(new char[data.width - data.header.length() + 1]).replace('\0', ' '));
+        stringBuilder.append('|').append('\n');
+        for (TableData data : datas) stringBuilder.append('+').append(new String(new char[data.width + 2]).replace('\0', '-'));
+        stringBuilder.append('+').append('\n');
+        int i = 0;
+        while (i < datas[0].strings.size())
+        {
+            for (TableData data : datas) stringBuilder.append('|').append(' ').append(data.strings.get(i)).append(new String(new char[data.width - data.strings.get(i).length() + 1]).replace('\0', ' '));
+            stringBuilder.append('|').append('\n');
+            i++;
+        }
+
+        return stringBuilder.toString();
+    }
+
+    public static int getHeading(EntityPlayer player)
+    {
+        return MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+    }
+
+    public static int getHeading()
+    {
+        return getHeading(Minecraft.getMinecraft().thePlayer);
+    }
+}
