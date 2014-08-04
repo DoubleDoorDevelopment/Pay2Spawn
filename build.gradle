@@ -54,12 +54,14 @@ processResources {
 }
 
 task sourcesJar(type: Jar) {
+    from "LICENSE.txt"
     from sourceSets.main.allSource
     classifier = 'src'
     appendix = project.minecraft.version
 }
 
 task deobfJar(type: Jar) {
+    from "LICENSE.txt"
     from sourceSets.main.output
     from (sourceSets.main.allSource.srcDirs) {
         include '**/*.java'
@@ -69,6 +71,7 @@ task deobfJar(type: Jar) {
 }
 
 jar {
+    from "LICENSE.txt"
     appendix = project.minecraft.version
 }
 
