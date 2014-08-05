@@ -15,3 +15,9 @@ Getting started
 ---------------
 
 [Look at the wiki!](https://github.com/DoubleDoorDevelopment/Pay2Spawn/wiki)
+
+License
+-------
+
+Permission is hereby granted to use the name "Pay2Spawn" to endorse or promote products derived from this software as long as you include an official build. (Downloaded from the links above.)
+If you distribute your own version, you must make a clear distinction. For example: "Pay2Spawn_notOfficial" would be enough.
