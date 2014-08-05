@@ -322,9 +322,9 @@ public class StructureTypeGui extends HelperGuiBase
 
         if (rotateBasedOnPlayerCheckBox.isSelected())
         {
-            GL11.glRotated(90 * Helper.getHeading(), 0, -1, 0);
+            GL11.glRotated(90 * Helper.getHeading(Minecraft.getMinecraft().thePlayer), 0, -1, 0);
 
-            switch (Helper.getHeading())
+            switch (Helper.getHeading(Minecraft.getMinecraft().thePlayer))
             {
                 case 1:
                     GL11.glTranslated(-1, 0, 0);
