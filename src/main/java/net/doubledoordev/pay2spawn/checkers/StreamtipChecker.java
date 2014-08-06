@@ -64,8 +64,8 @@ public class StreamtipChecker extends AbstractChecker implements Runnable
     DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
 
     String ClientID = "", ClientAccessToken = "";
-    boolean          enabled  = true;
-    int              interval = 3;
+    boolean          enabled  = false;
+    int              interval = 20;
     SimpleDateFormat sdf      = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
 
     private StreamtipChecker()
@@ -103,6 +103,7 @@ public class StreamtipChecker extends AbstractChecker implements Runnable
         ClientID = configuration.get(CAT, "ClientID", ClientID).getString();
         ClientAccessToken = configuration.get(CAT, "ClientAccessToken", ClientAccessToken).getString();
         interval = configuration.get(CAT, "interval", interval, "The time in between polls (in seconds).").getInt();
+        min_donation = configuration.get(CAT, "min_donation", min_donation, "Donations below this amount will only be added to statistics and will not spawn rewards").getDouble();
 
         recentDonationsBasedHudEntry = new DonationsBasedHudEntry(configuration, CAT + ".recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
         topDonationsBasedHudEntry = new DonationsBasedHudEntry(configuration, CAT + ".topDonations", -1, 1, 5, "$name: $$amount", "-- Top donations --", CheckerHandler.AMOUNT_DONATION_COMPARATOR);

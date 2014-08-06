@@ -61,6 +61,8 @@ public abstract class AbstractChecker
 
     public abstract DonationsBasedHudEntry[] getDonationsBasedHudEntries();
 
+    public double  min_donation = 1;
+
     protected void doWait(int time)
     {
         try
@@ -90,7 +92,7 @@ public abstract class AbstractChecker
             if (donation.amount > 0) // Only do these things for real donation amounts.
             {
                 Statistics.addToDonationAmount(donation.amount);
-                if (donation.amount < Pay2Spawn.getConfig().min_donation) return;
+                if (donation.amount < min_donation) return;
             }
             try
             {

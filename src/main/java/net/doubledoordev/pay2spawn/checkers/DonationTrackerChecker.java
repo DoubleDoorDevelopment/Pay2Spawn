@@ -30,13 +30,13 @@
 
 package net.doubledoordev.pay2spawn.checkers;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.hud.DonationsBasedHudEntry;
 import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.util.Donation;
 import net.doubledoordev.pay2spawn.util.Helper;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.IOException;
@@ -61,17 +61,16 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
     public static final DonationTrackerChecker INSTANCE     = new DonationTrackerChecker();
     public final static String                 NAME         = "donation-tracker";
     public final static String                 CAT          = BASECAT_TRACKERS + '.' + NAME;
-    public final static String                 URL          = "https://www.donation-tracker.com/customapi/?";
     public final static Pattern                HTML_REGEX   = Pattern.compile("<td.*?>(.+?)<\\/td.*?>");
-    public final static Pattern                AMOUNT_REGEX = Pattern.compile(".?(\\d+(?:\\.|,)\\d\\d)\\w?.?");
-
-    //public final static Pattern                HTML_REGEX    = Pattern.compile("From: (.+?) - .(\\d+\\.\\d\\d) - (.+?) \\| ");
+    public final static Pattern                AMOUNT_REGEX = Pattern.compile("(\\d+(?:\\.|,)\\d\\d)\\w?.?");
 
     DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
 
+    public String URL = "https://www.donation-tracker.com/customapi/?channel=%s&api_key=%s&custom=1";
+
     String Channel = "", APIKey = "";
-    boolean          enabled  = true;
-    int              interval = 3;
+    boolean          enabled  = false;
+    int              interval = 20;
     SimpleDateFormat sdf      = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss");
 
     private DonationTrackerChecker()
@@ -109,6 +108,8 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
         Channel = configuration.get(CAT, "Channel", Channel).getString();
         APIKey = configuration.get(CAT, "APIKey", APIKey).getString();
         interval = configuration.get(CAT, "interval", interval, "The time in between polls (in seconds).").getInt();
+        min_donation = configuration.get(CAT, "min_donation", min_donation, "Donations below this amount will only be added to statistics and will not spawn rewards").getDouble();
+        URL = configuration.get(CAT, "url", URL, "Donation Tracker API end point string").getString();
 
         recentDonationsBasedHudEntry = new DonationsBasedHudEntry(configuration, CAT + ".recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
         topDonationsBasedHudEntry = new DonationsBasedHudEntry(configuration, CAT + ".topDonations", -1, 1, 5, "$name: $$amount", "-- Top donations --", CheckerHandler.AMOUNT_DONATION_COMPARATOR);
@@ -123,17 +124,49 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
     @Override
     public void run()
     {
+        // Process any current donations from the API
+        processDonationAPI(true);
+
+        // Start the processing loop
+        while (true)
+        {
+            // Pause the configured wait period
+            doWait(interval);
+
+            // Check for any new donations
+            processDonationAPI(false);
+        }
+    }
+
+    /***
+     * Connects to the API and attempt to process any donations
+     *
+     * @param firstRun <code>boolean</code> used to identify previous donations that should not be processed.
+     */
+    private void processDonationAPI(boolean firstRun)
+    {
         try
         {
-            JsonObject root = JSON_PARSER.parse(Helper.readUrl(new URL(URL + "channel=" + Channel + "&api_key=" + APIKey + "&custom=1"))).getAsJsonObject();
+            JsonObject root = JSON_PARSER.parse(Helper.readUrl(new URL(String.format(URL, Channel, APIKey )))).getAsJsonObject();
             if (root.getAsJsonPrimitive("api_check").getAsInt() == 1)
             {
                 JsonArray donations = root.getAsJsonArray("donation_list");
                 for (JsonElement jsonElement : donations)
                 {
                     Donation donation = getDonation(jsonElement.getAsString());
-                    topDonationsBasedHudEntry.add(donation);
-                    doneIDs.add(donation.id);
+
+                    // Make sure we have a donation to work with and see if this is a first run
+                    if (donation != null && firstRun == true)
+                    {
+                        // This is a first run so add to current list/done ids
+                        topDonationsBasedHudEntry.add(donation);
+                        doneIDs.add(donation.id);
+                    }
+                    else if (donation != null)
+                    {
+                        // We have a donation and this is a loop check so process the donation
+                        process(donation, true);
+                    }
                 }
             }
         }
@@ -141,49 +174,47 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
         {
             e.printStackTrace();
         }
-
-        while (true)
-        {
-            doWait(interval);
-            try
-            {
-                JsonObject root = JSON_PARSER.parse(Helper.readUrl(new URL(URL + "channel=" + Channel + "&api_key=" + APIKey + "&custom=1"))).getAsJsonObject();
-                if (root.getAsJsonPrimitive("api_check").getAsInt() == 1)
-                {
-                    JsonArray donations = root.getAsJsonArray("donation_list");
-                    for (JsonElement jsonElement : donations)
-                    {
-                        process(getDonation(jsonElement.getAsString()), true);
-                    }
-                }
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
     }
 
     private Donation getDonation(String html)
     {
         ArrayList<String> htmlMatches = new ArrayList<>();
         Matcher htmlMatcher = HTML_REGEX.matcher(html);
-        while (htmlMatcher.find()) htmlMatches.add(htmlMatcher.group(1));
+
+        while (htmlMatcher.find())
+        {
+            htmlMatches.add(htmlMatcher.group(1));
+        }
         String[] data = htmlMatches.toArray(new String[htmlMatches.size()]);
 
-        Matcher amountMatcher = AMOUNT_REGEX.matcher(data[3]);
-        amountMatcher.find();
-        double amount = Double.parseDouble(amountMatcher.group(1).replace(',', '.'));
+        // Make sure we have enough data to process
+        if (htmlMatches.size() == 4)
+        {
+            Matcher amountMatcher = AMOUNT_REGEX.matcher(data[3]);
 
-        long time = new Date().getTime();
-        try
-        {
-            time = sdf.parse(data[2]).getTime();
+            // We only continue if we can match the regex amount
+            if (amountMatcher.find())
+            {
+                double amount = Double.parseDouble(amountMatcher.group(1).replace(',', '.'));
+
+                long time = new Date().getTime();
+                try
+                {
+                    time = sdf.parse(data[2]).getTime();
+                }
+                catch (ParseException e)
+                {
+                    e.printStackTrace();
+                }
+
+                // Currently Donation tracker doesn't send a proper ID value so we need to make one
+                String id = Helper.MD5(String.format("%s|%s|%s|%s ",  data[0], data[1], data[2], data[3]));
+
+                return new Donation(id, amount, time, data[0], data[1]);
+            }
         }
-        catch (ParseException e)
-        {
-            e.printStackTrace();
-        }
-        return new Donation(data[2], amount, time, data[0], data[1]);
+
+        // Something is wrong in the data so return null
+        return null;
     }
 }
