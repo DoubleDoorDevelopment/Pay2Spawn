@@ -61,8 +61,8 @@ public class TwitchChecker extends AbstractChecker implements Runnable
     DonationsBasedHudEntry recentDonationsBasedHudEntry;
 
     String  APIKey   = "";
-    boolean enabled  = true;
-    int     interval = 3;
+    boolean enabled  = false;
+    int     interval = 20;
     double  amount   = 5;
     String  channel  = "";
     URL url;

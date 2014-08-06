@@ -40,6 +40,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
@@ -50,6 +51,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -371,5 +373,45 @@ public class Helper
     public static int getHeading(EntityPlayer player)
     {
         return MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+    }
+
+    /***
+     * Returns a <code>true</code> if the supplied username is an OP in the server list
+     *
+     * @param username <code>String</code> containing the username to check OP status
+     * @return <code>boolean</code>
+     */
+    public static boolean isPlayerOpped(String username)
+    {
+        MinecraftServer server = MinecraftServer.getServer();
+
+        return server.getConfigurationManager().func_152596_g(server.func_152358_ax().func_152655_a(username));
+    }
+
+    /***
+     * Used to get the MD5 hash of a given string.
+     *
+     * @param inputString
+     * @return <code>String</code> containing MD5 hash or null if error caught
+     */
+    public static String MD5(String inputString)
+    {
+        try
+        {
+            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+            byte[] array = messageDigest.digest(inputString.getBytes());
+
+            StringBuffer stringBuilder = new StringBuffer();
+
+            for (int i = 0;i < array.length;++i)
+            {
+                stringBuilder.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1, 3));
+            }
+            return stringBuilder.toString();
+        }
+        catch (java.security.NoSuchAlgorithmException e)
+        {}
+
+        return null;
     }
 }

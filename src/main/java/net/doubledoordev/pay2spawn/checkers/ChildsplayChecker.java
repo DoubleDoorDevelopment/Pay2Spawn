@@ -77,8 +77,8 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
     DonationsBasedHudEntry recentDonationsBasedHudEntry;
 
     String APIKey = "", APIsecret = "";
-    boolean          enabled  = true;
-    int              interval = 3;
+    boolean          enabled  = false;
+    int              interval = 20;
     SimpleDateFormat sdf      = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private ChildsplayChecker()
@@ -124,6 +124,7 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
         APIKey = configuration.get(CAT, "APIKey", APIKey).getString();
         APIsecret = configuration.get(CAT, "APIsecret", APIsecret).getString();
         interval = configuration.get(CAT, "interval", interval, "The time in between polls (in seconds).").getInt();
+        min_donation = configuration.get(CAT, "min_donation", min_donation, "Donations below this amount will only be added to statistics and will not spawn rewards").getDouble();
 
         recentDonationsBasedHudEntry = new DonationsBasedHudEntry(configuration, CAT + ".recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
     }
