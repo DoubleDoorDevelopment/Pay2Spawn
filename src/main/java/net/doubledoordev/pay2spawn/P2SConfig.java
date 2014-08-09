@@ -33,7 +33,7 @@ package net.doubledoordev.pay2spawn;
 import net.doubledoordev.pay2spawn.checkers.CheckerHandler;
 import net.doubledoordev.pay2spawn.util.Helper;
 import com.google.common.io.Files;
-import net.doubledoordev.util.DevPerks;
+import net.doubledoordev.pay2spawn.util.DevPerks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 

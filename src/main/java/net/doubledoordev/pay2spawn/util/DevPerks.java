@@ -24,7 +24,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.doubledoordev.util;
+package net.doubledoordev.pay2spawn.util;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
