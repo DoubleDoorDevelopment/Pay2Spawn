@@ -41,12 +41,7 @@ import net.minecraftforge.common.config.Configuration;
 
 import java.io.IOException;
 import java.net.URL;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static net.doubledoordev.pay2spawn.util.Constants.BASECAT_TRACKERS;
 import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
@@ -61,17 +56,14 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
     public static final DonationTrackerChecker INSTANCE     = new DonationTrackerChecker();
     public final static String                 NAME         = "donation-tracker";
     public final static String                 CAT          = BASECAT_TRACKERS + '.' + NAME;
-    public final static Pattern                HTML_REGEX   = Pattern.compile("<td.*?>(.+?)<\\/td.*?>");
-    public final static Pattern                AMOUNT_REGEX = Pattern.compile("(\\d+(?:\\.|,)\\d\\d)\\w?.?");
 
     DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
 
-    public String URL = "https://www.donation-tracker.com/customapi/?channel=%s&api_key=%s&custom=1";
+    public String URL = "https://www.donation-tracker.com/api/?channel=%s&api_key=%s";
 
     String Channel = "", APIKey = "";
     boolean          enabled  = false;
     int              interval = 20;
-    SimpleDateFormat sdf      = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss");
 
     private DonationTrackerChecker()
     {
@@ -107,12 +99,21 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
         enabled = configuration.get(CAT, "enabled", enabled).getBoolean(enabled);
         Channel = configuration.get(CAT, "Channel", Channel).getString();
         APIKey = configuration.get(CAT, "APIKey", APIKey).getString();
-        interval = configuration.get(CAT, "interval", interval, "The time in between polls (in seconds).").getInt();
+        interval = configuration.get(CAT, "interval", interval, "The time in between polls minimum 5 (in seconds).").getInt();
         min_donation = configuration.get(CAT, "min_donation", min_donation, "Donations below this amount will only be added to statistics and will not spawn rewards").getDouble();
         URL = configuration.get(CAT, "url", URL, "Donation Tracker API end point string").getString();
 
         recentDonationsBasedHudEntry = new DonationsBasedHudEntry(configuration, CAT + ".recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
         topDonationsBasedHudEntry = new DonationsBasedHudEntry(configuration, CAT + ".topDonations", -1, 1, 5, "$name: $$amount", "-- Top donations --", CheckerHandler.AMOUNT_DONATION_COMPARATOR);
+
+        // Donation tracker doesn't allow a poll interval faster than 5 seconds
+        // They will IP ban anyone using a time below 5 so force the value to be safe
+        if (interval < 5)
+        {
+            interval = 5;
+            // Now force the config setting to 5
+            configuration.get(CAT, "interval", "The time in between polls minimum 5 (in seconds).").set(interval);
+        }
     }
 
     @Override
@@ -150,10 +151,10 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
             JsonObject root = JSON_PARSER.parse(Helper.readUrl(new URL(String.format(URL, Channel, APIKey )))).getAsJsonObject();
             if (root.getAsJsonPrimitive("api_check").getAsInt() == 1)
             {
-                JsonArray donations = root.getAsJsonArray("donation_list");
+                JsonArray donations = root.getAsJsonArray("donations");
                 for (JsonElement jsonElement : donations)
                 {
-                    Donation donation = getDonation(jsonElement.getAsString());
+                    Donation donation = getDonation(jsonElement.getAsJsonObject());
 
                     // Make sure we have a donation to work with and see if this is a first run
                     if (donation != null && firstRun == true)
@@ -176,42 +177,24 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
         }
     }
 
-    private Donation getDonation(String html)
+    private Donation getDonation(JsonObject jsonObject)
     {
-        ArrayList<String> htmlMatches = new ArrayList<>();
-        Matcher htmlMatcher = HTML_REGEX.matcher(html);
-
-        while (htmlMatcher.find())
+        try
         {
-            htmlMatches.add(htmlMatcher.group(1));
+            // Attempt to parse the data we need for the donation
+            String username = jsonObject.get("username").getAsString();
+            String note = jsonObject.get("note").getAsString();
+            long timestamp = jsonObject.get("timestamp").getAsLong();
+            double amount = jsonObject.get("amount").getAsDouble();
+            String id = jsonObject.get("transaction_id").getAsString();
+
+            // We have all the data we need to return the Donation object
+            return new Donation(id, amount, timestamp, username, note);
         }
-        String[] data = htmlMatches.toArray(new String[htmlMatches.size()]);
-
-        // Make sure we have enough data to process
-        if (htmlMatches.size() == 4)
+        catch(Exception e)
         {
-            Matcher amountMatcher = AMOUNT_REGEX.matcher(data[3]);
-
-            // We only continue if we can match the regex amount
-            if (amountMatcher.find())
-            {
-                double amount = Double.parseDouble(amountMatcher.group(1).replace(',', '.'));
-
-                long time = new Date().getTime();
-                try
-                {
-                    time = sdf.parse(data[2]).getTime();
-                }
-                catch (ParseException e)
-                {
-                    e.printStackTrace();
-                }
-
-                // Currently Donation tracker doesn't send a proper ID value so we need to make one
-                String id = Helper.MD5(String.format("%s|%s|%s|%s ",  data[0], data[1], data[2], data[3]));
-
-                return new Donation(id, amount, time, data[0], data[1]);
-            }
+            // We threw an error so just log it and move on
+            e.printStackTrace();
         }
 
         // Something is wrong in the data so return null
