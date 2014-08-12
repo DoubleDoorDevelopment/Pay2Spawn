@@ -100,7 +100,7 @@ public class TwitchChecker extends AbstractChecker implements Runnable
         configuration.addCustomCategoryComment(CAT, "This is the checker for twitch subs");
 
         enabled = configuration.get(CAT, "enabled", enabled).getBoolean(enabled);
-        APIKey = configuration.get(CAT, "APIKey", APIKey, "Get this from http://dries007.net/net.doubledoordev.ccm/p2s/").getString();
+        APIKey = configuration.get(CAT, "APIKey", APIKey, "Get this from http://dries007.net/ccm/p2s/").getString();
         channel = configuration.get(CAT, "channel", channel, "Your exact channel name").getString();
         interval = configuration.get(CAT, "interval", interval, "The time in between polls (in seconds).").getInt();
         amount = configuration.get(CAT, "amount", amount, "The amount of currency a sub counts for.").getDouble(amount);
