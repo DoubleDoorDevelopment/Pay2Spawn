@@ -31,6 +31,8 @@
 package net.doubledoordev.pay2spawn;
 
 import com.google.common.base.Strings;
+import cpw.mods.fml.client.config.DummyConfigElement;
+import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModMetadata;
@@ -41,6 +43,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
+import net.doubledoordev.d3core.util.ID3Mod;
 import net.doubledoordev.pay2spawn.checkers.CheckerHandler;
 import net.doubledoordev.pay2spawn.checkers.TwitchChecker;
 import net.doubledoordev.pay2spawn.cmd.CommandP2S;
@@ -55,6 +58,7 @@ import net.doubledoordev.pay2spawn.types.TypeRegistry;
 import net.doubledoordev.pay2spawn.util.*;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.common.config.ConfigElement;
 import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
@@ -63,6 +67,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static net.doubledoordev.pay2spawn.util.Constants.*;
 
@@ -72,7 +78,7 @@ import static net.doubledoordev.pay2spawn.util.Constants.*;
  * @author Dries007
  */
 @Mod(modid = MODID, name = NAME)
-public class Pay2Spawn
+public class Pay2Spawn implements ID3Mod
 {
     @Mod.Instance(MODID)
     public static Pay2Spawn instance;
@@ -175,9 +181,7 @@ public class Pay2Spawn
     public void init(FMLInitializationEvent event) throws MalformedURLException
     {
         ServerTickHandler.INSTANCE.init();
-
-        TypeRegistry.doConfig(config.configuration);
-        config.save();
+        config.syncConfig();
 
         rewardsDB = new RewardsDB(getRewardDBFile());
 
@@ -252,5 +256,24 @@ public class Pay2Spawn
         }
         event.registerServerCommand(new CommandP2SPermissions());
         event.registerServerCommand(new CommandP2SServer());
+    }
+
+    @Override
+    public void syncConfig()
+    {
+        config.syncConfig();
+    }
+
+    @Override
+    public void addConfigElements(List<IConfigElement> configElements)
+    {
+        List<IConfigElement> listsList = new ArrayList<IConfigElement>();
+
+        listsList.add(new ConfigElement(config.configuration.getCategory(Constants.MODID.toLowerCase())));
+        listsList.add(new ConfigElement(config.configuration.getCategory(Constants.FILTER_CAT.toLowerCase())));
+        listsList.add(new ConfigElement(config.configuration.getCategory(Constants.SERVER_CAT.toLowerCase())));
+        listsList.add(new ConfigElement(config.configuration.getCategory(Constants.BASECAT_TRACKERS.toLowerCase())));
+
+        configElements.add(new DummyConfigElement.DummyCategoryElement(MODID, "d3.pay2spawn.config.pay2spawn", listsList));
     }
 }

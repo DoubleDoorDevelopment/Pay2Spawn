@@ -1,16 +1,21 @@
-[
 {
-  "modid": "P2S",
-  "name": "Pay2Spawn",
-  "description": "Screw or help your favorite streamer!",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "https://github.com/CCM-Modding/Pay2Spawn",
-  "updateUrl": "",
-  "authors": ["Dries007", "CCM team"],
-  "credits": "MazeXD and DSlacky for the original idea",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
+  "modListVersion": 2,
+  "modList": [{
+    "modid": "P2S",
+    "name": "Pay2Spawn",
+    "description": "Screw or help your favorite streamer!",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://github.com/DoubleDoorDevelopment/Pay2Spawn",
+    "updateUrl": "",
+    "authorList": [ "Dries007", "Doubledoor team" ],
+    "credits": "MazeXD and DSlacky for the original idea",
+    "logoFile": "",
+    "screenshots": [],
+    "parent": "D3Core",
+    "requiredMods": [ "Forge", "D3Core" ],
+    "dependencies": [ "D3Core" ],
+    "dependants": [ ],
+    "useDependencyInformation": true
+  }]
 }
-]

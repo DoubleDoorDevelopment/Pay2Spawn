@@ -66,4 +66,9 @@ public class Hud
             }
         }
     }
+
+    public void doConfig()
+    {
+        for (IHudEntry hudEntry : set) hudEntry.updateConfig();
+    }
 }

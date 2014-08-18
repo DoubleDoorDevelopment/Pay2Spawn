@@ -48,4 +48,6 @@ public interface IHudEntry
     public String getFormat();
 
     public void addToList(ArrayList<String> list);
+
+    public void updateConfig();
 }

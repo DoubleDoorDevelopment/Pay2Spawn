@@ -126,7 +126,7 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
         interval = configuration.get(CAT, "interval", interval, "The time in between polls (in seconds).").getInt();
         min_donation = configuration.get(CAT, "min_donation", min_donation, "Donations below this amount will only be added to statistics and will not spawn rewards").getDouble();
 
-        recentDonationsBasedHudEntry = new DonationsBasedHudEntry(configuration, CAT + ".recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
+        recentDonationsBasedHudEntry = new DonationsBasedHudEntry(CAT + ".recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
     }
 
     @Override

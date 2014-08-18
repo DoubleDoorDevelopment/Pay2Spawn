@@ -30,10 +30,9 @@
 
 package net.doubledoordev.pay2spawn.types;
 
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.permissions.Node;
 import net.doubledoordev.pay2spawn.types.guis.CommandTypeGui;
-import net.doubledoordev.pay2spawn.util.Constants;
-import com.google.gson.JsonObject;
 import net.minecraft.command.ICommand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -133,9 +132,9 @@ public class CommandType extends TypeBase
     @Override
     public void doConfig(Configuration configuration)
     {
-        configuration.addCustomCategoryComment(Constants.MODID + "_types", "Reward config options");
-        configuration.addCustomCategoryComment(Constants.MODID + "_types." + NAME, "Used for commands");
-        feedback = configuration.get(MODID + "_types." + NAME, "feedback", feedback, "Disable command feedback. (server overrides client)").getBoolean(feedback);
+        configuration.addCustomCategoryComment(TYPES_CAT, "Reward config options");
+        configuration.addCustomCategoryComment(TYPES_CAT + '.' + NAME, "Used for commands");
+        feedback = configuration.get(TYPES_CAT + '.' + NAME, "feedback", feedback, "Disable command feedback. (server overrides client)").getBoolean(feedback);
     }
 
     public class cmdSender extends EntityPlayerMP

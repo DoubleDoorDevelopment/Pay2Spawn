@@ -45,23 +45,17 @@ import java.util.ArrayList;
 public class StatisticsHudEntry implements IHudEntry
 {
     public final ArrayList<String> strings = new ArrayList<>();
-    final int position, amount;
-    final String header, format;
+    int position, amount, maxAmount, defaultPosition, defaultAmount;
+    String header = "", format = "", configCat = "", defaultFormat = "", defaultHeader = "";
 
     public StatisticsHudEntry(String configCat, int maxAmount, int defaultPosition, int defaultAmount, String defaultFormat, String defaultHeader)
     {
-        int amount1;
-        Configuration config = Pay2Spawn.getConfig().configuration;
-
-        position = config.get(P2SConfig.HUD + "." + configCat, "position", defaultPosition, "0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt(defaultPosition);
-        amount1 = config.get(P2SConfig.HUD + "." + configCat, "amount", defaultAmount).getInt(defaultAmount);
-        if (maxAmount != -1 && amount1 > maxAmount) amount1 = maxAmount;
-        amount = amount1;
-
-        format = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "format", defaultFormat).getString());
-        header = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "header", defaultHeader, "Empty for no header. Use \\n for a blank line.").getString()).trim();
-
-        Pay2Spawn.getConfig().save();
+        this.configCat = configCat;
+        this.maxAmount = maxAmount;
+        this.defaultPosition = defaultPosition;
+        this.defaultAmount = defaultAmount;
+        this.defaultFormat = defaultFormat;
+        this.defaultHeader = defaultHeader;
     }
 
     @Override
@@ -95,5 +89,18 @@ public class StatisticsHudEntry implements IHudEntry
         {
             list.addAll(strings);
         }
+    }
+
+    @Override
+    public void updateConfig()
+    {
+        Configuration config = Pay2Spawn.getConfig().configuration;
+
+        position = config.get(P2SConfig.HUD + "." + configCat, "position", defaultPosition, "0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt(defaultPosition);
+        amount = config.get(P2SConfig.HUD + "." + configCat, "amount", amount).getInt(amount);
+        if (maxAmount != -1 && amount > maxAmount) amount = maxAmount;
+
+        format = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "format", defaultFormat).getString());
+        header = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "header", defaultHeader, "Empty for no header. Use \\n for a blank line.").getString()).trim();
     }
 }

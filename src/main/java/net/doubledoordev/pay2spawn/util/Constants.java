@@ -48,22 +48,15 @@ public class Constants
 {
     public static final String   NAME                = "Pay2Spawn";
     public static final String   MODID               = "P2S";
-    /**
-     * Network related
-     */
+
+    public static final String   SERVER_CAT          = MODID + "_server";
+    public static final String   FILTER_CAT          = MODID + "_filter";
+    public static final String   TYPES_CAT           = MODID + "_types";
     public static final String   BASECAT_TRACKERS    = "P2S_trackers";
     public static final String   MUSICURL            = "https://raw.github.com/CCM-Modding/Pay2Spawn/master/files/music.zip";
-    public static final String   PERKS_URL           = "http://doubledoordev.net/perks.json";
-    public static final String[] NBTTypes            = new String[] {"END", "BYTE", "SHORT", "INT", "LONG", "FLOAT", "DOUBLE", "BYTE[]", "STRING", "LIST", "COMPOUND", "INT[]"};
-    /**
-     * Donation data
-     */
-    public static final String   DONATION_USERNAME   = "twitchUsername";
-    public static final String   DONATION_AMOUNT     = "amount";
-    public static final String   DONATION_NOTE       = "note";
-    public static final String   ANONYMOUS           = "Anonymous";
 
-    public static final String CUSTOMHTML = "customHTML";
+    public static final String   ANONYMOUS           = "Anonymous";
+    public static final String   CUSTOMHTML = "customHTML";
 
     /**
      * Global helpers
@@ -83,6 +76,7 @@ public class Constants
     /**
      * NBT constants
      */
+    public static final String[] NBTTypes            = new String[] {"END", "BYTE", "SHORT", "INT", "LONG", "FLOAT", "DOUBLE", "BYTE[]", "STRING", "LIST", "COMPOUND", "INT[]"};
     public static final int END        = 0;
     public static final int BYTE       = 1;
     public static final int SHORT      = 2;

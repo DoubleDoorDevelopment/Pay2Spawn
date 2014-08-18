@@ -45,19 +45,16 @@ import java.util.ArrayList;
  */
 public class TotalDonationHudEntry implements IHudEntry
 {
-    final int    position;
-    final String format;
+    int    position, defaultPosition;
+    String format = "", configCat = "", defaultFormat = "";
     private double amount = 0;
 
     public TotalDonationHudEntry(String configCat, int defaultPosition, String defaultFormat, double amount)
     {
-        Configuration config = Pay2Spawn.getConfig().configuration;
-
-        position = config.get(P2SConfig.HUD + "." + configCat, "position", defaultPosition, "0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt(defaultPosition);
-        format = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "format", defaultFormat).getString());
+        this.configCat = configCat;
+        this.defaultPosition = defaultPosition;
+        this.defaultFormat = defaultFormat;
         this.amount = amount;
-
-        Pay2Spawn.getConfig().save();
     }
 
     @Override
@@ -96,6 +93,14 @@ public class TotalDonationHudEntry implements IHudEntry
         {
             list.add(format.replace("$amount", Constants.CURRENCY_FORMATTER.format(amount)));
         }
+    }
+
+    @Override
+    public void updateConfig()
+    {
+        Configuration config = Pay2Spawn.getConfig().configuration;
+        position = config.get(P2SConfig.HUD + "." + configCat, "position", defaultPosition, "0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt(defaultPosition);
+        format = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "format", defaultFormat).getString());
     }
 
     public double getDonated()

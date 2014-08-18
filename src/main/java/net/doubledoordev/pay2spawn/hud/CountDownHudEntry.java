@@ -45,19 +45,15 @@ import java.util.ArrayList;
 public class CountDownHudEntry implements IHudEntry
 {
     public final ArrayList<String> lines = new ArrayList<>();
-    final int    position;
-    final String header, format;
+    int    position, defaultPosition;
+    String header = "", format = "", configCat = "", defaultFormat = "", defaultHeader = "";
 
     public CountDownHudEntry(String configCat, int defaultPosition, String defaultFormat, String defaultHeader)
     {
-        Configuration config = Pay2Spawn.getConfig().configuration;
-
-        position = config.get(P2SConfig.HUD + "." + configCat, "position", defaultPosition, "0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt(defaultPosition);
-
-        format = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "format", defaultFormat).getString());
-        header = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "header", defaultHeader, "Empty for no header. Use \\n for a blank line.").getString()).trim();
-
-        Pay2Spawn.getConfig().save();
+        this.configCat = configCat;
+        this.defaultPosition = defaultPosition;
+        this.defaultFormat = defaultFormat;
+        this.defaultHeader = defaultHeader;
     }
 
     @Override
@@ -91,5 +87,15 @@ public class CountDownHudEntry implements IHudEntry
         {
             list.addAll(lines);
         }
+    }
+
+    @Override
+    public void updateConfig()
+    {
+        Configuration config = Pay2Spawn.getConfig().configuration;
+        position = config.get(P2SConfig.HUD + "." + configCat, "position", defaultPosition, "0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt(defaultPosition);
+
+        format = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "format", defaultFormat).getString());
+        header = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "header", defaultHeader, "Empty for no header. Use \\n for a blank line.").getString()).trim();
     }
 }

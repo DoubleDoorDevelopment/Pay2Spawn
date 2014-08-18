@@ -106,7 +106,7 @@ public class TwitchChecker extends AbstractChecker implements Runnable
         amount = configuration.get(CAT, "amount", amount, "The amount of currency a sub counts for.").getDouble(amount);
         note = configuration.get(CAT, "note", note, "The note attached to the 'fake' donation.").getString();
 
-        recentDonationsBasedHudEntry = new DonationsBasedHudEntry(configuration, CAT + ".recentSubs", -1, 2, 5, "$name", "-- Recent subs --", CheckerHandler.RECENT_DONATION_COMPARATOR);
+        recentDonationsBasedHudEntry = new DonationsBasedHudEntry(CAT + ".recentSubs", -1, 2, 5, "$name", "-- Recent subs --", CheckerHandler.RECENT_DONATION_COMPARATOR);
 
         try
         {

@@ -43,24 +43,16 @@ import java.util.ArrayList;
 public class DonationTrainEntry implements IHudEntry
 {
     public final ArrayList<String> strings = new ArrayList<>();
-    final int position;
-    final String format;
-    private final String timeoutMessage;
+    int position;
+    String format = "";
+    private String timeoutMessage = "";
     private int timeout;
     int time = -1, amount = 0;
-    private String line;
+    private String line = "";
 
     public DonationTrainEntry()
     {
-        Configuration config = Pay2Spawn.getConfig().configuration;
 
-        String configCat = "DonationTrain";
-        position = config.get(P2SConfig.HUD + "." + configCat, "position", 2, "0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt(2);
-        format = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "format", "Donationtrain! $amount donations already! Expires in $time.").getString());
-        line = timeoutMessage = config.get(P2SConfig.HUD + "." + configCat, "timeoutMessage", "No donation train going :(").getString();
-        timeout = config.get(P2SConfig.HUD + "." + configCat, "timeout", 60 * 3).getInt();
-
-        Pay2Spawn.getConfig().save();
     }
 
     @Override
@@ -91,6 +83,17 @@ public class DonationTrainEntry implements IHudEntry
     public void addToList(ArrayList<String> list)
     {
         list.add(line);
+    }
+
+    @Override
+    public void updateConfig()
+    {
+        Configuration config = Pay2Spawn.getConfig().configuration;
+        String configCat = "DonationTrain";
+        position = config.get(P2SConfig.HUD + "." + configCat, "position", 2, "0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt(2);
+        format = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "format", "Donationtrain! $amount donations already! Expires in $time.").getString());
+        line = timeoutMessage = config.get(P2SConfig.HUD + "." + configCat, "timeoutMessage", "No donation train going :(").getString();
+        timeout = config.get(P2SConfig.HUD + "." + configCat, "timeout", 60 * 3).getInt();
     }
 
     public void resetTimeout()

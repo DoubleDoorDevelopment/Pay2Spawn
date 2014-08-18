@@ -108,9 +108,9 @@ public class EntityType extends TypeBase
     @Override
     public void doConfig(Configuration configuration)
     {
-        configuration.addCustomCategoryComment(Constants.MODID + "_types", "Reward config options");
-        configuration.addCustomCategoryComment(Constants.MODID + "_types." + NAME, "Used for Entity and CustomEntity");
-        spawnLimit = configuration.get(Constants.MODID + "_types." + NAME, "spawnLimit", spawnLimit, "A hard entity spawn limit. Only counts 1 reward's mobs. -1 for no limit.").getInt(spawnLimit);
+        configuration.addCustomCategoryComment(TYPES_CAT, "Reward config options");
+        configuration.addCustomCategoryComment(TYPES_CAT + '.' + NAME, "Used for Entity and CustomEntity");
+        spawnLimit = configuration.get(TYPES_CAT + '.' + NAME, "spawnLimit", spawnLimit, "A hard entity spawn limit. Only counts 1 reward's mobs. -1 for no limit.").getInt(spawnLimit);
     }
 
     @Override

@@ -30,9 +30,11 @@
 
 package net.doubledoordev.pay2spawn.hud;
 
+import com.google.common.base.Strings;
+import net.doubledoordev.pay2spawn.Pay2Spawn;
+import net.doubledoordev.pay2spawn.checkers.CheckerHandler;
 import net.doubledoordev.pay2spawn.util.Donation;
 import net.doubledoordev.pay2spawn.util.Helper;
-import com.google.common.base.Strings;
 import net.minecraftforge.common.config.Configuration;
 
 import java.util.ArrayList;
@@ -48,20 +50,20 @@ import java.util.List;
 public class DonationsBasedHudEntry implements IHudEntry
 {
     final ArrayList<String> strings = new ArrayList<>();
-    final int position, amount;
-    final String header, format;
-    final Comparator<Donation> comparator;
+    int position, amount, maxAmount, defaultPosition, defaultAmount;
+    String header = "", format = "", configCat = "", defaultFormat = "", defaultHeader = "";
+    Comparator<Donation> comparator = CheckerHandler.AMOUNT_DONATION_COMPARATOR;
     List<Donation> donations = new ArrayList<>();
 
-    public DonationsBasedHudEntry(Configuration config, String configCat, int maxAmount, int defaultPosition, int defaultAmount, String defaultFormat, String defaultHeader, Comparator<Donation> comparator)
+    public DonationsBasedHudEntry(String configCat, int maxAmount, int defaultPosition, int defaultAmount, String defaultFormat, String defaultHeader, Comparator<Donation> comparator)
     {
-        position = config.get(configCat, "position", defaultPosition, "0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt(defaultPosition);
-        int amount1 = config.get(configCat, "amount", defaultAmount, "maximum: " + maxAmount).getInt(defaultAmount);
-        if (maxAmount != -1 && amount1 > maxAmount) amount1 = maxAmount;
-        amount = amount1;
+        this.configCat = configCat;
+        this.maxAmount = maxAmount;
+        this.defaultPosition = defaultPosition;
+        this.defaultAmount = defaultAmount;
+        this.defaultFormat = defaultFormat;
+        this.defaultHeader = defaultHeader;
 
-        format = Helper.formatColors(config.get(configCat, "format", defaultFormat).getString());
-        header = Helper.formatColors(config.get(configCat, "header", defaultHeader, "Empty for no header. Use \\n for a blank line.").getString()).trim();
         this.comparator = comparator;
     }
 
@@ -96,6 +98,19 @@ public class DonationsBasedHudEntry implements IHudEntry
         {
             list.addAll(strings);
         }
+    }
+
+    @Override
+    public void updateConfig()
+    {
+        Configuration config = Pay2Spawn.getConfig().configuration;
+        position = config.get(configCat, "position", defaultPosition, "0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt(defaultPosition);
+        int amount1 = config.get(configCat, "amount", defaultAmount, "maximum: " + maxAmount).getInt(defaultAmount);
+        if (maxAmount != -1 && amount1 > maxAmount) amount1 = maxAmount;
+        amount = amount1;
+
+        format = Helper.formatColors(config.get(configCat, "format", defaultFormat).getString());
+        header = Helper.formatColors(config.get(configCat, "header", defaultHeader, "Empty for no header. Use \\n for a blank line.").getString()).trim();
     }
 
     public void add(Donation donation)

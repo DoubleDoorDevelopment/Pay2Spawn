@@ -41,7 +41,6 @@ import net.minecraftforge.common.config.Configuration;
 
 import java.io.IOException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 
 import static net.doubledoordev.pay2spawn.util.Constants.BASECAT_TRACKERS;
 import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
@@ -103,8 +102,8 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
         min_donation = configuration.get(CAT, "min_donation", min_donation, "Donations below this amount will only be added to statistics and will not spawn rewards").getDouble();
         URL = configuration.get(CAT, "url", URL, "Donation Tracker API end point string").getString();
 
-        recentDonationsBasedHudEntry = new DonationsBasedHudEntry(configuration, CAT + ".recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
-        topDonationsBasedHudEntry = new DonationsBasedHudEntry(configuration, CAT + ".topDonations", -1, 1, 5, "$name: $$amount", "-- Top donations --", CheckerHandler.AMOUNT_DONATION_COMPARATOR);
+        recentDonationsBasedHudEntry = new DonationsBasedHudEntry(CAT + ".recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
+        topDonationsBasedHudEntry = new DonationsBasedHudEntry(CAT + ".topDonations", -1, 1, 5, "$name: $$amount", "-- Top donations --", CheckerHandler.AMOUNT_DONATION_COMPARATOR);
 
         // Donation tracker doesn't allow a poll interval faster than 5 seconds
         // They will IP ban anyone using a time below 5 so force the value to be safe

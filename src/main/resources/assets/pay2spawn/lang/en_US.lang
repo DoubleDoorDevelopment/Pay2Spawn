@@ -1,0 +1,17 @@
+d3.pay2spawn.config.pay2spawn=Pay2Spawn
+d3.pay2spawn.config.pay2spawn.tooltip=Settings for Pay2Spawn
+
+d3.pay2spawn.config.general=General Settings
+d3.pay2spawn.config.general.tooltip=Apply to client
+
+d3.pay2spawn.config.server=Server Settings
+d3.pay2spawn.config.server.tooltip=Apply to settings or SSP
+
+d3.pay2spawn.config.filter=Filter Settings
+d3.pay2spawn.config.filter.tooltip=For messages and names
+
+d3.pay2spawn.config.types=Types settings
+d3.pay2spawn.config.types.tooltip=Global settings per type
+
+d3.pay2spawn.config.trackers=Tracker settings
+d3.pay2spawn.config.trackers.tooltip=API keys, ...

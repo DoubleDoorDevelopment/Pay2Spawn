@@ -30,14 +30,13 @@
 
 package net.doubledoordev.pay2spawn.types;
 
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.permissions.Node;
 import net.doubledoordev.pay2spawn.random.RandomRegistry;
 import net.doubledoordev.pay2spawn.types.guis.StructureTypeGui;
-import net.doubledoordev.pay2spawn.util.Constants;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.shapes.*;
-import com.google.gson.JsonObject;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
@@ -341,9 +340,9 @@ public class StructureType extends TypeBase
     @Override
     public void doConfig(Configuration configuration)
     {
-        configuration.addCustomCategoryComment(Constants.MODID + "_types", "Reward config options");
-        configuration.addCustomCategoryComment(Constants.MODID + "_types." + NAME, "Used when spawning structures");
-        String[] bannedBlocksStrings = configuration.get(Constants.MODID + "_types." + NAME, "bannedBlocks", new String[0], "Banned blocks, format like this:\nid:metaData => Ban only that meta\nid => Ban all meta of that block").getStringList();
+        configuration.addCustomCategoryComment(TYPES_CAT, "Reward config options");
+        configuration.addCustomCategoryComment(TYPES_CAT + '.' + NAME, "Used when spawning structures");
+        String[] bannedBlocksStrings = configuration.get(TYPES_CAT + '.' + NAME, "bannedBlocks", new String[0], "Banned blocks, format like this:\nid:metaData => Ban only that meta\nid => Ban all meta of that block").getStringList();
         bannedBlocks = new int[bannedBlocksStrings.length][];
         for (int i = 0; i < bannedBlocksStrings.length; i++)
         {
