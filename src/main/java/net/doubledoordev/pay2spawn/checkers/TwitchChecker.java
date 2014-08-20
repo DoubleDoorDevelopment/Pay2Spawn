@@ -171,4 +171,9 @@ public class TwitchChecker extends AbstractChecker implements Runnable
     {
         return channel;
     }
+
+    public void reset()
+    {
+        subs.clear();
+    }
 }

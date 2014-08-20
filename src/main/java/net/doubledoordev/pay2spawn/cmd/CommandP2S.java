@@ -32,6 +32,7 @@ package net.doubledoordev.pay2spawn.cmd;
 
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.checkers.CheckerHandler;
+import net.doubledoordev.pay2spawn.checkers.TwitchChecker;
 import net.doubledoordev.pay2spawn.configurator.ConfiguratorManager;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.Statistics;
@@ -136,6 +137,10 @@ public class CommandP2S extends CommandBase
                     Statistics.addToDonationAmount(amount);
                 }
                 break;
+            case "resetsubs":
+                TwitchChecker.INSTANCE.reset();
+                Helper.msg(EnumChatFormatting.GOLD + "[P2S] Subs have been resetted!");
+            break;
             default:
                 Helper.msg(EnumChatFormatting.RED + "Unknown command. Protip: Use tab completion!");
                 break;
