@@ -30,12 +30,12 @@
 
 package net.doubledoordev.pay2spawn.types.guis;
 
+import com.google.common.base.Strings;
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.configurator.Configurator;
 import net.doubledoordev.pay2spawn.network.NbtRequestMessage;
 import net.doubledoordev.pay2spawn.network.TestMessage;
 import net.doubledoordev.pay2spawn.util.IIHasCallback;
-import com.google.common.base.Strings;
-import com.google.gson.JsonObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,16 +51,16 @@ import static net.doubledoordev.pay2spawn.util.Constants.*;
  */
 public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
 {
-    public JScrollPane scrollPane;
-    public JTextPane   jsonPane;
-    public JButton     parseFromJsonButton;
-    public JButton     saveButton;
-    public JButton     updateJsonButton;
-    public JButton     testButton;
-    public JButton     importItemYouAreButton;
-    public JPanel      pane1;
-    public JTextField  HTMLTextField;
-    private JTextField slotTextField;
+    public  JScrollPane scrollPane;
+    public  JTextPane   jsonPane;
+    public  JButton     parseFromJsonButton;
+    public  JButton     saveButton;
+    public  JButton     updateJsonButton;
+    public  JButton     testButton;
+    public  JButton     importItemYouAreButton;
+    public  JPanel      pane1;
+    public  JTextField  HTMLTextField;
+    private JTextField  slotTextField;
     private ItemTypeGui instance = this;
 
     public ItemTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
@@ -202,13 +202,13 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
         label1.setText("Custom HTML:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.EAST;
         panel1.add(label1, gbc);
         HTMLTextField = new JTextField();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.weightx = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -217,9 +217,31 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
         label2.setText("STRING");
         gbc = new GridBagConstraints();
         gbc.gridx = 2;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.WEST;
         panel1.add(label2, gbc);
+        slotTextField = new JTextField();
+        slotTextField.setText("-1");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel1.add(slotTextField, gbc);
+        final JLabel label3 = new JLabel();
+        label3.setText("Slot");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel1.add(label3, gbc);
+        final JLabel label4 = new JLabel();
+        label4.setText("INT");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel1.add(label4, gbc);
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -229,13 +251,13 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         pane1.add(panel2, gbc);
-        final JLabel label3 = new JLabel();
-        label3.setText("Json:");
+        final JLabel label5 = new JLabel();
+        label5.setText("Json:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        panel2.add(label3, gbc);
+        panel2.add(label5, gbc);
         scrollPane = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -295,9 +317,7 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
         panel3.add(testButton, gbc);
     }
 
-    /**
-     * @noinspection ALL
-     */
+    /** @noinspection ALL */
     public JComponent $$$getRootComponent$$$()
     { return pane1; }
 }

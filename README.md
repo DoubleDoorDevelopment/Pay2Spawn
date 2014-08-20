@@ -6,6 +6,12 @@ The continuation of the [CCM project](https://github.com/CCM-Modding/Pay2Spawn).
 
 This repo is for Pay2spawn for Minecraft 1.7.10 and onwards.
 
+Working on P2S
+--------------
+
+Make sure you tell intellij to generate source code for GUI changes!<br>
+Open settings, open 'GUI Designer', configure like [this](http://www.dries007.net/screenshots/2014-08-21_00-06-24.png). 
+
 Download
 --------
 

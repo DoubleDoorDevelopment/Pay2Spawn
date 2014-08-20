@@ -53,16 +53,7 @@
               <text value="STRING"/>
             </properties>
           </component>
-          <component id="c2c6b" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Slot:"/>
-            </properties>
-          </component>
-          <component id="925c9" class="javax.swing.JTextField" binding="slotTextField">
+          <component id="25288" class="javax.swing.JTextField" binding="slotTextField">
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -71,10 +62,18 @@
             </constraints>
             <properties>
               <text value="-1"/>
-              <toolTipText value="-1 just drops the item on you"/>
             </properties>
           </component>
-          <component id="bdbc" class="javax.swing.JLabel">
+          <component id="75596" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Slot"/>
+            </properties>
+          </component>
+          <component id="9a6f4" class="javax.swing.JLabel">
             <constraints>
               <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>

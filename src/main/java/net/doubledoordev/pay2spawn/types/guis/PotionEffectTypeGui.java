@@ -53,17 +53,17 @@ import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
  */
 public class PotionEffectTypeGui extends HelperGuiBase
 {
-    public JTextField        amplifierTextField;
-    public JScrollPane       scrollPane;
-    public JTextPane         jsonPane;
-    public JButton           parseFromJsonButton;
-    public JButton           saveButton;
-    public JButton           updateJsonButton;
-    public JButton           testButton;
-    public JPanel            panel1;
-    public JTextField        durationTextField;
-    public JComboBox<String> potionEffectComboBox;
-    private JTextField HTMLTextField;
+    public  JTextField        amplifierTextField;
+    public  JScrollPane       scrollPane;
+    public  JTextPane         jsonPane;
+    public  JButton           parseFromJsonButton;
+    public  JButton           saveButton;
+    public  JButton           updateJsonButton;
+    public  JButton           testButton;
+    public  JPanel            panel1;
+    public  JTextField        durationTextField;
+    public  JComboBox<String> potionEffectComboBox;
+    private JTextField        HTMLTextField;
 
     public PotionEffectTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
     {
@@ -273,6 +273,27 @@ public class PotionEffectTypeGui extends HelperGuiBase
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel2.add(potionEffectComboBox, gbc);
+        final JLabel label9 = new JLabel();
+        label9.setText("Custom HTML:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel2.add(label9, gbc);
+        HTMLTextField = new JTextField();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel2.add(HTMLTextField, gbc);
+        final JLabel label10 = new JLabel();
+        label10.setText("STRING");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(label10, gbc);
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -282,13 +303,13 @@ public class PotionEffectTypeGui extends HelperGuiBase
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         panel1.add(panel3, gbc);
-        final JLabel label9 = new JLabel();
-        label9.setText("Json:");
+        final JLabel label11 = new JLabel();
+        label11.setText("Json:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        panel3.add(label9, gbc);
+        panel3.add(label11, gbc);
         scrollPane = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -351,9 +372,7 @@ public class PotionEffectTypeGui extends HelperGuiBase
         label7.setLabelFor(potionEffectComboBox);
     }
 
-    /**
-     * @noinspection ALL
-     */
+    /** @noinspection ALL */
     public JComponent $$$getRootComponent$$$()
     { return panel1; }
 }
