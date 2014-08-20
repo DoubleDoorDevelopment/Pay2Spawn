@@ -73,21 +73,21 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
     @Override
     public void readJson()
     {
-        jsonPane.setText(GSON.toJson(data));
-
         if (data.has(SLOT_KEY)) slotTextField.setText(readValue(SLOT_KEY, data));
 
         HTMLTextField.setText(readValue(CUSTOMHTML, data));
+
+        jsonPane.setText(GSON.toJson(data));
     }
 
     @Override
     public void updateJson()
     {
-        jsonPane.setText(GSON.toJson(data));
-
         storeValue(SLOT_KEY, data, slotTextField.getText());
 
         if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
+
+        jsonPane.setText(GSON.toJson(data));
     }
 
     @Override
