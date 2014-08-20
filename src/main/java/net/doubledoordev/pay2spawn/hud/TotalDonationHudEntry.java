@@ -55,6 +55,8 @@ public class TotalDonationHudEntry implements IHudEntry
         this.defaultPosition = defaultPosition;
         this.defaultFormat = defaultFormat;
         this.amount = amount;
+
+        updateConfig();
     }
 
     @Override

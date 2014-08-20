@@ -175,13 +175,14 @@ public class Pay2Spawn implements ID3Mod
 
         TypeRegistry.preInit();
         Statistics.preInit();
+
+        config.syncConfig();
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) throws MalformedURLException
     {
         ServerTickHandler.INSTANCE.init();
-        config.syncConfig();
 
         rewardsDB = new RewardsDB(getRewardDBFile());
 
@@ -194,6 +195,8 @@ public class Pay2Spawn implements ID3Mod
 
         ClientTickHandler.INSTANCE.init();
         ConnectionHandler.INSTANCE.init();
+
+        config.syncConfig();
     }
 
     @Mod.EventHandler
@@ -240,6 +243,8 @@ public class Pay2Spawn implements ID3Mod
                                          );
             FMLCommonHandler.instance().handleExit(1);
         }
+
+        config.syncConfig();
     }
 
     @Mod.EventHandler

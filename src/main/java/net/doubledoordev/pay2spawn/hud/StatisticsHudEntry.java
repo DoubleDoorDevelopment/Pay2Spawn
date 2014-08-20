@@ -56,6 +56,8 @@ public class StatisticsHudEntry implements IHudEntry
         this.defaultAmount = defaultAmount;
         this.defaultFormat = defaultFormat;
         this.defaultHeader = defaultHeader;
+
+        updateConfig();
     }
 
     @Override

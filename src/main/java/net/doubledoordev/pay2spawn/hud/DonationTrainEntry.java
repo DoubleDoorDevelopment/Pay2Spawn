@@ -52,7 +52,7 @@ public class DonationTrainEntry implements IHudEntry
 
     public DonationTrainEntry()
     {
-
+        updateConfig();
     }
 
     @Override

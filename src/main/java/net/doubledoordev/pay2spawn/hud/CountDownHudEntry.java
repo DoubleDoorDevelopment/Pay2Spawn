@@ -54,6 +54,8 @@ public class CountDownHudEntry implements IHudEntry
         this.defaultPosition = defaultPosition;
         this.defaultFormat = defaultFormat;
         this.defaultHeader = defaultHeader;
+
+        updateConfig();
     }
 
     @Override

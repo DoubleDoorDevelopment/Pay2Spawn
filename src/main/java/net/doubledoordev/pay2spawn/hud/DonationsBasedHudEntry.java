@@ -65,6 +65,8 @@ public class DonationsBasedHudEntry implements IHudEntry
         this.defaultHeader = defaultHeader;
 
         this.comparator = comparator;
+
+        updateConfig();
     }
 
     @Override
