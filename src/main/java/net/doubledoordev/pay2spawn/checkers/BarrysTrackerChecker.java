@@ -58,7 +58,7 @@ public class BarrysTrackerChecker extends AbstractChecker implements Runnable
 
     DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
 
-    public String URL = "http://http://localhost:8082/donations/";
+    public String URL = "http://localhost:8082/donations/";
 
     boolean          enabled  = false;
     int              interval = 5;
