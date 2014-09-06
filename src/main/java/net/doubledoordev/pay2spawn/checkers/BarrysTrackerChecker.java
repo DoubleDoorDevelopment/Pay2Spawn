@@ -92,12 +92,12 @@ public class BarrysTrackerChecker extends AbstractChecker implements Runnable
     @Override
     public void doConfig(Configuration configuration)
     {
-        configuration.addCustomCategoryComment(CAT, "This is the checker for Barrys Donation Tracker");
+        configuration.addCustomCategoryComment(CAT, "This is the checker for Barrys Donation Tracker. http://don.barrycarlyon.co.uk/");
 
         enabled = configuration.get(CAT, "enabled", enabled).getBoolean(enabled);
         interval = configuration.get(CAT, "interval", interval, "The time in between polls minimum 5 (in seconds).").getInt();
         min_donation = configuration.get(CAT, "min_donation", min_donation, "Donations below this amount will only be added to statistics and will not spawn rewards").getDouble();
-        URL = configuration.get(CAT, "url", URL, "Donation Tracker API end point string").getString();
+        URL = configuration.get(CAT, "url", URL, "Donation Tracker Ping Point. Match to the Settings in the Tracker").getString();
 
         recentDonationsBasedHudEntry = new DonationsBasedHudEntry(CAT + ".recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
         topDonationsBasedHudEntry = new DonationsBasedHudEntry(CAT + ".topDonations", -1, 1, 5, "$name: $$amount", "-- Top donations --", CheckerHandler.AMOUNT_DONATION_COMPARATOR);
