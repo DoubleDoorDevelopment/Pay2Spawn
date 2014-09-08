@@ -30,28 +30,30 @@
 
 package net.doubledoordev.pay2spawn.types.guis;
 
+import com.google.common.base.Strings;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.doubledoordev.pay2spawn.configurator.Configurator;
 import net.doubledoordev.pay2spawn.network.TestMessage;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
 import net.doubledoordev.pay2spawn.util.shapes.IShape;
 import net.doubledoordev.pay2spawn.util.shapes.Shapes;
-import com.google.common.base.Strings;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -90,8 +92,6 @@ public class StructureTypeGui extends HelperGuiBase
         super(rewardID, name, inputData, typeMap);
         instance = this;
 
-        MinecraftForge.EVENT_BUS.register(instance);
-
         setupModels();
         makeAndOpen();
     }
@@ -100,14 +100,8 @@ public class StructureTypeGui extends HelperGuiBase
     public void setupDialog()
     {
         dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        dialog.addWindowListener(new WindowAdapter()
-        {
-            @Override
-            public void windowClosed(WindowEvent e)
-            {
-                MinecraftForge.EVENT_BUS.unregister(instance);
-            }
-        });
+        new ForgeEventbusDialogThing(dialog, this);
+
         synchronized (ishapes)
         {
             ishapes.clear();
@@ -147,7 +141,7 @@ public class StructureTypeGui extends HelperGuiBase
         shapeList.updateUI();
 
         rotateBasedOnPlayerCheckBox.setSelected(readValue(ROTATE_KEY, data).equals(TRUE_BYTE));
-        baseRotation.setSelectedIndex(data.has(BASEROTATION_KEY) ? Integer.parseInt(readValue(BASEROTATION_KEY, data)) : 0);
+        baseRotation.setSelectedIndex(data.has(BASEROTATION_KEY) ? Integer.parseInt(readValue(BASEROTATION_KEY, data)) : -1);
 
         jsonPane.setText(GSON.toJson(data));
     }
@@ -171,6 +165,7 @@ public class StructureTypeGui extends HelperGuiBase
             {
                 updateJson();
                 Configurator.instance.callback(rewardID, name, data);
+
                 dialog.dispose();
             }
         });

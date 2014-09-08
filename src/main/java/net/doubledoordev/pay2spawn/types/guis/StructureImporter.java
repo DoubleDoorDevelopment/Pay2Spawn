@@ -30,20 +30,19 @@
 
 package net.doubledoordev.pay2spawn.types.guis;
 
+import com.google.gson.JsonArray;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.network.StructureImportMessage;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
 import net.doubledoordev.pay2spawn.util.shapes.PointI;
 import net.doubledoordev.pay2spawn.util.shapes.Shapes;
-import com.google.gson.JsonArray;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.init.Items;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -52,8 +51,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.HashSet;
 
 /**
@@ -180,8 +177,6 @@ public class StructureImporter
             }
         });
 
-        MinecraftForge.EVENT_BUS.register(this.instance);
-
         dialog = new JDialog();
         dialog.setContentPane(panel1);
         dialog.setModal(true);
@@ -190,15 +185,7 @@ public class StructureImporter
         dialog.setPreferredSize(new Dimension(600, 750));
         dialog.setSize(400, 750);
         dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        dialog.addWindowListener(new WindowAdapter()
-        {
-            @Override
-            public void windowClosed(WindowEvent e)
-            {
-                MinecraftForge.EVENT_BUS.unregister(instance);
-            }
-        });
-
+        new ForgeEventbusDialogThing(dialog, this);
         helpText.setText(mode.helpText);
         dialog.pack();
         dialog.setVisible(true);
