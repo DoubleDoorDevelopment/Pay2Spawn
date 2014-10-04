@@ -36,6 +36,7 @@ import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.network.StructureImportMessage;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
+import net.doubledoordev.pay2spawn.util.shapes.IShape;
 import net.doubledoordev.pay2spawn.util.shapes.PointI;
 import net.doubledoordev.pay2spawn.util.shapes.Shapes;
 import net.minecraft.client.Minecraft;
@@ -59,8 +60,8 @@ import java.util.HashSet;
 public class StructureImporter
 {
     final StructureImporter instance  = this;
-    final HashSet<PointI>   points    = new HashSet<>();
-    final HashSet<PointI>   selection = new HashSet<>();
+    final HashSet<PointI> points    = new HashSet<>();
+    final HashSet<IShape> selection = new HashSet<>();
     private final StructureTypeGui callback;
     private final JDialog          dialog;
     public        JPanel           panel1;
@@ -75,6 +76,8 @@ public class StructureImporter
     public        JCheckBox        disableAlreadyImportedShapesCheckBox;
     PointI[] tempPointsArray = points.toArray(new PointI[points.size()]);
     Mode     mode            = Mode.SINGLE;
+    PointI p1; // For BOX mode
+    PointI p2; // For BOX mode
 
     public StructureImporter(final StructureTypeGui callback)
     {
@@ -94,7 +97,7 @@ public class StructureImporter
             public String getElementAt(int index)
             {
                 tempPointsArray = points.toArray(new PointI[points.size()]);
-                return tempPointsArray[index].toString() + " " + Minecraft.getMinecraft().theWorld.getBlock(tempPointsArray[index].getX(), tempPointsArray[index].getY(), tempPointsArray[index].getZ()).getLocalizedName();
+                return tempPointsArray[index].toString();
             }
         });
         modeComboBox.addActionListener(new AbstractAction()
@@ -115,7 +118,34 @@ public class StructureImporter
                 {
                     synchronized (selection)
                     {
-                        points.addAll(selection);
+                        for (IShape shape : selection) points.addAll(shape.getPoints());
+                        if (p1 != null && p2 != null)
+                        {
+                            int minX = Math.min(p1.getX(), p2.getX());
+                            int minY = Math.min(p1.getY(), p2.getY());
+                            int minZ = Math.min(p1.getZ(), p2.getZ());
+                            int diffX = Math.max(p1.getX(), p2.getX()) - minX;
+                            int diffY = Math.max(p1.getY(), p2.getY()) - minY;
+                            int diffZ = Math.max(p1.getZ(), p2.getZ()) - minZ;
+
+                            System.out.println(String.format("X: %d %d", minX, diffX));
+                            System.out.println(String.format("Y: %d %d", minY, diffY));
+                            System.out.println(String.format("Z: %d %d", minZ, diffZ));
+
+                            for (int x = 0; x <= diffX; x++)
+                            {
+                                for (int y = 0; y <= diffY; y++)
+                                {
+                                    for (int z = 0; z <= diffZ; z++)
+                                    {
+                                        PointI p = new PointI(minX + x, minY + y, minZ + z);
+                                        points.add(p);
+                                    }
+                                }
+                            }
+                        }
+                        p1 = null;
+                        p2 = null;
                         selection.clear();
                     }
                 }
@@ -131,7 +161,7 @@ public class StructureImporter
                 {
                     synchronized (selection)
                     {
-                        points.removeAll(selection);
+                        for (IShape shape : selection) points.removeAll(shape.getPoints());
                         selection.clear();
                     }
                 }
@@ -196,7 +226,7 @@ public class StructureImporter
     @SubscribeEvent
     public void renderEvent(RenderWorldLastEvent event)
     {
-        if (selection.size() == 0 && points.size() == 0) return;
+        if (selection.size() == 0 && points.size() == 0 && p1 == null && p2 == null) return;
 
         Tessellator tess = Tessellator.instance;
         Tessellator.renderingWorldRenderer = false;
@@ -214,19 +244,32 @@ public class StructureImporter
             synchronized (points)
             {
                 GL11.glLineWidth(1f);
-                for (PointI point : points) Helper.renderPoint(point, tess, 0, 1, 0);
+                GL11.glColor3d(0, 1, 0);
+                for (PointI point : points) point.render(tess);
             }
         }
 
         synchronized (selection)
         {
             GL11.glLineWidth(2f);
-            for (PointI point : selection) Helper.renderPoint(point, tess, 1, 0, 0);
+            GL11.glColor3d(1, 0, 0);
+            for (IShape point : selection) point.render(tess);
         }
 
-        if (pointList.getSelectedIndex() != -1)
+        if (pointList.getSelectedIndex() != -1 && tempPointsArray.length < pointList.getSelectedIndex())
         {
-            Helper.renderPoint(tempPointsArray[pointList.getSelectedIndex()], tess, 0, 0, 1);
+            GL11.glColor3d(0, 0, 1);
+            tempPointsArray[pointList.getSelectedIndex()].render(tess);
+        }
+
+        if (mode == Mode.BOX && p1 != null)
+        {
+            Helper.renderPoint(p1, tess, 246.0 / 255.0, 59.0 / 255.0, 246.0 / 255.0);
+        }
+
+        if (mode == Mode.BOX && p2 != null)
+        {
+            Helper.renderPoint(p2, tess, 59.0 / 243.0, 243.0 / 255.0, 246.0 / 255.0);
         }
 
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
@@ -257,21 +300,28 @@ public class StructureImporter
                     if (click == Click.RIGHT) selection.add(new PointI(x, y, z));
                 }
                 break;
+            case BOX:
+                synchronized (selection)
+                {
+                    if (click == Click.LEFT) p1 = new PointI(x, y, z);
+                    if (click == Click.RIGHT) p2 = new PointI(x, y, z);
+                }
+                break;
         }
         updateBtns();
     }
 
     private void updateBtns()
     {
-        addFromSelectionButton.setEnabled(selection.size() != 0);
-        removeFromSelectionButton.setEnabled(selection.size() != 0);
-        clearSelectionButton.setEnabled(selection.size() != 0);
+        addFromSelectionButton.setEnabled(selection.size() != 0 || (p1 != null && p2 != null));
+        removeFromSelectionButton.setEnabled(selection.size() != 0 || (p1 != null && p2 != null));
+        clearSelectionButton.setEnabled(selection.size() != 0 || (p1 != null && p2 != null));
     }
 
     {
-        // GUI initializer generated by IntelliJ IDEA GUI Designer
-        // >>> IMPORTANT!! <<<
-        // DO NOT EDIT OR ADD ANY CODE HERE!
+// GUI initializer generated by IntelliJ IDEA GUI Designer
+// >>> IMPORTANT!! <<<
+// DO NOT EDIT OR ADD ANY CODE HERE!
         $$$setupUI$$$();
     }
 
@@ -404,7 +454,9 @@ public class StructureImporter
 
     enum Mode
     {
-        SINGLE("Single block mode", "Right click => add block, Left click => remove block");
+        SINGLE("Single block mode", "Right click => add block, Left click => remove block"),
+        BOX("Box mode", "Right click => Point 1, Left click => Point 2");
+
         public final String name;
         public final String helpText;
 
