@@ -30,10 +30,12 @@
 
 package net.doubledoordev.pay2spawn.util;
 
+import com.google.common.base.Charsets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import io.netty.buffer.ByteBuf;
 import net.doubledoordev.pay2spawn.util.shapes.PointI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
@@ -390,6 +392,19 @@ public class Helper
         }
 
         return null;
+    }
+
+    public static void writeLongStringToByteBuf(ByteBuf buf, String s)
+    {
+        byte[] bytes = s.getBytes(Charsets.UTF_8);
+        buf.writeInt(bytes.length);
+        buf.writeBytes(bytes);
+    }
+
+    public static String readLongStringToByteBuf(ByteBuf buf)
+    {
+        int length = buf.readInt();
+        return buf.toString(buf.readerIndex(), length, Charsets.UTF_8);
     }
 
     public static final class TableData

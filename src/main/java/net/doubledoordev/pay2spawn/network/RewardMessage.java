@@ -81,14 +81,14 @@ public class RewardMessage implements IMessage
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        rewards = JSON_PARSER.parse(ByteBufUtils.readUTF8String(buf)).getAsJsonArray();
+        rewards = JSON_PARSER.parse(Helper.readLongStringToByteBuf(buf)).getAsJsonArray();
         rewardData = ByteBufUtils.readTag(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-        ByteBufUtils.writeUTF8String(buf, formattedData);
+        Helper.writeLongStringToByteBuf(buf, formattedData);
         ByteBufUtils.writeTag(buf, rewardData);
     }
 

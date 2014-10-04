@@ -78,7 +78,7 @@ public class MessageMessage implements IMessage
         amount = buf.readDouble();
         countdown = buf.readInt();
 
-        donation = GSON.fromJson(ByteBufUtils.readUTF8String(buf), Donation.class);
+        donation = GSON.fromJson(Helper.readLongStringToByteBuf(buf), Donation.class);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class MessageMessage implements IMessage
         buf.writeDouble(reward.getAmount());
         buf.writeInt(reward.getCountdown());
 
-        ByteBufUtils.writeUTF8String(buf, GSON_NOPP.toJson(donation));
+        Helper.writeLongStringToByteBuf(buf, GSON_NOPP.toJson(donation));
     }
 
     public static class Handler implements IMessageHandler<MessageMessage, IMessage>

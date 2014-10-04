@@ -82,14 +82,14 @@ public class TestMessage implements IMessage
     public void fromBytes(ByteBuf buf)
     {
         name = ByteBufUtils.readUTF8String(buf);
-        data = JSON_PARSER.parse(ByteBufUtils.readUTF8String(buf)).getAsJsonObject();
+        data = JSON_PARSER.parse(Helper.readLongStringToByteBuf(buf)).getAsJsonObject();
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
         ByteBufUtils.writeUTF8String(buf, name);
-        ByteBufUtils.writeUTF8String(buf, data.toString());
+        Helper.writeLongStringToByteBuf(buf, data.toString());
     }
 
     public static class Handler implements IMessageHandler<TestMessage, IMessage>

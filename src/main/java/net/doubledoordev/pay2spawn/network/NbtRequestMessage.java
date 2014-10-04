@@ -167,7 +167,7 @@ public class NbtRequestMessage implements IMessage
         }
         else
         {
-            response = ByteBufUtils.readUTF8String(buf);
+            response = Helper.readLongStringToByteBuf(buf);
         }
     }
 
@@ -189,7 +189,7 @@ public class NbtRequestMessage implements IMessage
         }
         else
         {
-            ByteBufUtils.writeUTF8String(buf, response);
+            Helper.writeLongStringToByteBuf(buf, response);
         }
     }
 
