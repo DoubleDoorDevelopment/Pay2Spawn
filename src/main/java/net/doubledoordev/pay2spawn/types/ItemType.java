@@ -30,12 +30,12 @@
 
 package net.doubledoordev.pay2spawn.types;
 
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.permissions.Node;
 import net.doubledoordev.pay2spawn.types.guis.ItemTypeGui;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
-import com.google.gson.JsonObject;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.item.EntityItem;
@@ -112,6 +112,42 @@ public class ItemType extends TypeBase
     }
 
     @Override
+    public void printHelpList(File configFolder)
+    {
+        File file = new File(configFolder, "Enchantment.txt");
+        try
+        {
+            if (file.exists()) file.delete();
+            file.createNewFile();
+            PrintWriter pw = new PrintWriter(file);
+
+            pw.println("Enchantment list file");
+
+            ArrayList<String> ids = new ArrayList<>();
+            ArrayList<String> names = new ArrayList<>();
+            ArrayList<String> minlvl = new ArrayList<>();
+            ArrayList<String> maxlvl = new ArrayList<>();
+            for (Enchantment enchantment : Enchantment.enchantmentsList)
+            {
+                if (enchantment != null)
+                {
+                    ids.add(enchantment.effectId + "");
+                    names.add(enchantment.getTranslatedName(enchantment.getMinLevel()));
+                    minlvl.add(enchantment.getMinLevel() + "");
+                    maxlvl.add(enchantment.getMaxLevel() + "");
+                }
+            }
+            pw.print(Helper.makeTable(new Helper.TableData("ID", ids), new Helper.TableData("name", names), new Helper.TableData("minLvl", minlvl), new Helper.TableData("maxLvl", maxlvl)));
+
+            pw.close();
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void openNewGui(int rewardID, JsonObject data)
     {
         new ItemTypeGui(rewardID, getName(), data, typeMap);
@@ -150,41 +186,5 @@ public class ItemType extends TypeBase
                 return is.getItem().getItemStackDisplayName(is);
         }
         return id;
-    }
-
-    @Override
-    public void printHelpList(File configFolder)
-    {
-        File file = new File(configFolder, "Enchantment.txt");
-        try
-        {
-            if (file.exists()) file.delete();
-            file.createNewFile();
-            PrintWriter pw = new PrintWriter(file);
-
-            pw.println("Enchantment list file");
-
-            ArrayList<String> ids = new ArrayList<>();
-            ArrayList<String> names = new ArrayList<>();
-            ArrayList<String> minlvl = new ArrayList<>();
-            ArrayList<String> maxlvl = new ArrayList<>();
-            for (Enchantment enchantment : Enchantment.enchantmentsList)
-            {
-                if (enchantment != null)
-                {
-                    ids.add(enchantment.effectId + "");
-                    names.add(enchantment.getTranslatedName(enchantment.getMinLevel()));
-                    minlvl.add(enchantment.getMinLevel() + "");
-                    maxlvl.add(enchantment.getMaxLevel() + "");
-                }
-            }
-            pw.print(Helper.makeTable(new Helper.TableData("ID", ids), new Helper.TableData("name", names), new Helper.TableData("minLvl", minlvl), new Helper.TableData("maxLvl", maxlvl)));
-
-            pw.close();
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
     }
 }

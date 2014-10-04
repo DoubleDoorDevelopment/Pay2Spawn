@@ -56,7 +56,6 @@ public class Base64
      * @param lineSep Optional "\r\n" after 76 characters, unless end of file.<br>
      *                No line separator will be in breach of RFC 2045 which specifies max 76 per line but will be a
      *                little faster.
-     *
      * @return A BASE64 encoded array. Never <code>null</code>.
      */
     public final static char[] encodeToChar(byte[] sArr, boolean lineSep)
@@ -112,7 +111,6 @@ public class Base64
      * and without line separators.
      *
      * @param sArr The source array. <code>null</code> or length 0 will return an empty array.
-     *
      * @return The decoded array of bytes. May be of length 0. Will be <code>null</code> if the legal characters
      * (including '=') isn't divideable by 4.  (I.e. definitely corrupted).
      */
@@ -169,7 +167,6 @@ public class Base64
      * + The array CAN have illegal characters at the beginning and end, those will be dealt with appropriately.<br>
      *
      * @param sArr The source array. Length 0 will return an empty array. <code>null</code> will throw an exception.
-     *
      * @return The decoded array of bytes. May be of length 0.
      */
     public final static byte[] decodeFast(char[] sArr)
@@ -239,7 +236,6 @@ public class Base64
      * @param lineSep Optional "\r\n" after 76 characters, unless end of file.<br>
      *                No line separator will be in breach of RFC 2045 which specifies max 76 per line but will be a
      *                little faster.
-     *
      * @return A BASE64 encoded array. Never <code>null</code>.
      */
     public final static byte[] encodeToByte(byte[] sArr, boolean lineSep)
@@ -295,7 +291,6 @@ public class Base64
      * and without line separators.
      *
      * @param sArr The source array. Length 0 will return an empty array. <code>null</code> will throw an exception.
-     *
      * @return The decoded array of bytes. May be of length 0. Will be <code>null</code> if the legal characters
      * (including '=') isn't divideable by 4. (I.e. definitely corrupted).
      */
@@ -354,7 +349,6 @@ public class Base64
      * + The array CAN have illegal characters at the beginning and end, those will be dealt with appropriately.<br>
      *
      * @param sArr The source array. Length 0 will return an empty array. <code>null</code> will throw an exception.
-     *
      * @return The decoded array of bytes. May be of length 0.
      */
     public final static byte[] decodeFast(byte[] sArr)
@@ -424,7 +418,6 @@ public class Base64
      * @param lineSep Optional "\r\n" after 76 characters, unless end of file.<br>
      *                No line separator will be in breach of RFC 2045 which specifies max 76 per line but will be a
      *                little faster.
-     *
      * @return A BASE64 encoded array. Never <code>null</code>.
      */
     public final static String encodeToString(byte[] sArr, boolean lineSep)
@@ -440,7 +433,6 @@ public class Base64
      * will create a temporary array though. This version will use <code>str.charAt(i)</code> to iterate the string.
      *
      * @param str The source string. <code>null</code> or length 0 will return an empty array.
-     *
      * @return The decoded array of bytes. May be of length 0. Will be <code>null</code> if the legal characters
      * (including '=') isn't divideable by 4.  (I.e. definitely corrupted).
      */
@@ -498,7 +490,6 @@ public class Base64
      * + The array CAN have illegal characters at the beginning and end, those will be dealt with appropriately.<br>
      *
      * @param s The source string. Length 0 will return an empty array. <code>null</code> will throw an exception.
-     *
      * @return The decoded array of bytes. May be of length 0.
      */
     public final static byte[] decodeFast(String s)

@@ -52,16 +52,13 @@ import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
  */
 public class BarrysTrackerChecker extends AbstractChecker implements Runnable
 {
-    public static final BarrysTrackerChecker   INSTANCE     = new BarrysTrackerChecker();
-    public final static String                 NAME         = "barrys-tracker";
-    public final static String                 CAT          = BASECAT_TRACKERS + '.' + NAME;
-
-    DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
-
+    public static final BarrysTrackerChecker INSTANCE = new BarrysTrackerChecker();
+    public final static String               NAME     = "barrys-tracker";
+    public final static String               CAT      = BASECAT_TRACKERS + '.' + NAME;
     public String URL = "http://localhost:8082/donations/";
-
-    boolean          enabled  = false;
-    int              interval = 5;
+    DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
+    boolean enabled  = false;
+    int     interval = 5;
 
     private BarrysTrackerChecker()
     {
@@ -115,7 +112,7 @@ public class BarrysTrackerChecker extends AbstractChecker implements Runnable
     @Override
     public DonationsBasedHudEntry[] getDonationsBasedHudEntries()
     {
-        return new DonationsBasedHudEntry[] {topDonationsBasedHudEntry, recentDonationsBasedHudEntry};
+        return new DonationsBasedHudEntry[]{topDonationsBasedHudEntry, recentDonationsBasedHudEntry};
     }
 
     @Override
@@ -135,7 +132,7 @@ public class BarrysTrackerChecker extends AbstractChecker implements Runnable
         }
     }
 
-    /***
+    /**
      * Connects to the API and attempt to process any donations
      *
      * @param firstRun <code>boolean</code> used to identify previous donations that should not be processed.
@@ -187,7 +184,7 @@ public class BarrysTrackerChecker extends AbstractChecker implements Runnable
             // We have all the data we need to return the Donation object
             return new Donation(id, amount, timestamp, username, note);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             // We threw an error so just log it and move on
             e.printStackTrace();

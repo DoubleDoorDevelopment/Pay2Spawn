@@ -30,6 +30,7 @@
 
 package net.doubledoordev.pay2spawn.types;
 
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.permissions.BanHelper;
 import net.doubledoordev.pay2spawn.permissions.Node;
@@ -39,7 +40,6 @@ import net.doubledoordev.pay2spawn.util.Constants;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.PointD;
 import net.doubledoordev.pay2spawn.util.Vector3;
-import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -68,44 +68,6 @@ public class CustomEntityType extends TypeBase
     public String getName()
     {
         return NAME;
-    }
-
-    @Override
-    public void openNewGui(int rewardID, JsonObject data)
-    {
-        new CustomEntityTypeGui(rewardID, getName(), data, EntityType.typeMap);
-    }
-
-    @Override
-    public Collection<Node> getPermissionNodes()
-    {
-        HashSet<Node> nodes = new HashSet<>();
-        for (String s : NAMES) nodes.add(new Node(NODENAME, s));
-        return nodes;
-    }
-
-    @Override
-    public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
-    {
-        return new Node(NODENAME, EntityList.getEntityString(EntityList.createEntityFromNBT(dataFromClient, player.getEntityWorld())));
-    }
-
-    @Override
-    public String replaceInTemplate(String id, JsonObject jsonObject)
-    {
-        switch (id)
-        {
-            case "entity":
-                StringBuilder sb = new StringBuilder();
-                sb.append(jsonObject.get("id").getAsString().replace("STRING:", ""));
-                while (jsonObject.has(RIDING_KEY))
-                {
-                    jsonObject = jsonObject.getAsJsonObject(RIDING_KEY);
-                    sb.append(" riding a ").append(jsonObject.get("id").getAsString().replace("STRING:", ""));
-                }
-                return sb.toString();
-        }
-        return id;
     }
 
     @Override
@@ -187,5 +149,43 @@ public class CustomEntityType extends TypeBase
                 }
             }
         }
+    }
+
+    @Override
+    public void openNewGui(int rewardID, JsonObject data)
+    {
+        new CustomEntityTypeGui(rewardID, getName(), data, EntityType.typeMap);
+    }
+
+    @Override
+    public Collection<Node> getPermissionNodes()
+    {
+        HashSet<Node> nodes = new HashSet<>();
+        for (String s : NAMES) nodes.add(new Node(NODENAME, s));
+        return nodes;
+    }
+
+    @Override
+    public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
+    {
+        return new Node(NODENAME, EntityList.getEntityString(EntityList.createEntityFromNBT(dataFromClient, player.getEntityWorld())));
+    }
+
+    @Override
+    public String replaceInTemplate(String id, JsonObject jsonObject)
+    {
+        switch (id)
+        {
+            case "entity":
+                StringBuilder sb = new StringBuilder();
+                sb.append(jsonObject.get("id").getAsString().replace("STRING:", ""));
+                while (jsonObject.has(RIDING_KEY))
+                {
+                    jsonObject = jsonObject.getAsJsonObject(RIDING_KEY);
+                    sb.append(" riding a ").append(jsonObject.get("id").getAsString().replace("STRING:", ""));
+                }
+                return sb.toString();
+        }
+        return id;
     }
 }

@@ -45,9 +45,9 @@ public class DonationTrainEntry implements IHudEntry
     public final ArrayList<String> strings = new ArrayList<>();
     int position;
     String format = "";
+    int time = -1, amount = 0;
     private String timeoutMessage = "";
     private int timeout;
-    int time = -1, amount = 0;
     private String line = "";
 
     public DonationTrainEntry()
@@ -98,13 +98,13 @@ public class DonationTrainEntry implements IHudEntry
 
     public void resetTimeout()
     {
-        amount ++;
+        amount++;
         time = timeout;
     }
 
     public void tick()
     {
-        if (time > 0) time --;
+        if (time > 0) time--;
         else return;
 
         if (time == 0)

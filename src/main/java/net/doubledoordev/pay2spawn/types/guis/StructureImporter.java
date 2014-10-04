@@ -63,16 +63,16 @@ public class StructureImporter
     final HashSet<PointI>   selection = new HashSet<>();
     private final StructureTypeGui callback;
     private final JDialog          dialog;
-    public JPanel          panel1;
-    public JList<String>   pointList;
-    public JLabel          helpText;
-    public JComboBox<Mode> modeComboBox;
-    public JButton         addFromSelectionButton;
-    public JButton         removeFromSelectionButton;
-    public JCheckBox       renderSelectionOnlyCheckBox;
-    public JButton         clearSelectionButton;
-    public JButton         importButton;
-    public JCheckBox       disableAlreadyImportedShapesCheckBox;
+    public        JPanel           panel1;
+    public        JList<String>    pointList;
+    public        JLabel           helpText;
+    public        JComboBox<Mode>  modeComboBox;
+    public        JButton          addFromSelectionButton;
+    public        JButton          removeFromSelectionButton;
+    public        JCheckBox        renderSelectionOnlyCheckBox;
+    public        JButton          clearSelectionButton;
+    public        JButton          importButton;
+    public        JCheckBox        disableAlreadyImportedShapesCheckBox;
     PointI[] tempPointsArray = points.toArray(new PointI[points.size()]);
     Mode     mode            = Mode.SINGLE;
 
@@ -394,9 +394,13 @@ public class StructureImporter
         panel1.add(importButton, gbc);
     }
 
-    /** @noinspection ALL */
+    /**
+     * @noinspection ALL
+     */
     public JComponent $$$getRootComponent$$$()
-    { return panel1; }
+    {
+        return panel1;
+    }
 
     enum Mode
     {

@@ -30,15 +30,15 @@
 
 package net.doubledoordev.pay2spawn.checkers;
 
+import com.google.common.base.Strings;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.hud.DonationsBasedHudEntry;
 import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.util.Base64;
 import net.doubledoordev.pay2spawn.util.Donation;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
-import com.google.common.base.Strings;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import net.minecraftforge.common.config.Configuration;
 
 import javax.crypto.Mac;
@@ -132,7 +132,7 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
     @Override
     public DonationsBasedHudEntry[] getDonationsBasedHudEntries()
     {
-        return new DonationsBasedHudEntry[] {recentDonationsBasedHudEntry};
+        return new DonationsBasedHudEntry[]{recentDonationsBasedHudEntry};
     }
 
     @Override

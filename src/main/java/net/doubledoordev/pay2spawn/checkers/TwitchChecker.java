@@ -30,12 +30,12 @@
 
 package net.doubledoordev.pay2spawn.checkers;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.hud.DonationsBasedHudEntry;
 import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.util.Donation;
 import net.doubledoordev.pay2spawn.util.Helper;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import net.minecraftforge.common.config.Configuration;
 
 import java.net.MalformedURLException;
@@ -121,7 +121,7 @@ public class TwitchChecker extends AbstractChecker implements Runnable
     @Override
     public DonationsBasedHudEntry[] getDonationsBasedHudEntries()
     {
-        return new DonationsBasedHudEntry[] {recentDonationsBasedHudEntry};
+        return new DonationsBasedHudEntry[]{recentDonationsBasedHudEntry};
     }
 
     @Override

@@ -30,14 +30,14 @@
 
 package net.doubledoordev.pay2spawn.checkers;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.hud.DonationsBasedHudEntry;
 import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.util.Donation;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.IOException;
@@ -112,7 +112,7 @@ public class StreamtipChecker extends AbstractChecker implements Runnable
     @Override
     public DonationsBasedHudEntry[] getDonationsBasedHudEntries()
     {
-        return new DonationsBasedHudEntry[] {topDonationsBasedHudEntry, recentDonationsBasedHudEntry};
+        return new DonationsBasedHudEntry[]{topDonationsBasedHudEntry, recentDonationsBasedHudEntry};
     }
 
     @Override

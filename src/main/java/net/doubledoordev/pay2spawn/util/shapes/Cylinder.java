@@ -30,11 +30,9 @@
 
 package net.doubledoordev.pay2spawn.util.shapes;
 
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.types.guis.StructureTypeGui;
 import net.doubledoordev.pay2spawn.types.guis.shapes.CylinderGui;
-import net.doubledoordev.pay2spawn.util.Helper;
-import com.google.gson.JsonObject;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
@@ -115,7 +113,7 @@ public class Cylinder extends AbstractShape
     {
         HashSet<PointI> points = new HashSet<>();
 
-        int d = (5 - radius * 4)/4;
+        int d = (5 - radius * 4) / 4;
         int x = 0;
         int z = radius;
 
@@ -171,22 +169,5 @@ public class Cylinder extends AbstractShape
     public void openGui(int i, JsonObject jsonObject, StructureTypeGui instance)
     {
         new CylinderGui(i, jsonObject, instance, typeMap);
-    }
-
-    private Collection<PointI> temppoints;
-    @Override
-    public void render(Tessellator tess)
-    {
-        if (temppoints == null) temppoints = getPoints();
-        for (PointI pointI : temppoints)
-        {
-            Helper.renderPoint(pointI, tess);
-        }
-    }
-
-    @Override
-    public IShape cloneShape()
-    {
-        return new Cylinder(center, radius, height);
     }
 }

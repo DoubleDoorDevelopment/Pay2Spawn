@@ -30,8 +30,8 @@
 
 package net.doubledoordev.pay2spawn.util.shapes;
 
-import net.doubledoordev.pay2spawn.types.guis.StructureTypeGui;
 import com.google.gson.JsonObject;
+import net.doubledoordev.pay2spawn.types.guis.StructureTypeGui;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -68,8 +68,6 @@ public interface IShape
     void openGui(int i, JsonObject jsonObject, StructureTypeGui instance);
 
     void render(Tessellator tess);
-
-    IShape cloneShape();
 
     IShape rotate(int baseRotation);
 }

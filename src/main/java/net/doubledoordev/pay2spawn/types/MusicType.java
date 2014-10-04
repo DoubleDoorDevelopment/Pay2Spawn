@@ -30,12 +30,12 @@
 
 package net.doubledoordev.pay2spawn.types;
 
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.network.MusicMessage;
 import net.doubledoordev.pay2spawn.permissions.Node;
 import net.doubledoordev.pay2spawn.types.guis.MusicTypeGui;
 import net.doubledoordev.pay2spawn.util.Constants;
-import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -90,35 +90,6 @@ public class MusicType extends TypeBase
     }
 
     @Override
-    public void openNewGui(int rewardID, JsonObject data)
-    {
-        new MusicTypeGui(rewardID, NAME, data, typeMap);
-    }
-
-    @Override
-    public Collection<Node> getPermissionNodes()
-    {
-        return new HashSet<>();
-    }
-
-    @Override
-    public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
-    {
-        return new Node(NAME, dataFromClient.getString(SOUND_KEY).split(" ")[0]);
-    }
-
-    @Override
-    public String replaceInTemplate(String id, JsonObject jsonObject)
-    {
-        switch (id)
-        {
-            case "song":
-                return jsonObject.get(SOUND_KEY).getAsString().replace(typeMap.get(SOUND_KEY) + ":", "");
-        }
-        return id;
-    }
-
-    @Override
     public void printHelpList(File configFolder)
     {
         musicFolder = new File(configFolder, "music");
@@ -157,5 +128,34 @@ public class MusicType extends TypeBase
                 }
             }, "Pay2Spawn music download and unzip").start();
         }
+    }
+
+    @Override
+    public void openNewGui(int rewardID, JsonObject data)
+    {
+        new MusicTypeGui(rewardID, NAME, data, typeMap);
+    }
+
+    @Override
+    public Collection<Node> getPermissionNodes()
+    {
+        return new HashSet<>();
+    }
+
+    @Override
+    public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
+    {
+        return new Node(NAME, dataFromClient.getString(SOUND_KEY).split(" ")[0]);
+    }
+
+    @Override
+    public String replaceInTemplate(String id, JsonObject jsonObject)
+    {
+        switch (id)
+        {
+            case "song":
+                return jsonObject.get(SOUND_KEY).getAsString().replace(typeMap.get(SOUND_KEY) + ":", "");
+        }
+        return id;
     }
 }

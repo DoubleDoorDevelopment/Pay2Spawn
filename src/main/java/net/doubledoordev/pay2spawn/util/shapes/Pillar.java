@@ -30,11 +30,9 @@
 
 package net.doubledoordev.pay2spawn.util.shapes;
 
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.types.guis.StructureTypeGui;
 import net.doubledoordev.pay2spawn.types.guis.shapes.PillarGui;
-import net.doubledoordev.pay2spawn.util.Helper;
-import com.google.gson.JsonObject;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
@@ -108,22 +106,5 @@ public class Pillar extends AbstractShape
     public void openGui(int i, JsonObject jsonObject, StructureTypeGui instance)
     {
         new PillarGui(i, jsonObject, instance, typeMap);
-    }
-
-    private Collection<PointI> temppoints;
-    @Override
-    public void render(Tessellator tess)
-    {
-        if (temppoints == null) temppoints = getPoints();
-        for (PointI pointI : temppoints)
-        {
-            Helper.renderPoint(pointI, tess);
-        }
-    }
-
-    @Override
-    public IShape cloneShape()
-    {
-        return new Pillar(center, height);
     }
 }

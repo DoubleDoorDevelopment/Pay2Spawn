@@ -106,14 +106,6 @@ public class EntityType extends TypeBase
     }
 
     @Override
-    public void doConfig(Configuration configuration)
-    {
-        configuration.addCustomCategoryComment(TYPES_CAT, "Reward config options");
-        configuration.addCustomCategoryComment(TYPES_CAT + '.' + NAME, "Used for Entity and CustomEntity");
-        spawnLimit = configuration.get(TYPES_CAT + '.' + NAME, "spawnLimit", spawnLimit, "A hard entity spawn limit. Only counts 1 reward's mobs. -1 for no limit.").getInt(spawnLimit);
-    }
-
-    @Override
     public NBTTagCompound getExample()
     {
         NBTTagCompound tag = new NBTTagCompound();
@@ -133,44 +125,6 @@ public class EntityType extends TypeBase
         tag.setInteger(AMOUNT_KEY, 2);
 
         return tag;
-    }
-
-    @Override
-    public void openNewGui(int rewardID, JsonObject data)
-    {
-        new EntityTypeGui(rewardID, getName(), data, typeMap);
-    }
-
-    @Override
-    public Collection<Node> getPermissionNodes()
-    {
-        HashSet<Node> nodes = new HashSet<>();
-        for (String s : EntityType.NAMES) nodes.add(new Node(NODENAME, s));
-        return nodes;
-    }
-
-    @Override
-    public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
-    {
-        return new Node(NODENAME, dataFromClient.getString(ENTITYNAME_KEY));
-    }
-
-    @Override
-    public String replaceInTemplate(String id, JsonObject jsonObject)
-    {
-        switch (id)
-        {
-            case "entity":
-                StringBuilder sb = new StringBuilder();
-                sb.append(jsonObject.get(ENTITYNAME_KEY).getAsString().replace("STRING:", ""));
-                while (jsonObject.has(RIDING_KEY))
-                {
-                    jsonObject = jsonObject.getAsJsonObject(RIDING_KEY);
-                    sb.append(" riding a ").append(jsonObject.get(ENTITYNAME_KEY).getAsString().replace("STRING:", ""));
-                }
-                return sb.toString();
-        }
-        return id;
     }
 
     @Override
@@ -249,6 +203,14 @@ public class EntityType extends TypeBase
     }
 
     @Override
+    public void doConfig(Configuration configuration)
+    {
+        configuration.addCustomCategoryComment(TYPES_CAT, "Reward config options");
+        configuration.addCustomCategoryComment(TYPES_CAT + '.' + NAME, "Used for Entity and CustomEntity");
+        spawnLimit = configuration.get(TYPES_CAT + '.' + NAME, "spawnLimit", spawnLimit, "A hard entity spawn limit. Only counts 1 reward's mobs. -1 for no limit.").getInt(spawnLimit);
+    }
+
+    @Override
     public void printHelpList(File configFolder)
     {
         File file = new File(configFolder, "EntityList.txt");
@@ -286,5 +248,43 @@ public class EntityType extends TypeBase
         {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void openNewGui(int rewardID, JsonObject data)
+    {
+        new EntityTypeGui(rewardID, getName(), data, typeMap);
+    }
+
+    @Override
+    public Collection<Node> getPermissionNodes()
+    {
+        HashSet<Node> nodes = new HashSet<>();
+        for (String s : EntityType.NAMES) nodes.add(new Node(NODENAME, s));
+        return nodes;
+    }
+
+    @Override
+    public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
+    {
+        return new Node(NODENAME, dataFromClient.getString(ENTITYNAME_KEY));
+    }
+
+    @Override
+    public String replaceInTemplate(String id, JsonObject jsonObject)
+    {
+        switch (id)
+        {
+            case "entity":
+                StringBuilder sb = new StringBuilder();
+                sb.append(jsonObject.get(ENTITYNAME_KEY).getAsString().replace("STRING:", ""));
+                while (jsonObject.has(RIDING_KEY))
+                {
+                    jsonObject = jsonObject.getAsJsonObject(RIDING_KEY);
+                    sb.append(" riding a ").append(jsonObject.get(ENTITYNAME_KEY).getAsString().replace("STRING:", ""));
+                }
+                return sb.toString();
+        }
+        return id;
     }
 }

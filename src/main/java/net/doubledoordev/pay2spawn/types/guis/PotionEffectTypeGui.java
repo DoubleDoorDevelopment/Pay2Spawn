@@ -30,10 +30,10 @@
 
 package net.doubledoordev.pay2spawn.types.guis;
 
-import net.doubledoordev.pay2spawn.configurator.Configurator;
-import net.doubledoordev.pay2spawn.network.TestMessage;
 import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
+import net.doubledoordev.pay2spawn.configurator.Configurator;
+import net.doubledoordev.pay2spawn.network.TestMessage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,9 +44,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import static net.doubledoordev.pay2spawn.types.PotionEffectType.*;
-import static net.doubledoordev.pay2spawn.util.Constants.CUSTOMHTML;
-import static net.doubledoordev.pay2spawn.util.Constants.GSON;
-import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
+import static net.doubledoordev.pay2spawn.util.Constants.*;
 
 /**
  * @author Dries007
@@ -372,7 +370,11 @@ public class PotionEffectTypeGui extends HelperGuiBase
         label7.setLabelFor(potionEffectComboBox);
     }
 
-    /** @noinspection ALL */
+    /**
+     * @noinspection ALL
+     */
     public JComponent $$$getRootComponent$$$()
-    { return panel1; }
+    {
+        return panel1;
+    }
 }

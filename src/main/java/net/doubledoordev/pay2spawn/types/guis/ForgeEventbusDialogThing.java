@@ -42,7 +42,7 @@ import java.awt.event.WindowEvent;
 public class ForgeEventbusDialogThing extends WindowAdapter
 {
     final JDialog dialog;
-    final Object object;
+    final Object  object;
 
     public ForgeEventbusDialogThing(final JDialog dialog, final Object object)
     {
@@ -57,6 +57,13 @@ public class ForgeEventbusDialogThing extends WindowAdapter
     @Override
     public void windowClosed(WindowEvent e)
     {
-        MinecraftForge.EVENT_BUS.unregister(object);
+        try
+        {
+            MinecraftForge.EVENT_BUS.unregister(object);
+        }
+        catch (NullPointerException ignored)
+        {
+
+        }
     }
 }

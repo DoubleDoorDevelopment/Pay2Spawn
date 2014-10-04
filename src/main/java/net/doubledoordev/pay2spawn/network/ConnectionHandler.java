@@ -30,12 +30,12 @@
 
 package net.doubledoordev.pay2spawn.network;
 
-import net.doubledoordev.pay2spawn.Pay2Spawn;
-import net.doubledoordev.pay2spawn.util.Helper;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
+import net.doubledoordev.pay2spawn.Pay2Spawn;
+import net.doubledoordev.pay2spawn.util.Helper;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.server.MinecraftServer;
@@ -83,7 +83,8 @@ public class ConnectionHandler
                 @Override
                 public void run()
                 {
-                    if (!StatusMessage.doesPlayerHaveValidConfig(username)) MinecraftServer.getServer().getConfigurationManager().func_152612_a(username).playerNetServerHandler.kickPlayerFromServer("Pay2Spawn is required on this server.\nIt needs to be configured properly.");
+                    if (!StatusMessage.doesPlayerHaveValidConfig(username))
+                        MinecraftServer.getServer().getConfigurationManager().func_152612_a(username).playerNetServerHandler.kickPlayerFromServer("Pay2Spawn is required on this server.\nIt needs to be configured properly.");
                 }
             }, 5 * 1000);
         }

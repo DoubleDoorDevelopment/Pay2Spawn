@@ -30,12 +30,12 @@
 
 package net.doubledoordev.pay2spawn.types.guis.shapes;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.types.guis.HelperGuiBase;
 import net.doubledoordev.pay2spawn.types.guis.StructureTypeGui;
 import net.doubledoordev.pay2spawn.util.shapes.IShape;
 import net.doubledoordev.pay2spawn.util.shapes.Shapes;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import javax.swing.*;
 import java.awt.*;

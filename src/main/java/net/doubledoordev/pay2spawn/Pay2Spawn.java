@@ -104,9 +104,15 @@ public class Pay2Spawn implements ID3Mod
         return instance.rewardsDB;
     }
 
-    public static Logger getLogger() { return instance.logger; }
+    public static Logger getLogger()
+    {
+        return instance.logger;
+    }
 
-    public static P2SConfig getConfig() { return instance.config; }
+    public static P2SConfig getConfig()
+    {
+        return instance.config;
+    }
 
     public static File getFolder()
     {
@@ -118,7 +124,10 @@ public class Pay2Spawn implements ID3Mod
         return instance.snw;
     }
 
-    public static File getRewardDBFile() { return new File(instance.configFolder, NAME + ".json"); }
+    public static File getRewardDBFile()
+    {
+        return new File(instance.configFolder, NAME + ".json");
+    }
 
     public static void reloadDB()
     {
@@ -220,7 +229,7 @@ public class Pay2Spawn implements ID3Mod
             JOptionPane.showMessageDialog(null, "Please configure Pay2Spawn properly BEFORE you try launching this instance again.\n" +
                             "You should provide AT LEAST your channel in the config. Pay2Spawn will crash otherwise.\n\n" +
                             "If you need help with the configuring of your rewards, contact us!", "Please configure Pay2Spawn!", JOptionPane.WARNING_MESSAGE
-                                         );
+            );
             FMLCommonHandler.instance().handleExit(1);
         }
 
@@ -229,7 +238,7 @@ public class Pay2Spawn implements ID3Mod
             JOptionPane.showMessageDialog(null, "Please reconfigure Pay2Spawn properly BEFORE you try launching this instance again.\n" +
                             "There have been major config changes.\n" +
                             "We made a backup for you, you should start fresh to avoid clutter.", "Please reconfigure Pay2Spawn!", JOptionPane.WARNING_MESSAGE
-                                         );
+            );
             FMLCommonHandler.instance().handleExit(1);
         }
 
@@ -240,7 +249,7 @@ public class Pay2Spawn implements ID3Mod
             JOptionPane.showMessageDialog(null, "You must provide your channel in the config for statistics.\n" +
                             "If you don't agree with this, opt out of the statistics program all together trough the 'PluginMetrics' config file.\n\n" +
                             "Important note: Don't send the PluginMetrics config to other users, that will screw up analytics.", "Please configure Pay2Spawn!", JOptionPane.WARNING_MESSAGE
-                                         );
+            );
             FMLCommonHandler.instance().handleExit(1);
         }
 

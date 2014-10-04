@@ -30,10 +30,10 @@
 
 package net.doubledoordev.pay2spawn.types;
 
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.permissions.Node;
 import net.doubledoordev.pay2spawn.random.RandomRegistry;
 import net.doubledoordev.pay2spawn.types.guis.LightningTypeGui;
-import com.google.gson.JsonObject;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;

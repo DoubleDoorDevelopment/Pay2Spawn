@@ -152,5 +152,7 @@ public class NBTGrabber implements IIHasCallback
      * @noinspection ALL
      */
     public JComponent $$$getRootComponent$$$()
-    { return panel1; }
+    {
+        return panel1;
+    }
 }

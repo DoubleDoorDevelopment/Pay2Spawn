@@ -30,11 +30,11 @@
 
 package net.doubledoordev.pay2spawn.util;
 
+import com.google.common.base.Strings;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.hud.StatisticsHudEntry;
 import net.doubledoordev.pay2spawn.hud.TotalDonationHudEntry;
-import com.google.common.base.Strings;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -66,7 +66,9 @@ public class Statistics
     private static StatisticsHudEntry    spawnsStatisticsHudEntry;
     private static TotalDonationHudEntry totalDonationHudEntry;
 
-    private Statistics() {}
+    private Statistics()
+    {
+    }
 
     public static void addToDonationAmount(double amount)
     {

@@ -85,6 +85,14 @@ public class CommandType extends TypeBase
     }
 
     @Override
+    public void doConfig(Configuration configuration)
+    {
+        configuration.addCustomCategoryComment(TYPES_CAT, "Reward config options");
+        configuration.addCustomCategoryComment(TYPES_CAT + '.' + NAME, "Used for commands");
+        feedback = configuration.get(TYPES_CAT + '.' + NAME, "feedback", feedback, "Disable command feedback. (server overrides client)").getBoolean(feedback);
+    }
+
+    @Override
     public void openNewGui(int rewardID, JsonObject data)
     {
         new CommandTypeGui(rewardID, NAME, data, typeMap);
@@ -129,14 +137,6 @@ public class CommandType extends TypeBase
         return id;
     }
 
-    @Override
-    public void doConfig(Configuration configuration)
-    {
-        configuration.addCustomCategoryComment(TYPES_CAT, "Reward config options");
-        configuration.addCustomCategoryComment(TYPES_CAT + '.' + NAME, "Used for commands");
-        feedback = configuration.get(TYPES_CAT + '.' + NAME, "feedback", feedback, "Disable command feedback. (server overrides client)").getBoolean(feedback);
-    }
-
     public class cmdSender extends EntityPlayerMP
     {
         public cmdSender(EntityPlayerMP player)
@@ -147,15 +147,15 @@ public class CommandType extends TypeBase
         }
 
         @Override
-        public boolean canCommandSenderUseCommand(int par1, String cmd)
-        {
-            return true;
-        }
-
-        @Override
         public void addChatComponentMessage(IChatComponent p_146105_1_)
         {
             if (feedback) super.addChatComponentMessage(p_146105_1_);
+        }
+
+        @Override
+        public boolean canCommandSenderUseCommand(int par1, String cmd)
+        {
+            return true;
         }
     }
 }

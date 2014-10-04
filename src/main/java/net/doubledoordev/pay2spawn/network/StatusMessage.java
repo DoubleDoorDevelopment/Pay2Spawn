@@ -30,15 +30,15 @@
 
 package net.doubledoordev.pay2spawn.network;
 
-import net.doubledoordev.pay2spawn.Pay2Spawn;
-import net.doubledoordev.pay2spawn.configurator.ConfiguratorManager;
-import net.doubledoordev.pay2spawn.permissions.PermissionsHandler;
-import net.doubledoordev.pay2spawn.util.Helper;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import net.doubledoordev.pay2spawn.Pay2Spawn;
+import net.doubledoordev.pay2spawn.configurator.ConfiguratorManager;
+import net.doubledoordev.pay2spawn.permissions.PermissionsHandler;
+import net.doubledoordev.pay2spawn.util.Helper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;

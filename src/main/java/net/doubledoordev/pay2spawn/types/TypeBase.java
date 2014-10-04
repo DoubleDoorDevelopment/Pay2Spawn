@@ -30,9 +30,9 @@
 
 package net.doubledoordev.pay2spawn.types;
 
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.configurator.HTMLGenerator;
 import net.doubledoordev.pay2spawn.permissions.Node;
-import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -71,7 +71,8 @@ public abstract class TypeBase
 
     /**
      * Spawn the reward, only called server side.
-     *  @param player         The player the reward comes from
+     *
+     * @param player         The player the reward comes from
      * @param dataFromClient the nbt from the JSON file, fully usable
      */
     public abstract void spawnServerSide(EntityPlayerMP player, NBTTagCompound dataFromClient, NBTTagCompound rewardData);
@@ -83,7 +84,8 @@ public abstract class TypeBase
      * @param configuration The configuration you should use
      */
     public void doConfig(Configuration configuration)
-    {}
+    {
+    }
 
     /**
      * Use to print out useful files (aka entity and sound lists or help files)
@@ -92,7 +94,8 @@ public abstract class TypeBase
      * @param configFolder Make a file in here
      */
     public void printHelpList(File configFolder)
-    {}
+    {
+    }
 
     public abstract void openNewGui(int rewardID, JsonObject data);
 

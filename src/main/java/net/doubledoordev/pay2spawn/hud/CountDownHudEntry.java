@@ -45,7 +45,7 @@ import java.util.ArrayList;
 public class CountDownHudEntry implements IHudEntry
 {
     public final ArrayList<String> lines = new ArrayList<>();
-    int    position, defaultPosition;
+    int position, defaultPosition;
     String header = "", format = "", configCat = "", defaultFormat = "", defaultHeader = "";
 
     public CountDownHudEntry(String configCat, int defaultPosition, String defaultFormat, String defaultHeader)

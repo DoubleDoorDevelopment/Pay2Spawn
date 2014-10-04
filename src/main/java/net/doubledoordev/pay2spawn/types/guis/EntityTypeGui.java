@@ -30,13 +30,13 @@
 
 package net.doubledoordev.pay2spawn.types.guis;
 
+import com.google.common.base.Strings;
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.configurator.Configurator;
 import net.doubledoordev.pay2spawn.network.TestMessage;
 import net.doubledoordev.pay2spawn.random.RandomRegistry;
 import net.doubledoordev.pay2spawn.random.RndEntity;
 import net.doubledoordev.pay2spawn.types.EntityType;
-import com.google.common.base.Strings;
-import com.google.gson.JsonObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -120,6 +120,56 @@ public class EntityTypeGui extends HelperGuiBase
         updateJson();
     }
 
+    @Override
+    public void readJson()
+    {
+        entityNameComboBox.setSelectedItem(readValue(ENTITYNAME_KEY, data));
+        customNameTextField.setText(readValue(CUSTOMNAME_KEY, data));
+        spawnRadiusTextField.setText(readValue(SPAWNRADIUS_KEY, data));
+        amountTextField.setText(readValue(AMOUNT_KEY, data));
+        HTMLTextField.setText(readValue(CUSTOMHTML, data));
+
+        String agro = readValue(AGRO_KEY, data);
+        notAgroRadioButton.setSelected(agro.equals(FALSE_BYTE) || agro.equals(""));
+        agroRadioButton.setSelected(agro.equals(TRUE_BYTE));
+        randomAgroRadioButton.setSelected(agro.startsWith(RANDOM_BOOLEAN));
+
+        String random = readValue(RANDOM_KEY, data);
+        donTRandomizeMobRadioButton.setSelected(random.equals(FALSE_BYTE) || random.equals(""));
+        randomizeMobRadioButton.setSelected(random.equals(TRUE_BYTE));
+        randomlyRandomizeMobRadioButton.setSelected(random.startsWith(RANDOM_BOOLEAN));
+
+        String ride = readValue(RIDETHISMOB_KEY, data);
+        dontRidemob.setSelected(ride.equals(FALSE_BYTE) || ride.equals(""));
+        rideThisMobRadioButton.setSelected(ride.equals(TRUE_BYTE));
+        randomlyRideMob.setSelected(ride.startsWith(RANDOM_BOOLEAN));
+
+        String thrownS = readValue(THROWTOWARDSPLAYER_KEY, data);
+        dontThrown.setSelected(thrownS.equals(FALSE_BYTE) || thrownS.equals(""));
+        thrown.setSelected(thrownS.equals(TRUE_BYTE));
+        RndThrown.setSelected(thrownS.startsWith(RANDOM_BOOLEAN));
+
+        jsonPane.setText(GSON.toJson(data));
+    }
+
+    @Override
+    public void updateJson()
+    {
+        storeValue(ENTITYNAME_KEY, data, entityNameComboBox.getSelectedItem());
+        storeValue(CUSTOMNAME_KEY, data, customNameTextField.getText());
+        storeValue(SPAWNRADIUS_KEY, data, spawnRadiusTextField.getText());
+        storeValue(AMOUNT_KEY, data, amountTextField.getText());
+
+        storeValue(AGRO_KEY, data, randomAgroRadioButton.isSelected() ? RANDOM_BOOLEAN : agroRadioButton.isSelected() ? TRUE_BYTE : FALSE_BYTE);
+        storeValue(RANDOM_KEY, data, randomlyRandomizeMobRadioButton.isSelected() ? RANDOM_BOOLEAN : randomizeMobRadioButton.isSelected() ? TRUE_BYTE : FALSE_BYTE);
+        storeValue(RIDETHISMOB_KEY, data, randomlyRideMob.isSelected() ? RANDOM_BOOLEAN : rideThisMobRadioButton.isSelected() ? TRUE_BYTE : FALSE_BYTE);
+        storeValue(THROWTOWARDSPLAYER_KEY, data, RndThrown.isSelected() ? RANDOM_BOOLEAN : thrown.isSelected() ? TRUE_BYTE : FALSE_BYTE);
+
+        if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
+
+        jsonPane.setText(GSON.toJson(data));
+    }
+
     public void setupListeners()
     {
         testButton.addActionListener(new ActionListener()
@@ -194,57 +244,6 @@ public class EntityTypeGui extends HelperGuiBase
     {
         return panel1;
     }
-
-    @Override
-    public void readJson()
-    {
-        entityNameComboBox.setSelectedItem(readValue(ENTITYNAME_KEY, data));
-        customNameTextField.setText(readValue(CUSTOMNAME_KEY, data));
-        spawnRadiusTextField.setText(readValue(SPAWNRADIUS_KEY, data));
-        amountTextField.setText(readValue(AMOUNT_KEY, data));
-        HTMLTextField.setText(readValue(CUSTOMHTML, data));
-
-        String agro = readValue(AGRO_KEY, data);
-        notAgroRadioButton.setSelected(agro.equals(FALSE_BYTE) || agro.equals(""));
-        agroRadioButton.setSelected(agro.equals(TRUE_BYTE));
-        randomAgroRadioButton.setSelected(agro.startsWith(RANDOM_BOOLEAN));
-
-        String random = readValue(RANDOM_KEY, data);
-        donTRandomizeMobRadioButton.setSelected(random.equals(FALSE_BYTE) || random.equals(""));
-        randomizeMobRadioButton.setSelected(random.equals(TRUE_BYTE));
-        randomlyRandomizeMobRadioButton.setSelected(random.startsWith(RANDOM_BOOLEAN));
-
-        String ride = readValue(RIDETHISMOB_KEY, data);
-        dontRidemob.setSelected(ride.equals(FALSE_BYTE) || ride.equals(""));
-        rideThisMobRadioButton.setSelected(ride.equals(TRUE_BYTE));
-        randomlyRideMob.setSelected(ride.startsWith(RANDOM_BOOLEAN));
-
-        String thrownS = readValue(THROWTOWARDSPLAYER_KEY, data);
-        dontThrown.setSelected(thrownS.equals(FALSE_BYTE) || thrownS.equals(""));
-        thrown.setSelected(thrownS.equals(TRUE_BYTE));
-        RndThrown.setSelected(thrownS.startsWith(RANDOM_BOOLEAN));
-
-        jsonPane.setText(GSON.toJson(data));
-    }
-
-    @Override
-    public void updateJson()
-    {
-        storeValue(ENTITYNAME_KEY, data, entityNameComboBox.getSelectedItem());
-        storeValue(CUSTOMNAME_KEY, data, customNameTextField.getText());
-        storeValue(SPAWNRADIUS_KEY, data, spawnRadiusTextField.getText());
-        storeValue(AMOUNT_KEY, data, amountTextField.getText());
-
-        storeValue(AGRO_KEY, data, randomAgroRadioButton.isSelected() ? RANDOM_BOOLEAN : agroRadioButton.isSelected() ? TRUE_BYTE : FALSE_BYTE);
-        storeValue(RANDOM_KEY, data, randomlyRandomizeMobRadioButton.isSelected() ? RANDOM_BOOLEAN : randomizeMobRadioButton.isSelected() ? TRUE_BYTE : FALSE_BYTE);
-        storeValue(RIDETHISMOB_KEY, data, randomlyRideMob.isSelected() ? RANDOM_BOOLEAN : rideThisMobRadioButton.isSelected() ? TRUE_BYTE : FALSE_BYTE);
-        storeValue(THROWTOWARDSPLAYER_KEY, data, RndThrown.isSelected() ? RANDOM_BOOLEAN : thrown.isSelected() ? TRUE_BYTE : FALSE_BYTE);
-
-        if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
-
-        jsonPane.setText(GSON.toJson(data));
-    }
-
     {
         // GUI initializer generated by IntelliJ IDEA GUI Designer
         // >>> IMPORTANT!! <<<
@@ -598,7 +597,11 @@ public class EntityTypeGui extends HelperGuiBase
         buttonGroup.add(RndThrown);
     }
 
-    /** @noinspection ALL */
+    /**
+     * @noinspection ALL
+     */
     public JComponent $$$getRootComponent$$$()
-    { return panel1; }
+    {
+        return panel1;
+    }
 }

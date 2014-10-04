@@ -25,13 +25,13 @@ import net.doubledoordev.libs.javazoom.jl.decoder.JavaLayerException;
 
 /**
  * The <code>AudioDeviceBase</code> class provides a simple thread-safe
- * implementation of the <code>AudioDevice</code> interface. 
+ * implementation of the <code>AudioDevice</code> interface.
  * Template methods are provided for subclasses to override and
  * in doing so provide the implementation for the main operations
- * of the <code>AudioDevice</code> interface. 
- * 
- * @since	0.0.8
- * @author	Mat McGowan
+ * of the <code>AudioDevice</code> interface.
+ *
+ * @author Mat McGowan
+ * @since 0.0.8
  */
 /*
  * REVIEW:  It is desirable to be able to use the decoder whe
@@ -42,136 +42,136 @@ import net.doubledoordev.libs.javazoom.jl.decoder.JavaLayerException;
  */
 public abstract class AudioDeviceBase implements AudioDevice
 {
-	private	boolean			open = false;
-	
-	private Decoder			decoder = null;
-	
-	/**
-	 * Opens this audio device. 
-	 * 
-	 * @param decoder	The decoder that will provide audio data
-	 *					to this audio device. 
-	 */
-	public synchronized void open(Decoder decoder) throws JavaLayerException
-	{
-		if (!isOpen())
-		{
-			this.decoder = decoder;
-			openImpl();
-			setOpen(true);
-		}
-	}
-	
-	/**
-	 * Template method to provide the 
-	 * implementation for the opening of the audio device. 
-	 */
-	protected void openImpl() throws JavaLayerException
-	{			
-	}
-	
-	/**
-	 * Sets the open state for this audio device. 
-	 */
-	protected void setOpen(boolean open)
-	{
-		this.open = open;
-	}
-	
-	/**
-	 * Determines if this audio device is open or not. 
-	 * 
-	 * @return <code>true</code> if the audio device is open,
-	 *		<code>false</code> if it is not. 	 
-	 */
-	public synchronized boolean isOpen()
-	{
-		return open;	
-	}
-	
-	/**
-	 * Closes this audio device. If the device is currently playing 
-	 * audio, playback is stopped immediately without flushing
-	 * any buffered audio data. 
-	 */
-	public synchronized void close()
-	{
-		if (isOpen())
-		{
-			closeImpl();
-			setOpen(false);	
-			decoder = null;
-		}
-	}
-	
-	/**
-	 * Template method to provide the implementation for
-	 * closing the audio device. 
-	 */
-	protected void closeImpl()
-	{
-	}
-	
-	/**
-	 * Writes audio data to this audio device. Audio data is
-	 * assumed to be in the output format of the decoder. This
-	 * method may return before the data has actually been sounded
-	 * by the device if the device buffers audio samples. 
-	 * 
-	 * @param samples	The samples to write to the audio device.
-	 * @param offs		The offset into the array of the first sample to write.
-	 * @param len		The number of samples from the array to write. 
-	 * @throws JavaLayerException if the audio data could not be
-	 *			written to the audio device. 
-	 * If the audio device is not open, this method does nthing. 
-	 */
-	public void write(short[] samples, int offs, int len) 
-		throws JavaLayerException
-	{
-		if (isOpen())
-		{
-			writeImpl(samples, offs, len);
-		}
-	}
-	
-	/**
-	 * Template method to provide the implementation for
-	 * writing audio samples to the audio device. 
-	 */
-	protected void writeImpl(short[] samples, int offs, int len) 
-		throws JavaLayerException
-	{
-	}
-	
-	/**
-	 * Waits for any buffered audio samples to be played by the
-	 * audio device. This method should only be called prior 
-	 * to closing the device. 
-	 */
-	public void flush()
-	{
-		if (isOpen())
-		{
-			flushImpl();	
-		}
-	}
-	
-	/**
-	 * Template method to provide the implementation for 
-	 * flushing any buffered audio data. 
-	 */
-	protected void flushImpl()
-	{		
-	}
-			
-	/**
-	 * Retrieves the decoder that provides audio data to this
-	 * audio device.
-	 * 
-	 * @return The associated decoder. 
-	 */
-	protected Decoder getDecoder()
-	{
-		return decoder;	
-	}
+    private boolean open = false;
+
+    private Decoder decoder = null;
+
+    /**
+     * Opens this audio device.
+     *
+     * @param decoder The decoder that will provide audio data
+     *                to this audio device.
+     */
+    public synchronized void open(Decoder decoder) throws JavaLayerException
+    {
+        if (!isOpen())
+        {
+            this.decoder = decoder;
+            openImpl();
+            setOpen(true);
+        }
+    }
+
+    /**
+     * Determines if this audio device is open or not.
+     *
+     * @return <code>true</code> if the audio device is open,
+     * <code>false</code> if it is not.
+     */
+    public synchronized boolean isOpen()
+    {
+        return open;
+    }
+
+    /**
+     * Sets the open state for this audio device.
+     */
+    protected void setOpen(boolean open)
+    {
+        this.open = open;
+    }
+
+    /**
+     * Writes audio data to this audio device. Audio data is
+     * assumed to be in the output format of the decoder. This
+     * method may return before the data has actually been sounded
+     * by the device if the device buffers audio samples.
+     *
+     * @param samples The samples to write to the audio device.
+     * @param offs    The offset into the array of the first sample to write.
+     * @param len     The number of samples from the array to write.
+     * @throws JavaLayerException if the audio data could not be
+     *                            written to the audio device.
+     *                            If the audio device is not open, this method does nthing.
+     */
+    public void write(short[] samples, int offs, int len)
+            throws JavaLayerException
+    {
+        if (isOpen())
+        {
+            writeImpl(samples, offs, len);
+        }
+    }
+
+    /**
+     * Closes this audio device. If the device is currently playing
+     * audio, playback is stopped immediately without flushing
+     * any buffered audio data.
+     */
+    public synchronized void close()
+    {
+        if (isOpen())
+        {
+            closeImpl();
+            setOpen(false);
+            decoder = null;
+        }
+    }
+
+    /**
+     * Waits for any buffered audio samples to be played by the
+     * audio device. This method should only be called prior
+     * to closing the device.
+     */
+    public void flush()
+    {
+        if (isOpen())
+        {
+            flushImpl();
+        }
+    }
+
+    /**
+     * Template method to provide the
+     * implementation for the opening of the audio device.
+     */
+    protected void openImpl() throws JavaLayerException
+    {
+    }
+
+    /**
+     * Template method to provide the implementation for
+     * closing the audio device.
+     */
+    protected void closeImpl()
+    {
+    }
+
+    /**
+     * Template method to provide the implementation for
+     * writing audio samples to the audio device.
+     */
+    protected void writeImpl(short[] samples, int offs, int len)
+            throws JavaLayerException
+    {
+    }
+
+    /**
+     * Template method to provide the implementation for
+     * flushing any buffered audio data.
+     */
+    protected void flushImpl()
+    {
+    }
+
+    /**
+     * Retrieves the decoder that provides audio data to this
+     * audio device.
+     *
+     * @return The associated decoder.
+     */
+    protected Decoder getDecoder()
+    {
+        return decoder;
+    }
 }

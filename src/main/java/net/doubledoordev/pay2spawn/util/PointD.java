@@ -165,9 +165,17 @@ public class PointD
     }
 
     @Override
-    public String toString()
+    public int hashCode()
     {
-        return "[" + x + ";" + y + ";" + z + "]";
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(x);
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(y);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(z);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 
     @Override
@@ -182,17 +190,9 @@ public class PointD
     }
 
     @Override
-    public int hashCode()
+    public String toString()
     {
-        int result;
-        long temp;
-        temp = Double.doubleToLongBits(x);
-        result = (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(y);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(z);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        return result;
+        return "[" + x + ";" + y + ";" + z + "]";
     }
 
     public int intX()

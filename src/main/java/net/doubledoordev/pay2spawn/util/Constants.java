@@ -46,17 +46,17 @@ import java.util.Random;
  */
 public class Constants
 {
-    public static final String   NAME                = "Pay2Spawn";
-    public static final String   MODID               = "P2S";
+    public static final String NAME  = "Pay2Spawn";
+    public static final String MODID = "P2S";
 
-    public static final String   SERVER_CAT          = MODID + "_server";
-    public static final String   FILTER_CAT          = MODID + "_filter";
-    public static final String   TYPES_CAT           = MODID + "_types";
-    public static final String   BASECAT_TRACKERS    = "P2S_trackers";
-    public static final String   MUSICURL            = "https://raw.github.com/CCM-Modding/Pay2Spawn/master/files/music.zip";
+    public static final String SERVER_CAT       = MODID + "_server";
+    public static final String FILTER_CAT       = MODID + "_filter";
+    public static final String TYPES_CAT        = MODID + "_types";
+    public static final String BASECAT_TRACKERS = "P2S_trackers";
+    public static final String MUSICURL         = "https://raw.github.com/CCM-Modding/Pay2Spawn/master/files/music.zip";
 
-    public static final String   ANONYMOUS           = "Anonymous";
-    public static final String   CUSTOMHTML = "customHTML";
+    public static final String ANONYMOUS  = "Anonymous";
+    public static final String CUSTOMHTML = "customHTML";
 
     /**
      * Global helpers
@@ -76,17 +76,17 @@ public class Constants
     /**
      * NBT constants
      */
-    public static final String[] NBTTypes            = new String[] {"END", "BYTE", "SHORT", "INT", "LONG", "FLOAT", "DOUBLE", "BYTE[]", "STRING", "LIST", "COMPOUND", "INT[]"};
-    public static final int END        = 0;
-    public static final int BYTE       = 1;
-    public static final int SHORT      = 2;
-    public static final int INT        = 3;
-    public static final int LONG       = 4;
-    public static final int FLOAT      = 5;
-    public static final int DOUBLE     = 6;
-    public static final int BYTE_ARRAY = 7;
-    public static final int STRING     = 8;
-    public static final int LIST       = 9;
-    public static final int COMPOUND   = 10;
-    public static final int INT_ARRAY  = 11;
+    public static final String[] NBTTypes   = new String[]{"END", "BYTE", "SHORT", "INT", "LONG", "FLOAT", "DOUBLE", "BYTE[]", "STRING", "LIST", "COMPOUND", "INT[]"};
+    public static final int      END        = 0;
+    public static final int      BYTE       = 1;
+    public static final int      SHORT      = 2;
+    public static final int      INT        = 3;
+    public static final int      LONG       = 4;
+    public static final int      FLOAT      = 5;
+    public static final int      DOUBLE     = 6;
+    public static final int      BYTE_ARRAY = 7;
+    public static final int      STRING     = 8;
+    public static final int      LIST       = 9;
+    public static final int      COMPOUND   = 10;
+    public static final int      INT_ARRAY  = 11;
 }

@@ -30,15 +30,15 @@
 
 package net.doubledoordev.pay2spawn.util;
 
+import com.google.common.collect.HashMultimap;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.network.MessageMessage;
 import net.doubledoordev.pay2spawn.random.RandomRegistry;
 import net.doubledoordev.pay2spawn.types.TypeBase;
 import net.doubledoordev.pay2spawn.types.TypeRegistry;
-import com.google.common.collect.HashMultimap;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import java.io.*;
 import java.util.Collection;

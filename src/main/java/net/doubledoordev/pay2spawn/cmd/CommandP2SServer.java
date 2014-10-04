@@ -63,26 +63,9 @@ public class CommandP2SServer extends CommandBase
     }
 
     @Override
-    public List getCommandAliases()
-    {
-        return Arrays.asList("p2sserver");
-    }
-
-    @Override
     public String getCommandUsage(ICommandSender icommandsender)
     {
         return HELP;
-    }
-
-    @Override
-    public boolean canCommandSenderUseCommand(ICommandSender sender)
-    {
-        return !(sender instanceof EntityPlayerMP) || MinecraftServer.getServer().getConfigurationManager().func_152596_g(((EntityPlayerMP) sender).getGameProfile());
-    }
-
-    public void sendChatToPlayer(ICommandSender sender, String message, EnumChatFormatting chatFormatting)
-    {
-        sender.addChatMessage(new ChatComponentText(message).setChatStyle(new ChatStyle().setColor(chatFormatting)));
     }
 
     @Override
@@ -139,6 +122,18 @@ public class CommandP2SServer extends CommandBase
     }
 
     @Override
+    public List getCommandAliases()
+    {
+        return Arrays.asList("p2sserver");
+    }
+
+    @Override
+    public boolean canCommandSenderUseCommand(ICommandSender sender)
+    {
+        return !(sender instanceof EntityPlayerMP) || MinecraftServer.getServer().getConfigurationManager().func_152596_g(((EntityPlayerMP) sender).getGameProfile());
+    }
+
+    @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] args)
     {
         switch (args.length)
@@ -153,5 +148,10 @@ public class CommandP2SServer extends CommandBase
                 }
         }
         return null;
+    }
+
+    public void sendChatToPlayer(ICommandSender sender, String message, EnumChatFormatting chatFormatting)
+    {
+        sender.addChatMessage(new ChatComponentText(message).setChatStyle(new ChatStyle().setColor(chatFormatting)));
     }
 }

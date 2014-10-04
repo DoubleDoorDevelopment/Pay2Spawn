@@ -46,10 +46,13 @@ import java.util.HashSet;
  */
 public abstract class AbstractChecker
 {
+    public double min_donation = 1;
     protected HashSet<String>   doneIDs = new HashSet<>();
     protected HashSet<Donation> backlog = new HashSet<>();
 
-    protected AbstractChecker() {}
+    protected AbstractChecker()
+    {
+    }
 
     public abstract String getName();
 
@@ -60,8 +63,6 @@ public abstract class AbstractChecker
     public abstract void doConfig(Configuration configuration);
 
     public abstract DonationsBasedHudEntry[] getDonationsBasedHudEntries();
-
-    public double  min_donation = 1;
 
     protected void doWait(int time)
     {

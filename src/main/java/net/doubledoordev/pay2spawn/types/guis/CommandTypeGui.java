@@ -30,10 +30,10 @@
 
 package net.doubledoordev.pay2spawn.types.guis;
 
-import net.doubledoordev.pay2spawn.configurator.Configurator;
-import net.doubledoordev.pay2spawn.network.TestMessage;
 import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
+import net.doubledoordev.pay2spawn.configurator.Configurator;
+import net.doubledoordev.pay2spawn.network.TestMessage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -304,5 +304,7 @@ public class CommandTypeGui extends HelperGuiBase
      * @noinspection ALL
      */
     public JComponent $$$getRootComponent$$$()
-    { return panel1; }
+    {
+        return panel1;
+    }
 }

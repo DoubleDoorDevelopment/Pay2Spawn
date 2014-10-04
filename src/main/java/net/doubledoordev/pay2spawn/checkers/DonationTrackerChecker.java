@@ -52,17 +52,14 @@ import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
  */
 public class DonationTrackerChecker extends AbstractChecker implements Runnable
 {
-    public static final DonationTrackerChecker INSTANCE     = new DonationTrackerChecker();
-    public final static String                 NAME         = "donation-tracker";
-    public final static String                 CAT          = BASECAT_TRACKERS + '.' + NAME;
-
-    DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
-
+    public static final DonationTrackerChecker INSTANCE = new DonationTrackerChecker();
+    public final static String                 NAME     = "donation-tracker";
+    public final static String                 CAT      = BASECAT_TRACKERS + '.' + NAME;
     public String URL = "https://www.donation-tracker.com/api/?channel=%s&api_key=%s";
-
+    DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
     String Channel = "", APIKey = "";
-    boolean          enabled  = false;
-    int              interval = 20;
+    boolean enabled  = false;
+    int     interval = 20;
 
     private DonationTrackerChecker()
     {
@@ -118,7 +115,7 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
     @Override
     public DonationsBasedHudEntry[] getDonationsBasedHudEntries()
     {
-        return new DonationsBasedHudEntry[] {topDonationsBasedHudEntry, recentDonationsBasedHudEntry};
+        return new DonationsBasedHudEntry[]{topDonationsBasedHudEntry, recentDonationsBasedHudEntry};
     }
 
     @Override
@@ -138,7 +135,7 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
         }
     }
 
-    /***
+    /**
      * Connects to the API and attempt to process any donations
      *
      * @param firstRun <code>boolean</code> used to identify previous donations that should not be processed.
@@ -147,7 +144,7 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
     {
         try
         {
-            JsonObject root = JSON_PARSER.parse(Helper.readUrl(new URL(String.format(URL, Channel, APIKey )))).getAsJsonObject();
+            JsonObject root = JSON_PARSER.parse(Helper.readUrl(new URL(String.format(URL, Channel, APIKey)))).getAsJsonObject();
             if (root.getAsJsonPrimitive("api_check").getAsInt() == 1)
             {
                 JsonArray donations = root.getAsJsonArray("donations");
@@ -190,7 +187,7 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
             // We have all the data we need to return the Donation object
             return new Donation(id, amount, timestamp, username, note);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             // We threw an error so just log it and move on
             e.printStackTrace();

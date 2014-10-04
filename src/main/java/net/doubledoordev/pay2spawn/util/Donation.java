@@ -104,6 +104,20 @@ public class Donation
     }
 
     @Override
+    public int hashCode()
+    {
+        int result;
+        long temp;
+        result = id.hashCode();
+        temp = Double.doubleToLongBits(amount);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + username.hashCode();
+        result = 31 * result + note.hashCode();
+        result = 31 * result + (int) (time ^ (time >>> 32));
+        return result;
+    }
+
+    @Override
     public boolean equals(Object o)
     {
         if (this == o) return true;
@@ -118,20 +132,6 @@ public class Donation
         if (!username.equals(donation.username)) return false;
 
         return true;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int result;
-        long temp;
-        result = id.hashCode();
-        temp = Double.doubleToLongBits(amount);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + username.hashCode();
-        result = 31 * result + note.hashCode();
-        result = 31 * result + (int) (time ^ (time >>> 32));
-        return result;
     }
 
     @Override

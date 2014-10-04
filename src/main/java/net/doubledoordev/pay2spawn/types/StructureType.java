@@ -59,15 +59,15 @@ import static net.doubledoordev.pay2spawn.util.Constants.*;
  */
 public class StructureType extends TypeBase
 {
-    public static final String                  SHAPES_KEY    = "shapes";
-    public static final String                  BLOCKDATA_KEY = "blockData";
-    public static final String                  TEDATA_KEY    = "tileEntityData";
-    public static final String                  BLOCKID_KEY   = "blockID";
-    public static final String                  META_KEY      = "meta";
-    public static final String                  WEIGHT_KEY    = "weight";
-    public static final String                  ROTATE_KEY    = "rotate";
-    public static final String                  BASEROTATION_KEY    = "baseRotation";
-    public static final HashMap<String, String> typeMap       = new HashMap<>();
+    public static final String                  SHAPES_KEY       = "shapes";
+    public static final String                  BLOCKDATA_KEY    = "blockData";
+    public static final String                  TEDATA_KEY       = "tileEntityData";
+    public static final String                  BLOCKID_KEY      = "blockID";
+    public static final String                  META_KEY         = "meta";
+    public static final String                  WEIGHT_KEY       = "weight";
+    public static final String                  ROTATE_KEY       = "rotate";
+    public static final String                  BASEROTATION_KEY = "baseRotation";
+    public static final HashMap<String, String> typeMap          = new HashMap<>();
 
     static
     {
@@ -78,8 +78,8 @@ public class StructureType extends TypeBase
         typeMap.put(BASEROTATION_KEY, NBTTypes[BYTE]);
     }
 
-    private static final String   NAME         = "structure";
-    public static        int[][] bannedBlocks;
+    private static final String NAME = "structure";
+    public static int[][] bannedBlocks;
 
     public static void applyShape(IShape shape, EntityPlayer player, ArrayList<NBTTagCompound> blockDataNbtList, byte baseRotation)
     {
@@ -310,6 +310,21 @@ public class StructureType extends TypeBase
     }
 
     @Override
+    public void doConfig(Configuration configuration)
+    {
+        configuration.addCustomCategoryComment(TYPES_CAT, "Reward config options");
+        configuration.addCustomCategoryComment(TYPES_CAT + '.' + NAME, "Used when spawning structures");
+        String[] bannedBlocksStrings = configuration.get(TYPES_CAT + '.' + NAME, "bannedBlocks", new String[0], "Banned blocks, format like this:\nid:metaData => Ban only that meta\nid => Ban all meta of that block").getStringList();
+        bannedBlocks = new int[bannedBlocksStrings.length][];
+        for (int i = 0; i < bannedBlocksStrings.length; i++)
+        {
+            String[] split = bannedBlocksStrings[i].split(":");
+            if (split.length == 1) bannedBlocks[i] = new int[]{Integer.parseInt(split[0])};
+            else bannedBlocks[i] = new int[]{Integer.parseInt(split[0]), Integer.parseInt(split[1])};
+        }
+    }
+
+    @Override
     public void openNewGui(int rewardID, JsonObject data)
     {
         new StructureTypeGui(rewardID, NAME, data, typeMap);
@@ -335,21 +350,6 @@ public class StructureType extends TypeBase
     public String replaceInTemplate(String id, JsonObject jsonObject)
     {
         return id;
-    }
-
-    @Override
-    public void doConfig(Configuration configuration)
-    {
-        configuration.addCustomCategoryComment(TYPES_CAT, "Reward config options");
-        configuration.addCustomCategoryComment(TYPES_CAT + '.' + NAME, "Used when spawning structures");
-        String[] bannedBlocksStrings = configuration.get(TYPES_CAT + '.' + NAME, "bannedBlocks", new String[0], "Banned blocks, format like this:\nid:metaData => Ban only that meta\nid => Ban all meta of that block").getStringList();
-        bannedBlocks = new int[bannedBlocksStrings.length][];
-        for (int i = 0; i < bannedBlocksStrings.length; i++)
-        {
-            String[] split = bannedBlocksStrings[i].split(":");
-            if (split.length == 1) bannedBlocks[i] = new int[] {Integer.parseInt(split[0])};
-            else bannedBlocks[i] = new int[] {Integer.parseInt(split[0]), Integer.parseInt(split[1])};
-        }
     }
 
     public static class BlockData
@@ -394,7 +394,8 @@ public class StructureType extends TypeBase
                     '}';
         }
 
-        public class BannedBlockException extends Exception {
+        public class BannedBlockException extends Exception
+        {
 
             public BannedBlockException(String s)
             {

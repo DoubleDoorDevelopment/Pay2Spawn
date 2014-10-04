@@ -62,18 +62,6 @@ public class CommandP2S extends CommandBase
     }
 
     @Override
-    public List getCommandAliases()
-    {
-        return Arrays.asList("p2s");
-    }
-
-    @Override
-    public boolean canCommandSenderUseCommand(ICommandSender sender)
-    {
-        return sender instanceof EntityPlayer;
-    }
-
-    @Override
     public String getCommandUsage(ICommandSender sender)
     {
         return HELP;
@@ -140,11 +128,23 @@ public class CommandP2S extends CommandBase
             case "resetsubs":
                 TwitchChecker.INSTANCE.reset();
                 Helper.msg(EnumChatFormatting.GOLD + "[P2S] Subs have been resetted!");
-            break;
+                break;
             default:
                 Helper.msg(EnumChatFormatting.RED + "Unknown command. Protip: Use tab completion!");
                 break;
         }
+    }
+
+    @Override
+    public List getCommandAliases()
+    {
+        return Arrays.asList("p2s");
+    }
+
+    @Override
+    public boolean canCommandSenderUseCommand(ICommandSender sender)
+    {
+        return sender instanceof EntityPlayer;
     }
 
     @Override

@@ -55,8 +55,8 @@ public class P2SConfig
 {
     public final static String HUD           = MODID + ".Hud";
     public static final String CONFIGVERSION = "2";
-    public final boolean majorConfigVersionChange;
-    public        Configuration configuration;
+    public final boolean       majorConfigVersionChange;
+    public       Configuration configuration;
     public boolean forceServerconfig = true;
     public boolean forceP2S          = false;
     public double  min_donation      = 1;
@@ -65,6 +65,7 @@ public class P2SConfig
     public Pattern[] whitelist_Name_p;
     public Pattern[] whitelist_Note_p;
     public  String   serverMessage  = "$streamer got $$amount from $name and $reward_name was triggered!";
+    public  boolean  sillyness      = true;
     @SuppressWarnings("FieldCanBeLocal")
     private String[] blacklist_Name = {"fuck", "cunt", "dick", "shit"};
     @SuppressWarnings("FieldCanBeLocal")
@@ -73,7 +74,6 @@ public class P2SConfig
     private String[] whitelist_Name = {"\"[\\w-]*\""};
     @SuppressWarnings("FieldCanBeLocal")
     private String[] whitelist_Note = {};
-    public  boolean  sillyness      = true;
 
     public P2SConfig(File file)
     {

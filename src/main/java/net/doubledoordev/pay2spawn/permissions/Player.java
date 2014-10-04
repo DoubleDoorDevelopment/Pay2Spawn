@@ -102,6 +102,15 @@ public class Player
     }
 
     @Override
+    public int hashCode()
+    {
+        int result = groups.hashCode();
+        result = 31 * result + overrideNodes.hashCode();
+        result = 31 * result + name.hashCode();
+        return result;
+    }
+
+    @Override
     public boolean equals(Object o)
     {
         if (this == o) return true;
@@ -111,15 +120,6 @@ public class Player
 
         return groups.equals(player.groups) && name.equals(player.name) && overrideNodes.equals(player.overrideNodes);
 
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int result = groups.hashCode();
-        result = 31 * result + overrideNodes.hashCode();
-        result = 31 * result + name.hashCode();
-        return result;
     }
 
     public void addNode(Node node)

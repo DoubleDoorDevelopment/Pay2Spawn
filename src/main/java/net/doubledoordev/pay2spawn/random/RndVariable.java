@@ -36,22 +36,27 @@ import java.util.regex.Pattern;
 
 /**
  * I'm insane for doing this but oh well.
- *
+ * <p/>
  * Use case: You want the same random value in 2 or more places.
  * You need to use the full expression everywhere.
  * The first time the solver comes across the tag with a new name, it will solve the random.
  * The second (or more) time if just fills in the value from memory.
- *
+ * <p/>
  * How to use: $var(name, somerandomthing)
- *
+ * <p/>
  * Example: $var(1, random(1, 10))
  *
  * @author Dries007
  */
 public class RndVariable implements IRandomResolver
 {
-    private static final Pattern PATTERN = Pattern.compile("\\$var\\((.*?), ?([^$]*)\\)");
-    private static final HashMap<String, String> VARMAP = new HashMap<>();
+    private static final Pattern                 PATTERN = Pattern.compile("\\$var\\((.*?), ?([^$]*)\\)");
+    private static final HashMap<String, String> VARMAP  = new HashMap<>();
+
+    public static void reset()
+    {
+        VARMAP.clear();
+    }
 
     @Override
     public String getIdentifier()
@@ -77,10 +82,5 @@ public class RndVariable implements IRandomResolver
     public boolean matches(int type, String value)
     {
         return PATTERN.matcher(value).find();
-    }
-
-    public static void reset()
-    {
-        VARMAP.clear();
     }
 }

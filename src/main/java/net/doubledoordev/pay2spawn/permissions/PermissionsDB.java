@@ -30,10 +30,10 @@
 
 package net.doubledoordev.pay2spawn.permissions;
 
-import net.doubledoordev.pay2spawn.Pay2Spawn;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.doubledoordev.pay2spawn.Pay2Spawn;
 
 import java.io.*;
 import java.util.HashMap;

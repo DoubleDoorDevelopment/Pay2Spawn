@@ -30,8 +30,8 @@
 
 package net.doubledoordev.pay2spawn.permissions;
 
-import net.doubledoordev.pay2spawn.Pay2Spawn;
 import com.google.common.base.Strings;
+import net.doubledoordev.pay2spawn.Pay2Spawn;
 
 import java.io.*;
 import java.util.HashSet;

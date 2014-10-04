@@ -30,10 +30,10 @@
 
 package net.doubledoordev.pay2spawn.types;
 
-import net.doubledoordev.pay2spawn.permissions.Node;
-import net.doubledoordev.pay2spawn.types.guis.FireworksTypeGui;
 import com.google.common.base.Throwables;
 import com.google.gson.JsonObject;
+import net.doubledoordev.pay2spawn.permissions.Node;
+import net.doubledoordev.pay2spawn.types.guis.FireworksTypeGui;
 import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -126,13 +126,13 @@ public class FireworksType extends TypeBase
         explosion.setByte(TYPE_KEY, (byte) 0);
         explosion.setByte(FLICKER_KEY, (byte) 0);
         explosion.setByte(TRAIL_KEY, (byte) 0);
-        explosion.setIntArray(COLORS_KEY, new int[] {14188952, 8073150});
+        explosion.setIntArray(COLORS_KEY, new int[]{14188952, 8073150});
         explosions.appendTag(explosion);
         explosion = new NBTTagCompound();
         explosion.setByte(TYPE_KEY, (byte) 1);
         explosion.setByte(FLICKER_KEY, (byte) 1);
         explosion.setByte(TRAIL_KEY, (byte) 0);
-        explosion.setIntArray(COLORS_KEY, new int[] {14188952, 8073150});
+        explosion.setIntArray(COLORS_KEY, new int[]{14188952, 8073150});
         explosions.appendTag(explosion);
         fireworks.setTag(EXPLOSIONS_KEY, explosions);
         tag.setTag(FIREWORKS_KEY, fireworks);

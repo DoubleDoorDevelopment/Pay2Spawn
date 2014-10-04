@@ -30,11 +30,9 @@
 
 package net.doubledoordev.pay2spawn.util.shapes;
 
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.types.guis.StructureTypeGui;
 import net.doubledoordev.pay2spawn.types.guis.shapes.BoxGui;
-import net.doubledoordev.pay2spawn.util.Helper;
-import com.google.gson.JsonObject;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
@@ -105,15 +103,46 @@ public class Box extends AbstractShape
     }
 
     @Override
+    public IShape rotate(int baseRotation)
+    {
+        super.rotate(baseRotation);
+
+        System.out.println("baseRotation " + baseRotation);
+
+        switch (baseRotation)
+        {
+            case 1:
+                int tempx = x;
+                x = -z;
+                z = -tempx;
+                break;
+            case 2:
+                x = -x;
+                z = -z;
+                break;
+            case 3:
+                int tempz = z;
+                z = x;
+                x = tempz;
+                break;
+        }
+
+        return this;
+    }
+
+    @Override
     public Collection<PointI> getPoints()
     {
         HashSet<PointI> points = new HashSet<>();
 
-        for (int x = -this.x; x <= this.x; x++)
+        int absx = Math.abs(this.x);
+        int absz = Math.abs(this.z);
+        int absy = Math.abs(this.y);
+        for (int x = -absx; x <= absx; x++)
         {
-            for (int z = -this.z; z <= this.z; z++)
+            for (int z = -absz; z <= absz; z++)
             {
-                for (int y = -this.y; y <= this.y; y++)
+                for (int y = -absy; y <= absy; y++)
                 {
                     points.add(new PointI(center.x + x, center.y + y, center.z + z));
                 }
@@ -129,48 +158,5 @@ public class Box extends AbstractShape
     public void openGui(int index, JsonObject jsonObject, StructureTypeGui instance)
     {
         new BoxGui(index, jsonObject, instance, typeMap);
-    }
-
-    private Collection<PointI> temppoints;
-    @Override
-    public void render(Tessellator tess)
-    {
-        if (temppoints == null) temppoints = getPoints();
-        for (PointI pointI : temppoints)
-        {
-            Helper.renderPoint(pointI, tess);
-        }
-    }
-
-    @Override
-    public IShape cloneShape()
-    {
-        return new Box(center, x, y, z);
-    }
-
-    @Override
-    public IShape rotate(int baseRotation)
-    {
-        super.rotate(baseRotation);
-
-        switch (baseRotation)
-        {
-            case 1:
-                int tempx = x;
-                x = -z;
-                z = -tempx;
-                break;
-            case 2:
-                x *= -1;
-                z *= -1;
-                break;
-            case 3:
-                int tempz = z;
-                z = x;
-                x = tempz;
-                break;
-        }
-
-        return this;
     }
 }

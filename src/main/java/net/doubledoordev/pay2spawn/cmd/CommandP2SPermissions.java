@@ -60,21 +60,9 @@ public class CommandP2SPermissions extends CommandBase
     }
 
     @Override
-    public List getCommandAliases()
-    {
-        return Arrays.asList("p2sperm");
-    }
-
-    @Override
     public String getCommandUsage(ICommandSender icommandsender)
     {
         return HELP;
-    }
-
-    @Override
-    public boolean canCommandSenderUseCommand(ICommandSender sender)
-    {
-        return !(sender instanceof EntityPlayerMP) || MinecraftServer.getServer().getConfigurationManager().func_152596_g(((EntityPlayerMP) sender).getGameProfile());
     }
 
     @Override
@@ -201,6 +189,18 @@ public class CommandP2SPermissions extends CommandBase
                 break;
         }
         PermissionsHandler.getDB().save();
+    }
+
+    @Override
+    public List getCommandAliases()
+    {
+        return Arrays.asList("p2sperm");
+    }
+
+    @Override
+    public boolean canCommandSenderUseCommand(ICommandSender sender)
+    {
+        return !(sender instanceof EntityPlayerMP) || MinecraftServer.getServer().getConfigurationManager().func_152596_g(((EntityPlayerMP) sender).getGameProfile());
     }
 
     @Override

@@ -75,7 +75,6 @@ public class Helper
      * Convert & into § if the next char is a chat formatter char
      *
      * @param message the message to be converted
-     *
      * @return the converted message
      */
     public static String formatColors(String message)
@@ -108,7 +107,6 @@ public class Helper
      *
      * @param format   text that needs var replacing
      * @param donation the donation data
-     *
      * @return the fully var-replaced string
      */
     public static String formatText(String format, Donation donation, Reward reward)
@@ -134,7 +132,6 @@ public class Helper
      *
      * @param dataToFormat data to be formatted
      * @param donation     the donation data
-     *
      * @return the fully var-replaced JsonElement
      */
     public static JsonElement formatText(JsonElement dataToFormat, Donation donation, Reward reward)
@@ -328,27 +325,6 @@ public class Helper
         GL11.glPopMatrix();
     }
 
-    public static final class TableData
-    {
-        public  String            header;
-        public  ArrayList<String> strings;
-        private int               width;
-
-        public TableData(String header, ArrayList<String> data)
-        {
-            this.header = header;
-            this.strings = data;
-            width = header.length();
-
-            updateWidth();
-        }
-
-        private void updateWidth()
-        {
-            for (String string : strings) if (width < string.length()) width = string.length();
-        }
-    }
-
     public static String makeTable(TableData... datas)
     {
         int size = 0;
@@ -372,10 +348,10 @@ public class Helper
 
     public static int getHeading(EntityPlayer player)
     {
-        return MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        return MathHelper.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
     }
 
-    /***
+    /**
      * Returns a <code>true</code> if the supplied username is an OP in the server list
      *
      * @param username <code>String</code> containing the username to check OP status
@@ -388,7 +364,7 @@ public class Helper
         return server.getConfigurationManager().func_152596_g(server.func_152358_ax().func_152655_a(username));
     }
 
-    /***
+    /**
      * Used to get the MD5 hash of a given string.
      *
      * @param inputString
@@ -403,15 +379,37 @@ public class Helper
 
             StringBuffer stringBuilder = new StringBuffer();
 
-            for (int i = 0;i < array.length;++i)
+            for (int i = 0; i < array.length; ++i)
             {
                 stringBuilder.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1, 3));
             }
             return stringBuilder.toString();
         }
         catch (java.security.NoSuchAlgorithmException e)
-        {}
+        {
+        }
 
         return null;
+    }
+
+    public static final class TableData
+    {
+        public  String            header;
+        public  ArrayList<String> strings;
+        private int               width;
+
+        public TableData(String header, ArrayList<String> data)
+        {
+            this.header = header;
+            this.strings = data;
+            width = header.length();
+
+            updateWidth();
+        }
+
+        private void updateWidth()
+        {
+            for (String string : strings) if (width < string.length()) width = string.length();
+        }
     }
 }

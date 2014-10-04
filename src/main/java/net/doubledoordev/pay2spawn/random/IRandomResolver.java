@@ -58,7 +58,6 @@ public interface IRandomResolver
      *
      * @param type  NBT type
      * @param value The random tag
-     *
      * @return the randomised value
      */
     public String solverRandom(int type, String value);
@@ -68,7 +67,6 @@ public interface IRandomResolver
      *
      * @param type  NBT type
      * @param value The random tag
-     *
      * @return true to handle this string
      */
     public boolean matches(int type, String value);

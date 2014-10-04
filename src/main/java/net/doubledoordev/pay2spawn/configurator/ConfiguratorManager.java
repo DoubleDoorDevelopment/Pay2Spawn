@@ -30,9 +30,9 @@
 
 package net.doubledoordev.pay2spawn.configurator;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.util.Helper;
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.util.EnumChatFormatting;
 
 /**

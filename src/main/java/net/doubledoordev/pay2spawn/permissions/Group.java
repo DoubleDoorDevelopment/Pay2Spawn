@@ -97,6 +97,15 @@ public class Group
     }
 
     @Override
+    public int hashCode()
+    {
+        int result = nodes.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + parent.hashCode();
+        return result;
+    }
+
+    @Override
     public boolean equals(Object o)
     {
         if (this == o) return true;
@@ -106,15 +115,6 @@ public class Group
 
         return name.equals(group.name) && nodes.equals(group.nodes) && parent.equals(group.parent);
 
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int result = nodes.hashCode();
-        result = 31 * result + name.hashCode();
-        result = 31 * result + parent.hashCode();
-        return result;
     }
 
     public void addNode(String nodeString)

@@ -30,8 +30,11 @@
 
 package net.doubledoordev.pay2spawn.util.shapes;
 
+import net.doubledoordev.pay2spawn.util.Helper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import static net.doubledoordev.pay2spawn.util.Constants.BYTE;
@@ -46,8 +49,8 @@ public abstract class AbstractShape implements IShape
 {
     public static final HashMap<String, String> typeMap             = new HashMap<>();
     public static final String                  CENTER_KEY          = "center";
-    public static final String HOLLOW_KEY          = "hollow";
-    public static final String REPLACEABLEONLY_KEY = "replaceableOnly";
+    public static final String                  HOLLOW_KEY          = "hollow";
+    public static final String                  REPLACEABLEONLY_KEY = "replaceableOnly";
 
     static
     {
@@ -55,6 +58,9 @@ public abstract class AbstractShape implements IShape
         typeMap.put(REPLACEABLEONLY_KEY, NBTTypes[BYTE]);
     }
 
+    public static final long RENDERTIMEOUT = 1000;
+    protected long tempPointsTime = 0L;
+    protected Collection<PointI> temppoints;
     PointI center = new PointI();
     boolean hollow, replaceableOnly;
 
@@ -69,15 +75,6 @@ public abstract class AbstractShape implements IShape
     }
 
     @Override
-    public IShape fromNBT(NBTTagCompound compound)
-    {
-        center.fromNBT(compound.getCompoundTag(CENTER_KEY));
-        hollow = compound.getBoolean(HOLLOW_KEY);
-        replaceableOnly = compound.getBoolean(REPLACEABLEONLY_KEY);
-        return this;
-    }
-
-    @Override
     public NBTTagCompound toNBT()
     {
         NBTTagCompound compound = new NBTTagCompound();
@@ -85,6 +82,15 @@ public abstract class AbstractShape implements IShape
         compound.setBoolean(HOLLOW_KEY, hollow);
         compound.setBoolean(REPLACEABLEONLY_KEY, replaceableOnly);
         return compound;
+    }
+
+    @Override
+    public IShape fromNBT(NBTTagCompound compound)
+    {
+        center.fromNBT(compound.getCompoundTag(CENTER_KEY));
+        hollow = compound.getBoolean(HOLLOW_KEY);
+        replaceableOnly = compound.getBoolean(REPLACEABLEONLY_KEY);
+        return this;
     }
 
     @Override
@@ -108,16 +114,16 @@ public abstract class AbstractShape implements IShape
     }
 
     @Override
+    public boolean getHollow()
+    {
+        return hollow;
+    }
+
+    @Override
     public IShape setHollow(boolean hollow)
     {
         this.hollow = hollow;
         return this;
-    }
-
-    @Override
-    public boolean getHollow()
-    {
-        return hollow;
     }
 
     @Override
@@ -131,6 +137,20 @@ public abstract class AbstractShape implements IShape
     {
         this.replaceableOnly = replaceableOnly;
         return this;
+    }
+
+    @Override
+    public void render(Tessellator tess)
+    {
+        if (temppoints == null || System.currentTimeMillis() - tempPointsTime > RENDERTIMEOUT)
+        {
+            temppoints = getPoints();
+            tempPointsTime = System.currentTimeMillis();
+        }
+        for (PointI pointI : temppoints)
+        {
+            Helper.renderPoint(pointI, tess);
+        }
     }
 
     @Override

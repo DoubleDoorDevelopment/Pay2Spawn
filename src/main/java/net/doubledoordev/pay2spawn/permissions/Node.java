@@ -65,9 +65,9 @@ public class Node
     }
 
     @Override
-    public String toString()
+    public int hashCode()
     {
-        return JOINER_DOT.join(parts);
+        return Arrays.hashCode(parts);
     }
 
     @Override
@@ -82,8 +82,8 @@ public class Node
     }
 
     @Override
-    public int hashCode()
+    public String toString()
     {
-        return Arrays.hashCode(parts);
+        return JOINER_DOT.join(parts);
     }
 }

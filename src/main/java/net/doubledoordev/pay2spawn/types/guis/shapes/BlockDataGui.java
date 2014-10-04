@@ -30,11 +30,11 @@
 
 package net.doubledoordev.pay2spawn.types.guis.shapes;
 
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.network.NbtRequestMessage;
 import net.doubledoordev.pay2spawn.types.StructureType;
 import net.doubledoordev.pay2spawn.types.guis.HelperGuiBase;
 import net.doubledoordev.pay2spawn.util.IIHasCallback;
-import com.google.gson.JsonObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -299,7 +299,11 @@ public class BlockDataGui extends HelperGuiBase implements IIHasCallback
         panel3.add(importNextBlockRightButton, gbc);
     }
 
-    /** @noinspection ALL */
+    /**
+     * @noinspection ALL
+     */
     public JComponent $$$getRootComponent$$$()
-    { return panel1; }
+    {
+        return panel1;
+    }
 }

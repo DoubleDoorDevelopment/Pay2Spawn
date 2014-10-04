@@ -43,7 +43,9 @@ public class Hud
     public static final Hud                INSTANCE = new Hud();
     public final        HashSet<IHudEntry> set      = new HashSet<>();
 
-    private Hud() {}
+    private Hud()
+    {
+    }
 
     public void render(ArrayList<String> left, ArrayList<String> right, ArrayList<String> bottomLeft, ArrayList<String> bottomRight)
     {

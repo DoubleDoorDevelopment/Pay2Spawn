@@ -30,11 +30,11 @@
 
 package net.doubledoordev.pay2spawn.types.guis.shapes;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.types.guis.StructureTypeGui;
 import net.doubledoordev.pay2spawn.util.shapes.Box;
 import net.doubledoordev.pay2spawn.util.shapes.PointI;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -542,7 +542,11 @@ public class BoxGui extends ShapeGuiBase
         buttonGroup.add(randomReplaceableRadioButton);
     }
 
-    /** @noinspection ALL */
+    /**
+     * @noinspection ALL
+     */
     public JComponent $$$getRootComponent$$$()
-    { return panel1; }
+    {
+        return panel1;
+    }
 }

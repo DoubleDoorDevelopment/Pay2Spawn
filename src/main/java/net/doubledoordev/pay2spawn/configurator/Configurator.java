@@ -30,12 +30,12 @@
 
 package net.doubledoordev.pay2spawn.configurator;
 
+import com.google.gson.*;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.types.TypeRegistry;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.IIHasCallback;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
-import com.google.gson.*;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -60,8 +60,8 @@ import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
  */
 public class Configurator implements IIHasCallback
 {
-    public static final String[] COLUMN_KEYS  = new String[] {"name", "amount", "message", "countdown", "rewards"};
-    public static final String[] COLUMN_NAMES = new String[] {"Name", "Amount", "Message", "Countdown", "Types of rewards"};
+    public static final String[] COLUMN_KEYS  = new String[]{"name", "amount", "message", "countdown", "rewards"};
+    public static final String[] COLUMN_NAMES = new String[]{"Name", "Amount", "Message", "Countdown", "Types of rewards"};
     public static Configurator  instance;
     public        JFrame        frame;
     public        JButton       duplicateSelectedRewardButton;
@@ -725,5 +725,7 @@ public class Configurator implements IIHasCallback
      * @noinspection ALL
      */
     public JComponent $$$getRootComponent$$$()
-    { return panel1; }
+    {
+        return panel1;
+    }
 }

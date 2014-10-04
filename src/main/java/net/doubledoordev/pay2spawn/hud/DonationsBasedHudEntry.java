@@ -53,7 +53,7 @@ public class DonationsBasedHudEntry implements IHudEntry
     int position, amount, maxAmount, defaultPosition, defaultAmount;
     String header = "", format = "", configCat = "", defaultFormat = "", defaultHeader = "";
     Comparator<Donation> comparator = CheckerHandler.AMOUNT_DONATION_COMPARATOR;
-    List<Donation> donations = new ArrayList<>();
+    List<Donation>       donations  = new ArrayList<>();
 
     public DonationsBasedHudEntry(String configCat, int maxAmount, int defaultPosition, int defaultAmount, String defaultFormat, String defaultHeader, Comparator<Donation> comparator)
     {

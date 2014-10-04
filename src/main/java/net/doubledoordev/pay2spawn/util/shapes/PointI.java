@@ -30,10 +30,10 @@
 
 package net.doubledoordev.pay2spawn.util.shapes;
 
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.types.guis.StructureTypeGui;
 import net.doubledoordev.pay2spawn.types.guis.shapes.PointIGui;
 import net.doubledoordev.pay2spawn.util.Helper;
-import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -145,6 +145,15 @@ public class PointI implements IShape
     }
 
     @Override
+    public int hashCode()
+    {
+        int result = x;
+        result = 31 * result + y;
+        result = 31 * result + z;
+        return result;
+    }
+
+    @Override
     public boolean equals(Object o)
     {
         if (this == o) return true;
@@ -153,15 +162,6 @@ public class PointI implements IShape
         PointI pointI = (PointI) o;
 
         return x == pointI.x && y == pointI.y && z == pointI.z;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        int result = x;
-        result = 31 * result + y;
-        result = 31 * result + z;
-        return result;
     }
 
     @Override
@@ -205,25 +205,6 @@ public class PointI implements IShape
         return Arrays.asList(this);
     }
 
-    public PointI addX(int x)
-    {
-        this.x += x;
-        return this;
-    }
-
-    public PointI addY(int y)
-    {
-        this.y += y;
-        return this;
-    }
-
-    public PointI addZ(int z)
-    {
-        this.z += z;
-        return this;
-    }
-
-
     @Override
     public PointI getCenter()
     {
@@ -240,6 +221,12 @@ public class PointI implements IShape
     }
 
     @Override
+    public boolean getHollow()
+    {
+        return hollow;
+    }
+
+    @Override
     public IShape setHollow(boolean hollow)
     {
         this.hollow = hollow;
@@ -247,9 +234,9 @@ public class PointI implements IShape
     }
 
     @Override
-    public boolean getHollow()
+    public boolean getReplaceableOnly()
     {
-        return hollow;
+        return replaceableOnly;
     }
 
     @Override
@@ -257,12 +244,6 @@ public class PointI implements IShape
     {
         this.replaceableOnly = replaceableOnly;
         return this;
-    }
-
-    @Override
-    public boolean getReplaceableOnly()
-    {
-        return replaceableOnly;
     }
 
     @Override
@@ -278,12 +259,6 @@ public class PointI implements IShape
     }
 
     @Override
-    public IShape cloneShape()
-    {
-        return new PointI(x, y, z);
-    }
-
-    @Override
     public IShape rotate(int baseRotation)
     {
         switch (baseRotation)
@@ -294,8 +269,8 @@ public class PointI implements IShape
                 z = -tempx;
                 break;
             case 2:
-                x *= -1;
-                z *= -1;
+                x = -x;
+                z = -z;
                 break;
             case 3:
                 int tempz = z;
@@ -303,6 +278,24 @@ public class PointI implements IShape
                 x = tempz;
                 break;
         }
+        return this;
+    }
+
+    public PointI addX(int x)
+    {
+        this.x += x;
+        return this;
+    }
+
+    public PointI addY(int y)
+    {
+        this.y += y;
+        return this;
+    }
+
+    public PointI addZ(int z)
+    {
+        this.z += z;
         return this;
     }
 }

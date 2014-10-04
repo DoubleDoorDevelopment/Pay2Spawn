@@ -30,10 +30,6 @@
 
 package net.doubledoordev.pay2spawn.network;
 
-import net.doubledoordev.pay2spawn.types.guis.StructureTypeGui;
-import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
-import net.doubledoordev.pay2spawn.util.shapes.PointI;
-import net.doubledoordev.pay2spawn.util.shapes.Shapes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import cpw.mods.fml.common.network.ByteBufUtils;
@@ -41,6 +37,10 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import net.doubledoordev.pay2spawn.types.guis.StructureTypeGui;
+import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
+import net.doubledoordev.pay2spawn.util.shapes.PointI;
+import net.doubledoordev.pay2spawn.util.shapes.Shapes;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -103,7 +103,7 @@ public class StructureImportMessage implements IMessage
                 {
                     NBTTagCompound shapeNbt = JsonNBTHelper.parseJSON(jsonElement.getAsJsonObject());
                     // Can only be a point anyways
-                    PointI point = (PointI)Shapes.loadShape(shapeNbt);
+                    PointI point = (PointI) Shapes.loadShape(shapeNbt);
                     World world = ctx.getServerHandler().playerEntity.worldObj;
                     int x = message.x + point.getX(), y = message.y + point.getY(), z = message.z + point.getZ();
 

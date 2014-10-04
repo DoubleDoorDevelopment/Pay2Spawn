@@ -30,15 +30,15 @@
 
 package net.doubledoordev.pay2spawn.util;
 
+import com.google.common.base.Strings;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.hud.CountDownHudEntry;
 import net.doubledoordev.pay2spawn.hud.DonationTrainEntry;
 import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.network.RewardMessage;
-import com.google.common.base.Strings;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -52,9 +52,9 @@ import java.util.Iterator;
 public class ClientTickHandler
 {
     public static final ClientTickHandler INSTANCE = new ClientTickHandler();
+    public  DonationTrainEntry donationTrainEntry;
     HashSet<QueEntry> entries = new HashSet<>();
-    private CountDownHudEntry countDownHudEntry;
-    public DonationTrainEntry donationTrainEntry;
+    private CountDownHudEntry  countDownHudEntry;
     private int i = 0;
 
     private ClientTickHandler()

@@ -30,12 +30,12 @@
 
 package net.doubledoordev.pay2spawn.types;
 
+import com.google.common.collect.HashBiMap;
+import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.permissions.Node;
 import net.doubledoordev.pay2spawn.types.guis.PotionEffectTypeGui;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
-import com.google.common.collect.HashBiMap;
-import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -90,6 +90,12 @@ public class PotionEffectType extends TypeBase
     }
 
     @Override
+    public void spawnServerSide(EntityPlayerMP player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
+    {
+        player.addPotionEffect(PotionEffect.readCustomPotionEffectFromNBT(dataFromClient));
+    }
+
+    @Override
     public void printHelpList(File configFolder)
     {
         File file = new File(configFolder, "Potion.txt");
@@ -121,12 +127,6 @@ public class PotionEffectType extends TypeBase
         {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public void spawnServerSide(EntityPlayerMP player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
-    {
-        player.addPotionEffect(PotionEffect.readCustomPotionEffectFromNBT(dataFromClient));
     }
 
     @Override
