@@ -47,6 +47,7 @@ public class StatisticsHudEntry implements IHudEntry
     public final ArrayList<String> strings = new ArrayList<>();
     int position, amount, maxAmount, defaultPosition, defaultAmount;
     String header = "", format = "", configCat = "", defaultFormat = "", defaultHeader = "";
+    private boolean writeToFile = true;
 
     public StatisticsHudEntry(String configCat, int maxAmount, int defaultPosition, int defaultAmount, String defaultFormat, String defaultHeader)
     {
@@ -104,5 +105,19 @@ public class StatisticsHudEntry implements IHudEntry
 
         format = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "format", defaultFormat).getString());
         header = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "header", defaultHeader, "Empty for no header. Use \\n for a blank line.").getString()).trim();
+
+        writeToFile = config.getBoolean("writeToFile", configCat, writeToFile, "Write to a file for external use.");
+    }
+
+    @Override
+    public String getFilename()
+    {
+        return "stats.txt";
+    }
+
+    @Override
+    public boolean writeToFile()
+    {
+        return writeToFile;
     }
 }

@@ -49,6 +49,7 @@ public class SaleEntry implements IHudEntry
     String format = "";
     int amount = 0;
     private String noSaleMessage = "";
+    private boolean writeToFile = true;
 
     @Override
     public int getPosition()
@@ -79,7 +80,7 @@ public class SaleEntry implements IHudEntry
     {
         RewardsDB.Sale sale = Pay2Spawn.getRewardsDB().getLastSale();
 
-        if (sale != null)
+        if (sale == null)
         {
             if (!Strings.isNullOrEmpty(noSaleMessage)) list.add(noSaleMessage);
         }
@@ -96,6 +97,19 @@ public class SaleEntry implements IHudEntry
         String configCat = "Sales";
         position = config.get(P2SConfig.HUD + "." + configCat, "position", 1, "0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt(2);
         format = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "format", "SALE! $amount% off for $time").getString());
-        noSaleMessage = config.get(P2SConfig.HUD + "." + configCat, "timeoutMessage", "No donation train going :(").getString();
+        noSaleMessage = config.get(P2SConfig.HUD + "." + configCat, "noSaleMessage", "No sale right now...").getString();
+        writeToFile = config.getBoolean("writeToFile", configCat, writeToFile, "Write to a file for external use.");
+    }
+
+    @Override
+    public String getFilename()
+    {
+        return "sale.txt";
+    }
+
+    @Override
+    public boolean writeToFile()
+    {
+        return writeToFile;
     }
 }

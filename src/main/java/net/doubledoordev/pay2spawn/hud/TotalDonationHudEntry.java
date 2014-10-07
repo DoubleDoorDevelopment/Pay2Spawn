@@ -48,6 +48,7 @@ public class TotalDonationHudEntry implements IHudEntry
     int position, defaultPosition;
     String format = "", configCat = "", defaultFormat = "";
     private double amount = 0;
+    private boolean writeToFile = true;
 
     public TotalDonationHudEntry(String configCat, int defaultPosition, String defaultFormat, double amount)
     {
@@ -98,6 +99,19 @@ public class TotalDonationHudEntry implements IHudEntry
         Configuration config = Pay2Spawn.getConfig().configuration;
         position = config.get(P2SConfig.HUD + "." + configCat, "position", defaultPosition, "0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt(defaultPosition);
         format = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "format", defaultFormat).getString());
+        writeToFile = config.getBoolean("writeToFile", configCat, writeToFile, "Write to a file for external use.");
+    }
+
+    @Override
+    public String getFilename()
+    {
+        return "total.txt";
+    }
+
+    @Override
+    public boolean writeToFile()
+    {
+        return writeToFile;
     }
 
     public void addToDonationamount(double amount)

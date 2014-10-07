@@ -49,6 +49,7 @@ public class DonationTrainEntry implements IHudEntry
     private String timeoutMessage = "";
     private int timeout;
     private String line = "";
+    private boolean writeToFile = true;
 
     public DonationTrainEntry()
     {
@@ -94,6 +95,19 @@ public class DonationTrainEntry implements IHudEntry
         format = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "format", "Donationtrain! $amount donations already! Expires in $time.").getString());
         line = timeoutMessage = config.get(P2SConfig.HUD + "." + configCat, "timeoutMessage", "No donation train going :(").getString();
         timeout = config.get(P2SConfig.HUD + "." + configCat, "timeout", 60 * 3).getInt();
+        writeToFile = config.getBoolean("writeToFile", configCat, writeToFile, "Write to a file for external use.");
+    }
+
+    @Override
+    public String getFilename()
+    {
+        return "donationtrain.txt";
+    }
+
+    @Override
+    public boolean writeToFile()
+    {
+        return writeToFile;
     }
 
     public void resetTimeout()

@@ -50,4 +50,8 @@ public interface IHudEntry
     public void addToList(ArrayList<String> list);
 
     public void updateConfig();
+
+    public String getFilename();
+
+    public boolean writeToFile();
 }

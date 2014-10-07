@@ -51,12 +51,14 @@ public class DonationsBasedHudEntry implements IHudEntry
 {
     final ArrayList<String> strings = new ArrayList<>();
     int position, amount, maxAmount, defaultPosition, defaultAmount;
-    String header = "", format = "", configCat = "", defaultFormat = "", defaultHeader = "";
+    String header = "", format = "", configCat = "", defaultFormat = "", defaultHeader = "", filename = "";
     Comparator<Donation> comparator = CheckerHandler.AMOUNT_DONATION_COMPARATOR;
     List<Donation>       donations  = new ArrayList<>();
+    boolean writeToFile = true;
 
-    public DonationsBasedHudEntry(String configCat, int maxAmount, int defaultPosition, int defaultAmount, String defaultFormat, String defaultHeader, Comparator<Donation> comparator)
+    public DonationsBasedHudEntry(String filename, String configCat, int maxAmount, int defaultPosition, int defaultAmount, String defaultFormat, String defaultHeader, Comparator<Donation> comparator)
     {
+        this.filename = filename;
         this.configCat = configCat;
         this.maxAmount = maxAmount;
         this.defaultPosition = defaultPosition;
@@ -111,6 +113,8 @@ public class DonationsBasedHudEntry implements IHudEntry
         if (maxAmount != -1 && amount1 > maxAmount) amount1 = maxAmount;
         amount = amount1;
 
+        writeToFile = config.getBoolean("writeToFile", configCat, writeToFile, "Write to a file for external use.");
+
         format = Helper.formatColors(config.get(configCat, "format", defaultFormat).getString());
         header = Helper.formatColors(config.get(configCat, "header", defaultHeader, "Empty for no header. Use \\n for a blank line.").getString()).trim();
     }
@@ -135,6 +139,18 @@ public class DonationsBasedHudEntry implements IHudEntry
         {
             strings.add(Helper.formatText(this.getFormat(), donation, null));
         }
+    }
+
+    @Override
+    public String getFilename()
+    {
+        return filename;
+    }
+
+    @Override
+    public boolean writeToFile()
+    {
+        return writeToFile;
     }
 }
 

@@ -47,6 +47,7 @@ public class CountDownHudEntry implements IHudEntry
     public final ArrayList<String> lines = new ArrayList<>();
     int position, defaultPosition;
     String header = "", format = "", configCat = "", defaultFormat = "", defaultHeader = "";
+    boolean writeToFile = true;
 
     public CountDownHudEntry(String configCat, int defaultPosition, String defaultFormat, String defaultHeader)
     {
@@ -97,7 +98,21 @@ public class CountDownHudEntry implements IHudEntry
         Configuration config = Pay2Spawn.getConfig().configuration;
         position = config.get(P2SConfig.HUD + "." + configCat, "position", defaultPosition, "0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt(defaultPosition);
 
+        writeToFile = config.getBoolean("writeToFile", configCat, writeToFile, "Write to a file for external use.");
+
         format = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "format", defaultFormat).getString());
         header = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "header", defaultHeader, "Empty for no header. Use \\n for a blank line.").getString()).trim();
+    }
+
+    @Override
+    public String getFilename()
+    {
+        return "countdown.txt";
+    }
+
+    @Override
+    public boolean writeToFile()
+    {
+        return writeToFile;
     }
 }

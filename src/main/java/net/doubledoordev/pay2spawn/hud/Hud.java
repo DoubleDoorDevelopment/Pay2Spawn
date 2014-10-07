@@ -30,6 +30,18 @@
 
 package net.doubledoordev.pay2spawn.hud;
 
+import com.google.common.base.Joiner;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import net.doubledoordev.pay2spawn.P2SConfig;
+import net.doubledoordev.pay2spawn.Pay2Spawn;
+import net.doubledoordev.pay2spawn.util.Constants;
+import net.minecraftforge.common.config.Configuration;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -42,9 +54,16 @@ public class Hud
 {
     public static final Hud                INSTANCE = new Hud();
     public final        HashSet<IHudEntry> set      = new HashSet<>();
+    private final File folder;
+    private String lineSeperator = " | ";
+    private Joiner joiner;
 
     private Hud()
     {
+        FMLCommonHandler.instance().bus().register(this);
+        folder = new File(Pay2Spawn.getFolder(), "textFiles");
+        //noinspection ResultOfMethodCallIgnored
+        folder.mkdir();
     }
 
     public void render(ArrayList<String> left, ArrayList<String> right, ArrayList<String> bottomLeft, ArrayList<String> bottomRight)
@@ -71,6 +90,45 @@ public class Hud
 
     public void doConfig()
     {
+        Configuration config = Pay2Spawn.getConfig().configuration;
+        lineSeperator = config.get(P2SConfig.HUD, "lineSeperator", lineSeperator, "Separator in between 2 or more lines when writing to the text tile. Use \\n to indicate a new line.").getString();
         for (IHudEntry hudEntry : set) hudEntry.updateConfig();
+
+        joiner = Joiner.on(lineSeperator);
+    }
+
+    @SubscribeEvent
+    public void writefile(TickEvent.ClientTickEvent event)
+    {
+        if (event.phase != TickEvent.Phase.END) return;
+
+        ArrayList<String> allLines = new ArrayList<>();
+        for (IHudEntry hudEntry : set)
+        {
+            if (!hudEntry.writeToFile()) continue;
+
+            ArrayList<String> lines = new ArrayList<>();
+            hudEntry.addToList(lines);
+
+            String text = joiner.join(lines);
+            allLines.add(text);
+
+            try
+            {
+                FileUtils.writeStringToFile(new File(folder, hudEntry.getFilename()), joiner.join(lines));
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        try
+        {
+            FileUtils.writeStringToFile(new File(folder, "Combined.txt"), joiner.join(allLines));
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }
