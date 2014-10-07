@@ -404,7 +404,26 @@ public class Helper
     public static String readLongStringToByteBuf(ByteBuf buf)
     {
         int length = buf.readInt();
-        return buf.toString(buf.readerIndex(), length, Charsets.UTF_8);
+        byte[] bytes = new byte[length];
+        buf.readBytes(bytes);
+        return new String(bytes, Charsets.UTF_8);
+    }
+
+    public static String getTimeString(int ms)
+    {
+        StringBuilder sb = new StringBuilder();
+        if (ms > 60 * 60 * 1000)
+        {
+            sb.append(ms / (60 * 60 * 1000)).append("h ");
+            ms %= 60 * 60 * 1000;
+        }
+        if (ms > 60 * 1000)
+        {
+            sb.append(ms / (60 * 1000)).append("m ");
+            ms %= 60 * 1000;
+        }
+        sb.append((double) ms / 1000).append("s");
+        return sb.toString();
     }
 
     public static final class TableData

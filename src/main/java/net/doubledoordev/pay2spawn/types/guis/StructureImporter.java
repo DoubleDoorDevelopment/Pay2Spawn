@@ -128,10 +128,6 @@ public class StructureImporter
                             int diffY = Math.max(p1.getY(), p2.getY()) - minY;
                             int diffZ = Math.max(p1.getZ(), p2.getZ()) - minZ;
 
-                            System.out.println(String.format("X: %d %d", minX, diffX));
-                            System.out.println(String.format("Y: %d %d", minY, diffY));
-                            System.out.println(String.format("Z: %d %d", minZ, diffZ));
-
                             for (int x = 0; x <= diffX; x++)
                             {
                                 for (int y = 0; y <= diffY; y++)

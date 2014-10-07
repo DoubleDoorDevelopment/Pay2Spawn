@@ -115,7 +115,7 @@ public class Reward
 
     public String getMessage()
     {
-        return message;
+        return message == null ? "" : message;
     }
 
     public String getTypes()

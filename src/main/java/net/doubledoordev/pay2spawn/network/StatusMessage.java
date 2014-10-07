@@ -132,7 +132,8 @@ public class StatusMessage implements IMessage
         HANDSHAKE,
         CONFIGSYNC,
         FORCE,
-        STATUS
+        STATUS,
+        SALE
     }
 
     public static class Handler implements IMessageHandler<StatusMessage, IMessage>
@@ -157,6 +158,9 @@ public class StatusMessage implements IMessage
                         break;
                     case STATUS:
                         return new StatusMessage(Type.STATUS, message.extraData[0], Boolean.toString(Pay2Spawn.enable));
+                    case SALE:
+                        Pay2Spawn.getRewardsDB().addSale(Integer.parseInt(message.extraData[0]), Integer.parseInt(message.extraData[1]));
+                        break;
                 }
             }
             else
@@ -169,12 +173,6 @@ public class StatusMessage implements IMessage
                         // Can't use return statement here cause you can't return multiple packets
                         if (MinecraftServer.getServer().isDedicatedServer() && Pay2Spawn.getConfig().forceServerconfig) sendConfigToPlayer(ctx.getServerHandler().playerEntity);
                         if (MinecraftServer.getServer().isDedicatedServer() && Pay2Spawn.getConfig().forceP2S) sendForceToPlayer(ctx.getServerHandler().playerEntity);
-                        break;
-                    case CONFIGSYNC:
-                        // Noop
-                        break;
-                    case FORCE:
-                        // Noop
                         break;
                     case STATUS:
                         EntityPlayer sender = MinecraftServer.getServer().getConfigurationManager().func_152612_a(message.extraData[0]);

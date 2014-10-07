@@ -107,8 +107,6 @@ public class Box extends AbstractShape
     {
         super.rotate(baseRotation);
 
-        System.out.println("baseRotation " + baseRotation);
-
         switch (baseRotation)
         {
             case 1:

@@ -42,6 +42,8 @@ import net.doubledoordev.pay2spawn.types.TypeRegistry;
 
 import java.io.*;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
 
 import static net.doubledoordev.pay2spawn.util.Constants.GSON;
@@ -55,7 +57,8 @@ import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
  */
 public class RewardsDB
 {
-    private final HashMultimap<Double, Reward> map = HashMultimap.create();
+    public final  LinkedList<Sale>             saleList = new LinkedList<>();
+    private final HashMultimap<Double, Reward> map      = HashMultimap.create();
     public boolean editable;
 
     public RewardsDB(String input)
@@ -132,14 +135,19 @@ public class RewardsDB
 
     public synchronized void process(Donation donation, boolean msg)
     {
-        double highestmatch = 0d;
+        Sale sale = null;
+        while (!saleList.isEmpty() && sale == null)
+        {
+            if (!saleList.getFirst().isExpired()) sale = saleList.getFirst();
+        }
+        if (sale != null) donation.amount /= (sale.amount / 100.0);
 
+        double highestmatch = 0d;
         Reward reward = null;
         if (map.containsKey(donation.amount)) reward = RandomRegistry.getRandomFromSet(map.get(donation.amount));
         else
         {
-            for (double key : map.keySet())
-                if (key < donation.amount && highestmatch < key) highestmatch = key;
+            for (double key : map.keySet()) if (key < donation.amount && highestmatch < key) highestmatch = key;
 
             if (map.containsKey(highestmatch)) reward = RandomRegistry.getRandomFromSet(map.get(highestmatch));
         }
@@ -159,7 +167,7 @@ public class RewardsDB
             RandomRegistry.getRandomFromSet(map.get(-1D)).addToCountdown(donation, false, reward);
         }
 
-        Pay2Spawn.getSnw().sendToServer(new MessageMessage(reward, donation));
+        if (reward != null) Pay2Spawn.getSnw().sendToServer(new MessageMessage(reward, donation));
     }
 
     public Set<Double> getAmounts()
@@ -170,5 +178,45 @@ public class RewardsDB
     public Collection<Reward> getRewards()
     {
         return map.values();
+    }
+
+    public void addSale(int time, int amount)
+    {
+        saleList.add(new Sale(time, amount));
+    }
+
+    public Sale getLastSale()
+    {
+        Sale sale = null;
+        synchronized (saleList)
+        {
+            while (!saleList.isEmpty() && sale == null)
+            {
+                if (!saleList.getFirst().isExpired()) sale = saleList.getFirst();
+            }
+        }
+        return sale;
+    }
+
+    public static class Sale
+    {
+        public final int amount;
+        public long time;
+        private boolean activated = false;
+        public Sale(int time, int amount)
+        {
+            this.time = time * 1000 * 60;
+            this.amount = amount;
+        }
+
+        public boolean isExpired()
+        {
+            if (!activated)
+            {
+                this.activated = true;
+                this.time += System.currentTimeMillis();
+            }
+            return time - System.currentTimeMillis() < 0;
+        }
     }
 }

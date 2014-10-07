@@ -205,7 +205,15 @@ public class JsonNBTHelper
         if (n instanceof Float) return new NBTTagFloat(n.floatValue());
         if (n instanceof Double) return new NBTTagDouble(n.doubleValue());
 
-        throw new NumberFormatException(element.toString() + " is was not able to be parsed.");
+        try
+        {
+            return new NBTTagInt(Integer.parseInt(element.toString()));
+        }
+        catch (NumberFormatException ignored)
+        {
+
+        }
+        throw new NumberFormatException(element.getAsNumber() + " is was not able to be parsed.");
     }
 
     public static NBTTagByteArray parseJSONByteArray(String value)

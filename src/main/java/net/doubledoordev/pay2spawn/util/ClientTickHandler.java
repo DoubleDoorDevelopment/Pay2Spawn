@@ -38,6 +38,7 @@ import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.hud.CountDownHudEntry;
 import net.doubledoordev.pay2spawn.hud.DonationTrainEntry;
 import net.doubledoordev.pay2spawn.hud.Hud;
+import net.doubledoordev.pay2spawn.hud.SaleEntry;
 import net.doubledoordev.pay2spawn.network.RewardMessage;
 
 import java.util.HashSet;
@@ -53,8 +54,9 @@ public class ClientTickHandler
 {
     public static final ClientTickHandler INSTANCE = new ClientTickHandler();
     public  DonationTrainEntry donationTrainEntry;
+    public SaleEntry saleEntry;
     HashSet<QueEntry> entries = new HashSet<>();
-    private CountDownHudEntry  countDownHudEntry;
+    private CountDownHudEntry countDownHudEntry;
     private int i = 0;
 
     private ClientTickHandler()
@@ -70,7 +72,6 @@ public class ClientTickHandler
         i = 0;
 
         donationTrainEntry.tick();
-
         countDownHudEntry.lines.clear();
 
         Iterator<QueEntry> rewardIterator = entries.iterator();
@@ -106,6 +107,9 @@ public class ClientTickHandler
 
         donationTrainEntry = new DonationTrainEntry();
         Hud.INSTANCE.set.add(donationTrainEntry);
+
+        saleEntry = new SaleEntry();
+        Hud.INSTANCE.set.add(saleEntry);
     }
 
     public class QueEntry
