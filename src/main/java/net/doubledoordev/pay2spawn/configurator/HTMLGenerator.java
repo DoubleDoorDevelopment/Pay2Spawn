@@ -90,7 +90,7 @@ public class HTMLGenerator
             @Override
             public int compare(Reward o1, Reward o2)
             {
-                return (int) (o1.getAmount() - o2.getAmount());
+                return (int) (o1.getAmount() * 100 - o2.getAmount() * 100);
             }
         });
 
