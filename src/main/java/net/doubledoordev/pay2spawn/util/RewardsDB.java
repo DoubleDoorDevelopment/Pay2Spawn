@@ -42,7 +42,6 @@ import net.doubledoordev.pay2spawn.types.TypeRegistry;
 
 import java.io.*;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -200,9 +199,10 @@ public class RewardsDB
 
     public static class Sale
     {
-        public final int amount;
-        public long time;
+        public final int  amount;
+        public       long time;
         private boolean activated = false;
+
         public Sale(int time, int amount)
         {
             this.time = time * 1000 * 60;

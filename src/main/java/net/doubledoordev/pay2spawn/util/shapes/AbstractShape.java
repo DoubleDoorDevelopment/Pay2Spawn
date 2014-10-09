@@ -58,8 +58,8 @@ public abstract class AbstractShape implements IShape
         typeMap.put(REPLACEABLEONLY_KEY, NBTTypes[BYTE]);
     }
 
-    public static final long RENDERTIMEOUT = 1000;
-    protected long tempPointsTime = 0L;
+    public static final long RENDERTIMEOUT  = 1000;
+    protected           long tempPointsTime = 0L;
     protected Collection<PointI> temppoints;
     PointI center = new PointI();
     boolean hollow, replaceableOnly;

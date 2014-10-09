@@ -165,7 +165,7 @@ public class jlc
                         //output_mode = O_WAVEFILE;
                         output_filename = argv[i];
                     }
-			 /*else if (argv[i].equals("-f"))
+             /*else if (argv[i].equals("-f"))
 			 {
 		        if (++i == argc)
 				{

@@ -47,7 +47,7 @@ public class TotalDonationHudEntry implements IHudEntry
 {
     int position, defaultPosition;
     String format = "", configCat = "", defaultFormat = "";
-    private double amount = 0;
+    private double  amount      = 0;
     private boolean writeToFile = true;
 
     public TotalDonationHudEntry(String configCat, int defaultPosition, String defaultFormat, double amount)

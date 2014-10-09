@@ -30,8 +30,8 @@ import net.doubledoordev.libs.javazoom.jl.decoder.JavaLayerException;
  */
 public class JavaSoundAudioDeviceFactory extends AudioDeviceFactory
 {
-    static private final String DEVICE_CLASS_NAME = "net.doubledoordev.libs.javazoom.jl.player.JavaSoundAudioDevice";
-    private boolean tested = false;
+    static private final String  DEVICE_CLASS_NAME = "net.doubledoordev.libs.javazoom.jl.player.JavaSoundAudioDevice";
+    private              boolean tested            = false;
 
     public synchronized AudioDevice createAudioDevice()
             throws JavaLayerException

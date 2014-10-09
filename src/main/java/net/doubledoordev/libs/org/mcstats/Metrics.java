@@ -737,7 +737,9 @@ public class Metrics
          */
         protected void onOptOut()
         {
-        }        @Override
+        }
+
+        @Override
         public boolean equals(final Object object)
         {
             if (!(object instanceof Graph))

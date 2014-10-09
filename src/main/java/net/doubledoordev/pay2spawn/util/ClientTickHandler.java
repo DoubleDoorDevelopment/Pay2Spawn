@@ -53,8 +53,8 @@ import java.util.Iterator;
 public class ClientTickHandler
 {
     public static final ClientTickHandler INSTANCE = new ClientTickHandler();
-    public  DonationTrainEntry donationTrainEntry;
-    public SaleEntry saleEntry;
+    public DonationTrainEntry donationTrainEntry;
+    public SaleEntry          saleEntry;
     HashSet<QueEntry> entries = new HashSet<>();
     private CountDownHudEntry countDownHudEntry;
     private int i = 0;

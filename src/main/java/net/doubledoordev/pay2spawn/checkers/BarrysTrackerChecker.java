@@ -55,7 +55,7 @@ public class BarrysTrackerChecker extends AbstractChecker implements Runnable
     public static final BarrysTrackerChecker INSTANCE = new BarrysTrackerChecker();
     public final static String               NAME     = "barrys-tracker";
     public final static String               CAT      = BASECAT_TRACKERS + '.' + NAME;
-    public String URL = "http://localhost:8082/donations/";
+    public              String               URL      = "http://localhost:8082/donations/";
     DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
     boolean enabled  = false;
     int     interval = 5;

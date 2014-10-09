@@ -52,9 +52,9 @@ public class DonationsBasedHudEntry implements IHudEntry
     final ArrayList<String> strings = new ArrayList<>();
     int position, amount, maxAmount, defaultPosition, defaultAmount;
     String header = "", format = "", configCat = "", defaultFormat = "", defaultHeader = "", filename = "";
-    Comparator<Donation> comparator = CheckerHandler.AMOUNT_DONATION_COMPARATOR;
-    List<Donation>       donations  = new ArrayList<>();
-    boolean writeToFile = true;
+    Comparator<Donation> comparator  = CheckerHandler.AMOUNT_DONATION_COMPARATOR;
+    List<Donation>       donations   = new ArrayList<>();
+    boolean              writeToFile = true;
 
     public DonationsBasedHudEntry(String filename, String configCat, int maxAmount, int defaultPosition, int defaultAmount, String defaultFormat, String defaultHeader, Comparator<Donation> comparator)
     {
@@ -119,6 +119,18 @@ public class DonationsBasedHudEntry implements IHudEntry
         header = Helper.formatColors(config.get(configCat, "header", defaultHeader, "Empty for no header. Use \\n for a blank line.").getString()).trim();
     }
 
+    @Override
+    public String getFilename()
+    {
+        return filename;
+    }
+
+    @Override
+    public boolean writeToFile()
+    {
+        return writeToFile;
+    }
+
     public void add(Donation donation)
     {
         donations.add(donation);
@@ -139,18 +151,6 @@ public class DonationsBasedHudEntry implements IHudEntry
         {
             strings.add(Helper.formatText(this.getFormat(), donation, null));
         }
-    }
-
-    @Override
-    public String getFilename()
-    {
-        return filename;
-    }
-
-    @Override
-    public boolean writeToFile()
-    {
-        return writeToFile;
     }
 }
 

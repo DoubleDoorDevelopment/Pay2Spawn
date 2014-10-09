@@ -62,59 +62,59 @@ final class SynthesisFilter
 	public static final int MEDIUM_QUALITY = 2;
 	public static final int LOW_QUALITY = 4;
 	*/
-    private static final float  cos15_64 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 15.0 / 64.0)));
-    private static final float  cos17_64 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 17.0 / 64.0)));
-  
-	/*
+    private static final float cos15_64 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 15.0 / 64.0)));
+    private static final float cos17_64 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 17.0 / 64.0)));
+
+    /*
     private void setQuality(int quality0)
-	{
-	  	switch (quality0)
-	  	{		
-		case HIGH_QUALITY:
-		case MEDIUM_QUALITY:
-		case LOW_QUALITY:						  
-			v_inc = 16 * quality0;			
-			quality = quality0;
-			break;	
-		default :
-			throw new IllegalArgumentException("Unknown quality value");
-	  	}				
-	}
-	
-	public int getQuality()
-	{
-		return quality;	
-	}
-	*/
-    private static final float  cos19_64 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 19.0 / 64.0)));
-    private static final float  cos21_64 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 21.0 / 64.0)));
-    private static final float  cos23_64 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 23.0 / 64.0)));
-    private static final float  cos25_64 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 25.0 / 64.0)));
-    private static final float  cos27_64 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 27.0 / 64.0)));
-    private static final float  cos29_64 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 29.0 / 64.0)));
-    private static final float  cos31_64 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 31.0 / 64.0)));
-    private static final float  cos1_32  = (float) (1.0 / (2.0 * Math.cos(MY_PI / 32.0)));
-    private static final float  cos3_32  = (float) (1.0 / (2.0 * Math.cos(MY_PI * 3.0 / 32.0)));
-    private static final float  cos5_32  = (float) (1.0 / (2.0 * Math.cos(MY_PI * 5.0 / 32.0)));
-    private static final float  cos7_32  = (float) (1.0 / (2.0 * Math.cos(MY_PI * 7.0 / 32.0)));
-    private static final float  cos9_32  = (float) (1.0 / (2.0 * Math.cos(MY_PI * 9.0 / 32.0)));
-    private static final float  cos11_32 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 11.0 / 32.0)));
-    private static final float  cos13_32 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 13.0 / 32.0)));
-    private static final float  cos15_32 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 15.0 / 32.0)));
-    private static final float  cos1_16  = (float) (1.0 / (2.0 * Math.cos(MY_PI / 16.0)));
-    private static final float  cos3_16  = (float) (1.0 / (2.0 * Math.cos(MY_PI * 3.0 / 16.0)));
-    private static final float  cos5_16  = (float) (1.0 / (2.0 * Math.cos(MY_PI * 5.0 / 16.0)));
-    private static final float  cos7_16  = (float) (1.0 / (2.0 * Math.cos(MY_PI * 7.0 / 16.0)));
-    private static final float  cos1_8   = (float) (1.0 / (2.0 * Math.cos(MY_PI / 8.0)));
-    private static final float  cos3_8   = (float) (1.0 / (2.0 * Math.cos(MY_PI * 3.0 / 8.0)));
-    private static final float  cos1_4   = (float) (1.0 / (2.0 * Math.cos(MY_PI / 4.0)));
-    private static float d[] = null;
+    {
+          switch (quality0)
+          {
+        case HIGH_QUALITY:
+        case MEDIUM_QUALITY:
+        case LOW_QUALITY:
+            v_inc = 16 * quality0;
+            quality = quality0;
+            break;
+        default :
+            throw new IllegalArgumentException("Unknown quality value");
+          }
+    }
+
+    public int getQuality()
+    {
+        return quality;
+    }
+    */
+    private static final float cos19_64 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 19.0 / 64.0)));
+    private static final float cos21_64 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 21.0 / 64.0)));
+    private static final float cos23_64 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 23.0 / 64.0)));
+    private static final float cos25_64 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 25.0 / 64.0)));
+    private static final float cos27_64 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 27.0 / 64.0)));
+    private static final float cos29_64 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 29.0 / 64.0)));
+    private static final float cos31_64 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 31.0 / 64.0)));
+    private static final float cos1_32  = (float) (1.0 / (2.0 * Math.cos(MY_PI / 32.0)));
+    private static final float cos3_32  = (float) (1.0 / (2.0 * Math.cos(MY_PI * 3.0 / 32.0)));
+    private static final float cos5_32  = (float) (1.0 / (2.0 * Math.cos(MY_PI * 5.0 / 32.0)));
+    private static final float cos7_32  = (float) (1.0 / (2.0 * Math.cos(MY_PI * 7.0 / 32.0)));
+    private static final float cos9_32  = (float) (1.0 / (2.0 * Math.cos(MY_PI * 9.0 / 32.0)));
+    private static final float cos11_32 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 11.0 / 32.0)));
+    private static final float cos13_32 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 13.0 / 32.0)));
+    private static final float cos15_32 = (float) (1.0 / (2.0 * Math.cos(MY_PI * 15.0 / 32.0)));
+    private static final float cos1_16  = (float) (1.0 / (2.0 * Math.cos(MY_PI / 16.0)));
+    private static final float cos3_16  = (float) (1.0 / (2.0 * Math.cos(MY_PI * 3.0 / 16.0)));
+    private static final float cos5_16  = (float) (1.0 / (2.0 * Math.cos(MY_PI * 5.0 / 16.0)));
+    private static final float cos7_16  = (float) (1.0 / (2.0 * Math.cos(MY_PI * 7.0 / 16.0)));
+    private static final float cos1_8   = (float) (1.0 / (2.0 * Math.cos(MY_PI / 8.0)));
+    private static final float cos3_8   = (float) (1.0 / (2.0 * Math.cos(MY_PI * 3.0 / 8.0)));
+    private static final float cos1_4   = (float) (1.0 / (2.0 * Math.cos(MY_PI / 4.0)));
+    private static       float d[]      = null;
     /**
      * d[] split into subarrays of length 16. This provides for
      * more faster access by allowing a block of 16 to be addressed
      * with constant offset.
      */
-    private static float d16[][] = null;
+    private static       float d16[][]  = null;
     private float[] v1;
     private float[] v2;
     private float[] actual_v;            // v1 or v2
@@ -128,6 +128,7 @@ final class SynthesisFilter
      */
 
     private float[] _tmpOut = new float[32];
+
     /**
      * Contructor.
      * The scalefactor scales the calculated float pcm samples to short values
@@ -296,7 +297,7 @@ final class SynthesisFilter
         //float[] pp = new float[16];
 
 	 /*
-	 for (int i=31; i>=0; i--)
+     for (int i=31; i>=0; i--)
 	 {
 		 new_v[i] = 0.0f;
 	 }

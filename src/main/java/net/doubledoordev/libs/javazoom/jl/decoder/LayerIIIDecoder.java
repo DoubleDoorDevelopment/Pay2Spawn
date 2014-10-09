@@ -41,9 +41,9 @@ package net.doubledoordev.libs.javazoom.jl.decoder;
  */
 final class LayerIIIDecoder implements FrameDecoder
 {
-    public static final int pretab[] =
+    public static final  int   pretab[]                   =
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 3, 3, 3, 2, 0};
-    public static final float two_to_negative_half_pow[] =
+    public static final  float two_to_negative_half_pow[] =
             {1.0000000000E+00f, 7.0710678119E-01f, 5.0000000000E-01f, 3.5355339059E-01f,
                     2.5000000000E-01f, 1.7677669530E-01f, 1.2500000000E-01f, 8.8388347648E-02f,
                     6.2500000000E-02f, 4.4194173824E-02f, 3.1250000000E-02f, 2.2097086912E-02f,
@@ -61,8 +61,8 @@ final class LayerIIIDecoder implements FrameDecoder
                     3.7252902985E-09f, 2.6341780319E-09f, 1.8626451492E-09f, 1.3170890160E-09f,
                     9.3132257462E-10f, 6.5854450798E-10f, 4.6566128731E-10f, 3.2927225399E-10f
             };
-    public static final float t_43[] = create_t_43();
-    public static final float io[][] =
+    public static final  float t_43[]                     = create_t_43();
+    public static final  float io[][]                     =
             {
                     {1.0000000000E+00f, 8.4089641526E-01f, 7.0710678119E-01f, 5.9460355751E-01f,
                             5.0000000001E-01f, 4.2044820763E-01f, 3.5355339060E-01f, 2.9730177876E-01f,
@@ -81,7 +81,7 @@ final class LayerIIIDecoder implements FrameDecoder
                             2.4414062501E-04f, 1.7263349151E-04f, 1.2207031251E-04f, 8.6316745755E-05f,
                             6.1035156254E-05f, 4.3158372878E-05f, 3.0517578127E-05f, 2.1579186439E-05f}
             };
-    public static final float TAN12[] =
+    public static final  float TAN12[]                    =
             {
                     0.0f, 0.26794919f, 0.57735027f, 1.0f,
                     1.73205081f, 3.73205081f, 9.9999999e10f, -3.73205081f,
@@ -91,7 +91,7 @@ final class LayerIIIDecoder implements FrameDecoder
     /**
      * ***********************************************************
      */
-    public static final float win[][] =
+    public static final  float win[][]                    =
             {
                     {-1.6141214951E-02f, -5.3603178919E-02f, -1.0070713296E-01f, -1.6280817573E-01f,
                             -4.9999999679E-01f, -3.8388735032E-01f, -6.2061144372E-01f, -1.1659756083E+00f,
@@ -133,26 +133,26 @@ final class LayerIIIDecoder implements FrameDecoder
                             -1.5350360518E-01f, -1.3758624925E-01f, -1.2103922149E-01f, -2.0710679058E-01f,
                             -8.4752577594E-02f, -6.4157525656E-02f, -4.1131172614E-02f, -1.4790705759E-02f}
             };
-    public static final int nr_of_sfb_block[][][] =
+    public static final  int   nr_of_sfb_block[][][]      =
             {{{6, 5, 5, 5}, {9, 9, 9, 9}, {6, 9, 9, 9}},
                     {{6, 5, 7, 3}, {9, 9, 12, 6}, {6, 9, 12, 6}},
                     {{11, 10, 0, 0}, {18, 18, 0, 0}, {15, 18, 0, 0}},
                     {{7, 7, 7, 0}, {12, 12, 12, 0}, {6, 15, 12, 0}},
                     {{6, 6, 6, 3}, {12, 9, 9, 6}, {6, 12, 9, 6}},
                     {{8, 8, 5, 0}, {15, 12, 9, 0}, {6, 18, 9, 0}}};
-    private static final int SSLIMIT = 18;
-    private static final int SBLIMIT = 32;
-    private static final int slen[][] =
+    private static final int   SSLIMIT                    = 18;
+    private static final int   SBLIMIT                    = 32;
+    private static final int   slen[][]                   =
             {
                     {0, 0, 0, 0, 3, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4},
                     {0, 1, 2, 3, 0, 1, 2, 3, 1, 2, 3, 1, 2, 3, 2, 3}
             };
-    private static final float cs[] =
+    private static final float cs[]                       =
             {
                     0.857492925712f, 0.881741997318f, 0.949628649103f, 0.983314592492f,
                     0.995517816065f, 0.999160558175f, 0.999899195243f, 0.999993155067f
             };
-    private static final float ca[] =
+    private static final float ca[]                       =
             {
                     -0.5144957554270f, -0.4717319685650f, -0.3133774542040f, -0.1819131996110f,
                     -0.0945741925262f, -0.0409655828852f, -0.0141985685725f, -0.00369997467375f
@@ -161,7 +161,7 @@ final class LayerIIIDecoder implements FrameDecoder
     // the actual calculation
     // 576 / 18
 /*
-	private static final int ss_div[] =
+    private static final int ss_div[] =
 	{
 		 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 		 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
@@ -235,29 +235,29 @@ final class LayerIIIDecoder implements FrameDecoder
 	};
 */
     private static /*final*/ int reorder_table[][]/* = loadReorderTable()*/;    // SZD: will be generated on demand
-    final double d43 = (4.0 / 3.0);
+    final         double d43      = (4.0 / 3.0);
     /**
      *
      */
     // MDM: new_slen is fully initialized before use, no need
     // to reallocate array.
-    private final int[] new_slen = new int[4];
-    public int[] scalefac_buffer;
+    private final int[]  new_slen = new int[4];
+    public int[]   scalefac_buffer;
     public Sftable sftable;
     /**
      *
      */
-    int[] x = {0};
-    int[] y = {0};
+    int[]   x         = {0};
+    int[]   y         = {0};
     // private III_scalefac_t 		scalefac;
-    int[] v = {0};
-    int[] w = {0};
+    int[]   v         = {0};
+    int[]   w         = {0};
     /**
      *
      */
 
-    int[]   is_pos   = new int[576];
-    float[] is_ratio = new float[576];
+    int[]   is_pos    = new int[576];
+    float[] is_ratio  = new float[576];
     /**
      *
      */
@@ -283,15 +283,15 @@ final class LayerIIIDecoder implements FrameDecoder
     private int             which_channels;
     private BitReserve      br;
     private III_side_info_t si;
-    private temporaire2[] III_scalefac_t;
-    private temporaire2[] scalefac;
-    private int max_gr;
-    private int frame_start;
-    private int part2_start;
-    private int channels;
-    private int first_channel;
-    private int last_channel;
-    private int sfreq;
+    private temporaire2[]   III_scalefac_t;
+    private temporaire2[]   scalefac;
+    private int             max_gr;
+    private int             frame_start;
+    private int             part2_start;
+    private int             channels;
+    private int             first_channel;
+    private int             last_channel;
+    private int             sfreq;
     /**
      * Decode one frame, filling the buffer with the output samples.
      */
@@ -300,7 +300,7 @@ final class LayerIIIDecoder implements FrameDecoder
     // SynthesisFilter in one go.
     private float[] samples1 = new float[32];
     private float[] samples2 = new float[32];
-    private              int counter = 0;
+    private int     counter  = 0;
     private SBI[] sfBandIndex; // Init in the constructor.
 
     /**
@@ -488,9 +488,10 @@ final class LayerIIIDecoder implements FrameDecoder
     // This may be adjusted for performance without any problems.
     //public static final int 	POW_TABLE_LIMIT=512;
 
-    /************************************************************/
+    /**
+     * ********************************************************
+     */
 	/*                            L3TABLE                       */
-
     public void decodeFrame()
     {
         decode();
@@ -2557,7 +2558,9 @@ final class LayerIIIDecoder implements FrameDecoder
 	/*                          END OF L3TYPE                      */
     /***************************************************************/
 
-    /***************************************************************/
+    /**
+     * ***********************************************************
+     */
 	/*                             INV_MDCT                        */
 
     static class temporaire
@@ -2576,7 +2579,10 @@ final class LayerIIIDecoder implements FrameDecoder
             gr[1] = new gr_info_s();
         }
     }
-    /***************************************************************/
+
+    /**
+     * ***********************************************************
+     */
 	/*                         END OF INV_MDCT                     */
 
     static class III_side_info_t

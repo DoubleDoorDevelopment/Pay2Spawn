@@ -38,7 +38,6 @@ import net.doubledoordev.pay2spawn.util.RewardsDB;
 import net.minecraftforge.common.config.Configuration;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * @author Dries007
@@ -47,9 +46,9 @@ public class SaleEntry implements IHudEntry
 {
     int position;
     String format = "";
-    int amount = 0;
-    private String noSaleMessage = "";
-    private boolean writeToFile = true;
+    int    amount = 0;
+    private String  noSaleMessage = "";
+    private boolean writeToFile   = true;
 
     @Override
     public int getPosition()

@@ -60,8 +60,8 @@ import java.util.HashSet;
 public class StructureImporter
 {
     final StructureImporter instance  = this;
-    final HashSet<PointI> points    = new HashSet<>();
-    final HashSet<IShape> selection = new HashSet<>();
+    final HashSet<PointI>   points    = new HashSet<>();
+    final HashSet<IShape>   selection = new HashSet<>();
     private final StructureTypeGui callback;
     private final JDialog          dialog;
     public        JPanel           panel1;

@@ -43,12 +43,13 @@ public class RiffFile
     public static final int DDC_USER_ABORT    = 5;        // Operation was aborted by the user
     public static final int DDC_INVALID_FILE  = 6;      // File format does not match
     // RiffFileMode
-    public static final int RFM_UNKNOWN = 0;           // undefined type (can use to mean "N/A" or "not open")
-    public static final int RFM_WRITE   = 1;               // open for write
-    public static final int RFM_READ    = 2;               // open for read
+    public static final int RFM_UNKNOWN       = 0;           // undefined type (can use to mean "N/A" or "not open")
+    public static final int RFM_WRITE         = 1;               // open for write
+    public static final int RFM_READ          = 2;               // open for read
     protected int              fmode;            // current file I/O mode
     protected RandomAccessFile file;             // I/O stream to use
     private   RiffChunkHeader  riff_header;      // header for whole file
+
     /**
      * Dummy Constructor
      */

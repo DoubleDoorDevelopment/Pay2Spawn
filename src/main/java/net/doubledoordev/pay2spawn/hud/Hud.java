@@ -36,7 +36,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.doubledoordev.pay2spawn.P2SConfig;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
-import net.doubledoordev.pay2spawn.util.Constants;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.commons.io.FileUtils;
 

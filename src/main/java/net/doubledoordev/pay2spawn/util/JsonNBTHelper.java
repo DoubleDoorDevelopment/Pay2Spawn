@@ -108,7 +108,6 @@ public class JsonNBTHelper
         JsonArray jsonArray = new JsonArray();
         for (int i = 0; i < nbtArray.tagCount(); i++)
         {
-            // TODO: Yell at Mojang for this...
             switch (nbtArray.func_150303_d())
             {
                 case 5:

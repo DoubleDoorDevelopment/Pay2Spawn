@@ -46,9 +46,9 @@ import java.util.HashSet;
  */
 public abstract class AbstractChecker
 {
-    public double min_donation = 1;
-    protected HashSet<String>   doneIDs = new HashSet<>();
-    protected HashSet<Donation> backlog = new HashSet<>();
+    public    double            min_donation = 1;
+    protected HashSet<String>   doneIDs      = new HashSet<>();
+    protected HashSet<Donation> backlog      = new HashSet<>();
 
     protected AbstractChecker()
     {

@@ -37,8 +37,8 @@ import java.util.Hashtable;
 
 public class FactoryRegistry extends AudioDeviceFactory
 {
-    static private FactoryRegistry instance = null;
-    protected Hashtable factories = new Hashtable();
+    static private FactoryRegistry instance  = null;
+    protected      Hashtable       factories = new Hashtable();
 
     static synchronized public FactoryRegistry systemRegistry()
     {

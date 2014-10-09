@@ -32,7 +32,6 @@ package net.doubledoordev.pay2spawn.network;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;

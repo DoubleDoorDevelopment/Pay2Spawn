@@ -55,7 +55,7 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
     public static final DonationTrackerChecker INSTANCE = new DonationTrackerChecker();
     public final static String                 NAME     = "donation-tracker";
     public final static String                 CAT      = BASECAT_TRACKERS + '.' + NAME;
-    public String URL = "https://www.donation-tracker.com/api/?channel=%s&api_key=%s";
+    public              String                 URL      = "https://www.donation-tracker.com/api/?channel=%s&api_key=%s";
     DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
     String Channel = "", APIKey = "";
     boolean enabled  = false;

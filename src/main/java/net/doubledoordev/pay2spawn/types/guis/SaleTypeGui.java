@@ -41,13 +41,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
-import static net.doubledoordev.pay2spawn.types.RandomItemType.DISPLAY_KEY;
-import static net.doubledoordev.pay2spawn.types.RandomItemType.NAME_KEY;
-import static net.doubledoordev.pay2spawn.types.RandomItemType.TAG_KEY;
-import static net.doubledoordev.pay2spawn.types.SaleType.*;
-import static net.doubledoordev.pay2spawn.util.Constants.CUSTOMHTML;
-import static net.doubledoordev.pay2spawn.util.Constants.GSON;
-import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
+import static net.doubledoordev.pay2spawn.types.SaleType.AMOUNT_KEY;
+import static net.doubledoordev.pay2spawn.types.SaleType.TIME_KEY;
+import static net.doubledoordev.pay2spawn.util.Constants.*;
 
 /**
  * @author Dries007
@@ -63,7 +59,7 @@ public class SaleTypeGui extends HelperGuiBase
     private JButton     updateJsonButton;
     private JButton     testButton;
     private JTextField  timeTextField;
-    private JPanel panel1;
+    private JPanel      panel1;
 
     public SaleTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
     {

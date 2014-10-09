@@ -46,7 +46,6 @@ import java.io.FilenameFilter;
 
 /**
  * Does music reward on the client
- * TODO: Replace with command in new version of MC
  *
  * @author Dries007
  */

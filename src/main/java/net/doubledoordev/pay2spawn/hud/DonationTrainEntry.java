@@ -45,10 +45,10 @@ public class DonationTrainEntry implements IHudEntry
     public final ArrayList<String> strings = new ArrayList<>();
     int position;
     String format = "";
-    int time = -1, amount = 0;
+    int    time   = -1, amount = 0;
     private String timeoutMessage = "";
     private int timeout;
-    private String line = "";
+    private String  line        = "";
     private boolean writeToFile = true;
 
     public DonationTrainEntry()

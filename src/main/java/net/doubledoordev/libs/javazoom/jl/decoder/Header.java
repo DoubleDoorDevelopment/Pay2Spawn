@@ -52,15 +52,15 @@ public final class Header
      */
     public static final int MPEG1 = 1;
 
-    public static final int STEREO               = 0;
-    public static final int JOINT_STEREO         = 1;
-    public static final int DUAL_CHANNEL         = 2;
-    public static final int SINGLE_CHANNEL       = 3;
-    public static final int FOURTYFOUR_POINT_ONE = 0;
-    public static final int FOURTYEIGHT          = 1;
-    public static final int THIRTYTWO            = 2;
+    public static final int    STEREO               = 0;
+    public static final int    JOINT_STEREO         = 1;
+    public static final int    DUAL_CHANNEL         = 2;
+    public static final int    SINGLE_CHANNEL       = 3;
+    public static final int    FOURTYFOUR_POINT_ONE = 0;
+    public static final int    FOURTYEIGHT          = 1;
+    public static final int    THIRTYTWO            = 2;
     // E.B -> private to public
-    public static final int bitrates[][][] = {
+    public static final int    bitrates[][][]       = {
             {{0 /*free format*/, 32000, 48000, 56000, 64000, 80000, 96000,
                     112000, 128000, 144000, 160000, 176000, 192000, 224000, 256000, 0},
                     {0 /*free format*/, 8000, 16000, 24000, 32000, 40000, 48000,
@@ -84,7 +84,7 @@ public final class Header
 
     };
     // E.B -> private to public
-    public static final String bitrate_str[][][] = {
+    public static final String bitrate_str[][][]    = {
             {{"free format", "32 kbit/s", "48 kbit/s", "56 kbit/s", "64 kbit/s",
                     "80 kbit/s", "96 kbit/s", "112 kbit/s", "128 kbit/s", "144 kbit/s",
                     "160 kbit/s", "176 kbit/s", "192 kbit/s", "224 kbit/s", "256 kbit/s",
@@ -124,10 +124,10 @@ public final class Header
                             "96 kbit/s", "112 kbit/s", "128 kbit/s", "144 kbit/s", "160 kbit/s",
                             "forbidden"}},
     };
-    public short checksum;
-    public int   framesize;
-    public int   nSlots;
-    private int h_layer, h_protection_bit, h_bitrate_index,
+    public  short checksum;
+    public  int   framesize;
+    public  int   nSlots;
+    private int   h_layer, h_protection_bit, h_bitrate_index,
             h_padding_bit, h_mode_extension;
     private int h_version;
     private int h_mode;

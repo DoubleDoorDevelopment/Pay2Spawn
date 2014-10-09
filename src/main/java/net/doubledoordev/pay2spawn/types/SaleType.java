@@ -32,8 +32,6 @@ package net.doubledoordev.pay2spawn.types;
 
 import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
-import net.doubledoordev.pay2spawn.configurator.Configurator;
-import net.doubledoordev.pay2spawn.network.MusicMessage;
 import net.doubledoordev.pay2spawn.network.StatusMessage;
 import net.doubledoordev.pay2spawn.permissions.Node;
 import net.doubledoordev.pay2spawn.types.guis.SaleTypeGui;
@@ -46,7 +44,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import static net.doubledoordev.pay2spawn.network.StatusMessage.Type.SALE;
-import static net.doubledoordev.pay2spawn.util.Constants.*;
+import static net.doubledoordev.pay2spawn.util.Constants.INT;
+import static net.doubledoordev.pay2spawn.util.Constants.NBTTypes;
 
 /**
  * @author Dries007
