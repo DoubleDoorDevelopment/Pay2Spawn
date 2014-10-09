@@ -134,19 +134,19 @@ public class RewardsDB
 
     public synchronized void process(Donation donation, boolean msg)
     {
-        Sale sale = null;
-        while (!saleList.isEmpty() && sale == null)
-        {
-            if (!saleList.getFirst().isExpired()) sale = saleList.getFirst();
-        }
-        if (sale != null) donation.amount /= (sale.amount / 100.0);
+        double amount = donation.amount; // Keep original value for stats and display purposes.
+
+        Sale sale = getLastSale();
+        if (sale != null) amount /= 1.0 - (sale.amount / 100.0);
+
+        Pay2Spawn.getLogger().info("Donation + sale = " + amount);
 
         double highestmatch = 0d;
         Reward reward = null;
-        if (map.containsKey(donation.amount)) reward = RandomRegistry.getRandomFromSet(map.get(donation.amount));
+        if (map.containsKey(amount)) reward = RandomRegistry.getRandomFromSet(map.get(amount));
         else
         {
-            for (double key : map.keySet()) if (key < donation.amount && highestmatch < key) highestmatch = key;
+            for (double key : map.keySet()) if (key < amount && highestmatch < key) highestmatch = key;
 
             if (map.containsKey(highestmatch)) reward = RandomRegistry.getRandomFromSet(map.get(highestmatch));
         }
@@ -192,6 +192,7 @@ public class RewardsDB
             while (!saleList.isEmpty() && sale == null)
             {
                 if (!saleList.getFirst().isExpired()) sale = saleList.getFirst();
+                else saleList.remove();
             }
         }
         return sale;
