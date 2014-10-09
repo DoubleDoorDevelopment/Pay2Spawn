@@ -42,6 +42,8 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
@@ -49,6 +51,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -424,6 +427,38 @@ public class Helper
         }
         sb.append((double) ms / 1000).append("s");
         return sb.toString();
+    }
+
+    /**
+     * a > 32k check
+     *
+     * @return true if too big
+     */
+    public static boolean checkTooBigForNetwork(NBTTagCompound root)
+    {
+        try
+        {
+            if (CompressedStreamTools.compress(root).length > 32000)
+            {
+                JOptionPane.showMessageDialog(null, "Your reward is too big. (>32 kb)\nYou will CRASH if you spawn this in.\nYou can fix this by separating one large reward into 2 or more smaller rewards.", "Reward too big", JOptionPane.ERROR_MESSAGE);
+                return true;
+            }
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * a > 32k check
+     *
+     * @return true if too big
+     */
+    public static boolean checkTooBigForNetwork(JsonObject object)
+    {
+        return checkTooBigForNetwork(JsonNBTHelper.parseJSON(object));
     }
 
     public static final class TableData

@@ -31,6 +31,8 @@
 package net.doubledoordev.pay2spawn.util;
 
 import com.google.common.base.Strings;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -40,9 +42,15 @@ import net.doubledoordev.pay2spawn.hud.DonationTrainEntry;
 import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.hud.SaleEntry;
 import net.doubledoordev.pay2spawn.network.RewardMessage;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
 
+import javax.swing.*;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
+
+import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
 
 /**
  * Client side tick things
@@ -131,7 +139,15 @@ public class ClientTickHandler
 
         public void send()
         {
-            Pay2Spawn.getSnw().sendToServer(new RewardMessage(reward, donation, actualReward));
+            NBTTagCompound rewardData = new NBTTagCompound();
+            rewardData.setString("name", reward.getName());
+            rewardData.setDouble("amount", reward.getAmount());
+            // replace all the dummy data with the correct data by converting the JsonArry to a string and then parsing that string to a new JsonArray
+            JsonArray rewards = JSON_PARSER.parse(Helper.formatText(reward.getRewards(), donation, actualReward == null ? reward : actualReward).toString()).getAsJsonArray();
+            for (JsonElement reward : rewards)
+            {
+                Pay2Spawn.getSnw().sendToServer(new RewardMessage(JsonNBTHelper.parseJSON(reward.getAsJsonObject()), rewardData));
+            }
         }
     }
 }

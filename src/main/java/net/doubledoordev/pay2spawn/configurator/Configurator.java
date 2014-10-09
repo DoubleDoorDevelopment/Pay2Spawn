@@ -36,6 +36,7 @@ import net.doubledoordev.pay2spawn.types.TypeRegistry;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.IIHasCallback;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
+import net.minecraft.nbt.CompressedStreamTools;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -132,6 +133,9 @@ public class Configurator implements IIHasCallback
             JsonObject object = new JsonObject();
             object.addProperty("type", type);
             object.add("data", newData);
+
+            if (Helper.checkTooBigForNetwork(object)) return;
+
             rewardData.add(object);
             rewards.updateUI();
         }

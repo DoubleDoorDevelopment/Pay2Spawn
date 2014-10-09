@@ -96,14 +96,14 @@ public class StructureImportMessage implements IMessage
         {
             if (ctx.side.isServer())
             {
+                int offsetx = message.root.getInteger("x"), offsety = message.root.getInteger("y"), offsetz = message.root.getInteger("z");
                 NBTTagCompound newRoot = new NBTTagCompound();
                 NBTTagList newList = new NBTTagList();
 
                 NBTTagList list = message.root.getTagList("list", COMPOUND);
                 for (int i = 0; i < list.tagCount(); i++)
                 {
-                    NBTTagCompound shapeNbt = list.getCompoundTagAt(i);
-                    PointI point = new PointI(shapeNbt);
+                    PointI point = new PointI(list.getCompoundTagAt(i));
                     World world = ctx.getServerHandler().playerEntity.worldObj;
                     int x = point.getX(), y = point.getY(), z = point.getZ();
 
@@ -133,6 +133,7 @@ public class StructureImportMessage implements IMessage
 
                         blockDataNbt.appendTag(compound);
                     }
+                    NBTTagCompound shapeNbt = point.move(offsetx, offsety, offsetz).toNBT();
                     shapeNbt.setTag(BLOCKDATA_KEY, blockDataNbt);
                     newList.appendTag(shapeNbt);
                 }

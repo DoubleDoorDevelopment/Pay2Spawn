@@ -30,15 +30,12 @@
 
 package net.doubledoordev.pay2spawn.types.guis;
 
-import com.google.gson.JsonArray;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.network.StructureImportMessage;
 import net.doubledoordev.pay2spawn.util.Helper;
-import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
 import net.doubledoordev.pay2spawn.util.shapes.IShape;
 import net.doubledoordev.pay2spawn.util.shapes.PointI;
-import net.doubledoordev.pay2spawn.util.shapes.Shapes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -47,7 +44,6 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -210,15 +206,17 @@ public class StructureImporter
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                int x = Helper.round(Minecraft.getMinecraft().thePlayer.posX), y = Helper.round(Minecraft.getMinecraft().thePlayer.posY), z = Helper.round(Minecraft.getMinecraft().thePlayer.posZ);
-
                 NBTTagCompound root = new NBTTagCompound();
+                root.setInteger("x", -Helper.round(Minecraft.getMinecraft().thePlayer.posX));
+                root.setInteger("y", -Helper.round(Minecraft.getMinecraft().thePlayer.posY));
+                root.setInteger("z", -Helper.round(Minecraft.getMinecraft().thePlayer.posZ));
                 NBTTagList list = new NBTTagList();
                 synchronized (points)
                 {
                     for (PointI point : points) list.appendTag(point.toNBT());
                 }
                 root.setTag("list", list);
+                if (Helper.checkTooBigForNetwork(root)) return;
                 Pay2Spawn.getSnw().sendToServer(new StructureImportMessage(root));
                 dialog.dispose();
             }

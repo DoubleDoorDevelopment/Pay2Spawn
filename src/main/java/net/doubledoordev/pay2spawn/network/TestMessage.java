@@ -46,8 +46,12 @@ import net.doubledoordev.pay2spawn.types.TypeRegistry;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
+
+import javax.swing.*;
+import java.io.IOException;
 
 import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
 
@@ -58,23 +62,25 @@ import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
  */
 public class TestMessage implements IMessage
 {
-    private String     name;
-    private JsonObject data;
+    private String         name;
+    private NBTTagCompound data;
 
     public TestMessage()
     {
 
     }
 
-    public TestMessage(String name, JsonObject data)
+    public TestMessage(String name, NBTTagCompound data)
     {
         this.name = name;
         this.data = data;
     }
 
-    public static void sendToServer(String name, JsonObject data)
+    public static void sendToServer(String name, JsonObject jsondata)
     {
         if (Minecraft.getMinecraft().isGamePaused()) Helper.msg(EnumChatFormatting.RED + "Some tests don't work while paused! Use your chat key to lose focus.");
+        NBTTagCompound data = JsonNBTHelper.parseJSON(jsondata);
+        if (Helper.checkTooBigForNetwork(data)) return;
         Pay2Spawn.getSnw().sendToServer(new TestMessage(name, data));
     }
 
@@ -82,14 +88,14 @@ public class TestMessage implements IMessage
     public void fromBytes(ByteBuf buf)
     {
         name = ByteBufUtils.readUTF8String(buf);
-        data = JSON_PARSER.parse(Helper.readLongStringToByteBuf(buf)).getAsJsonObject();
+        data = ByteBufUtils.readTag(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
         ByteBufUtils.writeUTF8String(buf, name);
-        Helper.writeLongStringToByteBuf(buf, data.toString());
+        ByteBufUtils.writeTag(buf, data);
     }
 
     public static class Handler implements IMessageHandler<TestMessage, IMessage>
@@ -105,9 +111,8 @@ public class TestMessage implements IMessage
                 Helper.sendChatToPlayer(ctx.getServerHandler().playerEntity, "Testing reward " + message.name + ".");
                 Pay2Spawn.getLogger().info("Test by " + ctx.getServerHandler().playerEntity.getCommandSenderName() + " Type: " + message.name + " Data: " + message.data);
                 TypeBase type = TypeRegistry.getByName(message.name);
-                NBTTagCompound nbt = JsonNBTHelper.parseJSON(message.data);
 
-                Node node = type.getPermissionNode(ctx.getServerHandler().playerEntity, nbt);
+                Node node = type.getPermissionNode(ctx.getServerHandler().playerEntity, message.data);
                 if (BanHelper.isBanned(node))
                 {
                     Helper.sendChatToPlayer(ctx.getServerHandler().playerEntity, "This node (" + node + ") is banned.", EnumChatFormatting.RED);
@@ -119,7 +124,7 @@ public class TestMessage implements IMessage
                     Pay2Spawn.getLogger().warn(ctx.getServerHandler().playerEntity.getDisplayName() + " doesn't have perm node " + node.toString());
                     return null;
                 }
-                type.spawnServerSide(ctx.getServerHandler().playerEntity, nbt, rewardData);
+                type.spawnServerSide(ctx.getServerHandler().playerEntity, message.data, rewardData);
             }
             return null;
         }
