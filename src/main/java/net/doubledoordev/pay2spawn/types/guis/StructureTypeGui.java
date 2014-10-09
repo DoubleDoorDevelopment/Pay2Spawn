@@ -40,10 +40,13 @@ import net.doubledoordev.pay2spawn.network.TestMessage;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
 import net.doubledoordev.pay2spawn.util.shapes.IShape;
+import net.doubledoordev.pay2spawn.util.shapes.PointI;
 import net.doubledoordev.pay2spawn.util.shapes.Shapes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -96,9 +99,13 @@ public class StructureTypeGui extends HelperGuiBase
         makeAndOpen();
     }
 
-    public static void importCallback(JsonArray points)
+    public static void importCallback(NBTTagCompound root)
     {
-        instance.shapes.addAll(points);
+        NBTTagList list = root.getTagList("list", COMPOUND);
+        for (int i = 0; i < list.tagCount(); i++)
+        {
+            instance.shapes.add(JsonNBTHelper.parseNBT(Shapes.addShapeType(list.getCompoundTagAt(i), PointI.class)));
+        }
         instance.updateJson();
         instance.shapeList.clearSelection();
     }

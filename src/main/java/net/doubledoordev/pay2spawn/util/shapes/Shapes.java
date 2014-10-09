@@ -66,6 +66,12 @@ public class Shapes
         return MAP.get(compound.getString(SHAPE_KEY)).fromNBT(compound);
     }
 
+    public static NBTTagCompound addShapeType(NBTTagCompound shapeData, Class<? extends IShape> clazz)
+    {
+        shapeData.setString(SHAPE_KEY, clazz.getSimpleName());
+        return shapeData;
+    }
+
     public static NBTTagCompound storeShape(IShape shape)
     {
         NBTTagCompound compound = shape.toNBT();

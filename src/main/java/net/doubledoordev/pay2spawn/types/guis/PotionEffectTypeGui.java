@@ -84,9 +84,9 @@ public class PotionEffectTypeGui extends HelperGuiBase
             int i = Integer.parseInt(id);
             if (POTIONS.inverse().containsKey(i)) id = POTIONS.inverse().get(i);
         }
-        catch (NumberFormatException e)
+        catch (NumberFormatException ignored)
         {
-            e.printStackTrace();
+
         }
         potionEffectComboBox.setSelectedItem(id);
         amplifierTextField.setText(readValue(AMPLIFIER_KEY, data));

@@ -43,7 +43,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.init.Items;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -52,6 +56,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.HashSet;
 
 /**
@@ -158,6 +163,29 @@ public class StructureImporter
                     synchronized (selection)
                     {
                         for (IShape shape : selection) points.removeAll(shape.getPoints());
+                        if (p1 != null && p2 != null)
+                        {
+                            int minX = Math.min(p1.getX(), p2.getX());
+                            int minY = Math.min(p1.getY(), p2.getY());
+                            int minZ = Math.min(p1.getZ(), p2.getZ());
+                            int diffX = Math.max(p1.getX(), p2.getX()) - minX;
+                            int diffY = Math.max(p1.getY(), p2.getY()) - minY;
+                            int diffZ = Math.max(p1.getZ(), p2.getZ()) - minZ;
+
+                            for (int x = 0; x <= diffX; x++)
+                            {
+                                for (int y = 0; y <= diffY; y++)
+                                {
+                                    for (int z = 0; z <= diffZ; z++)
+                                    {
+                                        PointI p = new PointI(minX + x, minY + y, minZ + z);
+                                        points.remove(p);
+                                    }
+                                }
+                            }
+                        }
+                        p1 = null;
+                        p2 = null;
                         selection.clear();
                     }
                 }
@@ -184,13 +212,14 @@ public class StructureImporter
             {
                 int x = Helper.round(Minecraft.getMinecraft().thePlayer.posX), y = Helper.round(Minecraft.getMinecraft().thePlayer.posY), z = Helper.round(Minecraft.getMinecraft().thePlayer.posZ);
 
-                JsonArray jsonArray = new JsonArray();
+                NBTTagCompound root = new NBTTagCompound();
+                NBTTagList list = new NBTTagList();
                 synchronized (points)
                 {
-                    for (PointI point : points) jsonArray.add(JsonNBTHelper.parseNBT(Shapes.storeShape(point.move(-x, -y, -z))));
+                    for (PointI point : points) list.appendTag(point.toNBT());
                 }
-                Pay2Spawn.getSnw().sendToServer(new StructureImportMessage(x, y, z, jsonArray));
-
+                root.setTag("list", list);
+                Pay2Spawn.getSnw().sendToServer(new StructureImportMessage(root));
                 dialog.dispose();
             }
         });

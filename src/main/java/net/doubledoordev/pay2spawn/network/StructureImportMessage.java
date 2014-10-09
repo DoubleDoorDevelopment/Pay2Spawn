@@ -32,62 +32,61 @@ package net.doubledoordev.pay2spawn.network;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.types.guis.StructureTypeGui;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
 import net.doubledoordev.pay2spawn.util.shapes.PointI;
 import net.doubledoordev.pay2spawn.util.shapes.Shapes;
 import net.minecraft.block.Block;
+import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import java.io.IOException;
+
 import static net.doubledoordev.pay2spawn.types.StructureType.*;
+import static net.doubledoordev.pay2spawn.util.Constants.COMPOUND;
 import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
 
 /**
  * Reads all blockID, metadata and NBT from a list of points
  *
+ * Uses NBT instead of a stringified JSON array because of network efficiency
+ *
  * @author Dries007
  */
 public class StructureImportMessage implements IMessage
 {
-    int x, y, z;
-    JsonArray jsonArray;
+    NBTTagCompound root;
 
     public StructureImportMessage()
     {
     }
 
-    public StructureImportMessage(int x, int y, int z, JsonArray jsonArray)
+    public StructureImportMessage(NBTTagCompound root)
     {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.jsonArray = jsonArray;
+        this.root = root;
     }
 
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        this.x = buf.readInt();
-        this.y = buf.readInt();
-        this.z = buf.readInt();
-        jsonArray = JSON_PARSER.parse(Helper.readLongStringToByteBuf(buf)).getAsJsonArray();
+        root = ByteBufUtils.readTag(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-        buf.writeInt(x);
-        buf.writeInt(y);
-        buf.writeInt(z);
-        Helper.writeLongStringToByteBuf(buf, jsonArray.toString());
+        ByteBufUtils.writeTag(buf, root);
     }
 
     public static class Handler implements IMessageHandler<StructureImportMessage, IMessage>
@@ -97,15 +96,16 @@ public class StructureImportMessage implements IMessage
         {
             if (ctx.side.isServer())
             {
-                JsonArray newArray = new JsonArray();
+                NBTTagCompound newRoot = new NBTTagCompound();
+                NBTTagList newList = new NBTTagList();
 
-                for (JsonElement jsonElement : message.jsonArray)
+                NBTTagList list = message.root.getTagList("list", COMPOUND);
+                for (int i = 0; i < list.tagCount(); i++)
                 {
-                    NBTTagCompound shapeNbt = JsonNBTHelper.parseJSON(jsonElement.getAsJsonObject());
-                    // Can only be a point anyways
-                    PointI point = (PointI) Shapes.loadShape(shapeNbt);
+                    NBTTagCompound shapeNbt = list.getCompoundTagAt(i);
+                    PointI point = new PointI(shapeNbt);
                     World world = ctx.getServerHandler().playerEntity.worldObj;
-                    int x = message.x + point.getX(), y = message.y + point.getY(), z = message.z + point.getZ();
+                    int x = point.getX(), y = point.getY(), z = point.getZ();
 
                     // Set up the correct block data
                     NBTTagList blockDataNbt = new NBTTagList();
@@ -134,16 +134,15 @@ public class StructureImportMessage implements IMessage
                         blockDataNbt.appendTag(compound);
                     }
                     shapeNbt.setTag(BLOCKDATA_KEY, blockDataNbt);
-
-                    // Add to new array
-                    newArray.add(JsonNBTHelper.parseNBT(shapeNbt));
+                    newList.appendTag(shapeNbt);
                 }
 
-                return new StructureImportMessage(message.x, message.y, message.z, newArray);
+                newRoot.setTag("list", newList);
+                return new StructureImportMessage(newRoot);
             }
             else
             {
-                StructureTypeGui.importCallback(message.jsonArray);
+                StructureTypeGui.importCallback(message.root);
                 return null;
             }
         }

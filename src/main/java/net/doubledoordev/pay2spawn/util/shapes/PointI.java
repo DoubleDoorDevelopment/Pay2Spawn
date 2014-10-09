@@ -298,4 +298,9 @@ public class PointI implements IShape
         this.z += z;
         return this;
     }
+
+    public IShape copy()
+    {
+        return new PointI(x, y, z);
+    }
 }
