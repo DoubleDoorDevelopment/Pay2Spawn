@@ -32,6 +32,7 @@ package net.doubledoordev.pay2spawn.configurator;
 
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.checkers.TwitchChecker;
+import net.doubledoordev.pay2spawn.network.HTMLuploadMessage;
 import net.doubledoordev.pay2spawn.types.TypeRegistry;
 import net.doubledoordev.pay2spawn.util.Reward;
 import org.apache.commons.io.FileUtils;
@@ -83,6 +84,7 @@ public class HTMLGenerator
 
     public static void generate() throws IOException
     {
+        StringBuilder result = new StringBuilder();
         ArrayList<Reward> sortedRewards = new ArrayList<>();
         sortedRewards.addAll(Pay2Spawn.getRewardsDB().getRewards());
         Collections.sort(sortedRewards, new Comparator<Reward>()
@@ -99,7 +101,7 @@ public class HTMLGenerator
         int begin = text.indexOf(LOOP_START);
         int end = text.indexOf(LOOP_END);
 
-        FileUtils.writeStringToFile(output, replace(text.substring(0, begin)), false);
+        result.append(replace(text.substring(0, begin)));
 
         String loop = text.substring(begin + LOOP_START.length(), end);
         for (Reward reward : sortedRewards)
@@ -107,8 +109,10 @@ public class HTMLGenerator
             Pay2Spawn.getLogger().info("Adding " + reward + " to html file.");
             FileUtils.writeStringToFile(output, replace(loop, reward), true);
         }
+        result.append(text.substring(end + LOOP_END.length(), text.length()));
 
-        FileUtils.writeStringToFile(output, text.substring(end + LOOP_END.length(), text.length()), true);
+        FileUtils.writeStringToFile(output, result.toString());
+        Pay2Spawn.getSnw().sendToServer(new HTMLuploadMessage(result.toString()));
     }
 
     private static String replace(String text) throws IOException

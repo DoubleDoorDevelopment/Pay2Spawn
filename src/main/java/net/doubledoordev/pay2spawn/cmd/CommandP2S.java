@@ -30,10 +30,12 @@
 
 package net.doubledoordev.pay2spawn.cmd;
 
+import com.google.common.base.Throwables;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.checkers.CheckerHandler;
 import net.doubledoordev.pay2spawn.checkers.TwitchChecker;
 import net.doubledoordev.pay2spawn.configurator.ConfiguratorManager;
+import net.doubledoordev.pay2spawn.configurator.HTMLGenerator;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.Statistics;
 import net.minecraft.command.CommandBase;
@@ -41,6 +43,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -92,6 +95,16 @@ public class CommandP2S extends CommandBase
                 break;
             case "getnbt":
                 ConfiguratorManager.openNbt();
+                break;
+            case "makehtml":
+                try
+                {
+                    HTMLGenerator.generate();
+                }
+                catch (IOException e)
+                {
+                    Throwables.propagate(e);
+                }
                 break;
             case "off":
                 if (Pay2Spawn.forceOn) Helper.msg(EnumChatFormatting.RED + "Forced on by server.");
@@ -150,7 +163,7 @@ public class CommandP2S extends CommandBase
     @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] args)
     {
-        if (args.length == 1) return getListOfStringsMatchingLastWord(args, "reload", "configure", "getnbt", "off", "on", "donate", "permissions", "adjusttotal");
+        if (args.length == 1) return getListOfStringsMatchingLastWord(args, "reload", "configure", "getnbt", "makehtml", "off", "on", "donate", "permissions", "adjusttotal");
         return null;
     }
 }

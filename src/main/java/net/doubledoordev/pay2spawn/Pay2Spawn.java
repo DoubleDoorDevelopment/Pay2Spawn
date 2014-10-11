@@ -181,6 +181,7 @@ public class Pay2Spawn implements ID3Mod
         snw.registerMessage(TestMessage.Handler.class, TestMessage.class, id++, Side.SERVER);
         snw.registerMessage(StructureImportMessage.Handler.class, StructureImportMessage.class, id++, Side.SERVER);
         snw.registerMessage(StructureImportMessage.Handler.class, StructureImportMessage.class, id++, Side.CLIENT);
+        snw.registerMessage(HTMLuploadMessage.Handler.class, HTMLuploadMessage.class, id++, Side.SERVER);
 
         TypeRegistry.preInit();
         Statistics.preInit();

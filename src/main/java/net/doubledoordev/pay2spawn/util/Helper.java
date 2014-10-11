@@ -406,8 +406,7 @@ public class Helper
 
     public static String readLongStringToByteBuf(ByteBuf buf)
     {
-        int length = buf.readInt();
-        byte[] bytes = new byte[length];
+        byte[] bytes = new byte[buf.readInt()];
         buf.readBytes(bytes);
         return new String(bytes, Charsets.UTF_8);
     }
