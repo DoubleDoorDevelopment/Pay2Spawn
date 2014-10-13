@@ -59,7 +59,7 @@ public class P2SConfig
     public       Configuration configuration;
     public boolean forceServerconfig = true;
     public boolean forceP2S          = false;
-    public double  min_donation      = 1;
+    public String  channel      = "";
     public Pattern[] blacklist_Name_p;
     public Pattern[] blacklist_Note_p;
     public Pattern[] whitelist_Name_p;
@@ -97,6 +97,8 @@ public class P2SConfig
             configuration = new Configuration(file);
             configuration.get(MODID, cvk, CONFIGVERSION).set(CONFIGVERSION);
         }
+
+        channel = configuration.getString("channel", MODID.toLowerCase(), channel, "Your channel name on twitch or any other streaming service.\nYou need this for stats and for the twitch sub tracker.\nTHIS CHANGED PLACE");
 
         configuration.setCategoryLanguageKey(MODID, "d3.pay2spawn.config.general");
         configuration.setCategoryLanguageKey(SERVER_CAT, "d3.pay2spawn.config.server");

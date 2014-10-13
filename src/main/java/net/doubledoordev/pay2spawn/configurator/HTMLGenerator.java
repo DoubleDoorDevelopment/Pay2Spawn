@@ -137,7 +137,7 @@ public class HTMLGenerator
         switch (parts[0])
         {
             case "channel":
-                return TwitchChecker.INSTANCE.getChannel();
+                return Pay2Spawn.getConfig().channel;
             case "reward":
                 switch (parts[1])
                 {

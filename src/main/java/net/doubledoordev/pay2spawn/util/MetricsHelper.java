@@ -75,7 +75,7 @@ public class MetricsHelper
                         return (int) (Helper.findMax(Pay2Spawn.getRewardsDB().getAmounts()));
                     }
                 });
-                metrics.createGraph("ChannelName").addPlotter(new Metrics.Plotter(TwitchChecker.INSTANCE.getChannel())
+                metrics.createGraph("ChannelName").addPlotter(new Metrics.Plotter(Pay2Spawn.getConfig().channel)
                 {
                     @Override
                     public int getValue()

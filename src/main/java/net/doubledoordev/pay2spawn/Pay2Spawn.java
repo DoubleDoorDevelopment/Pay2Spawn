@@ -245,7 +245,7 @@ public class Pay2Spawn implements ID3Mod
 
         boolean deobf = Launch.blackboard.containsKey("fml.deobfuscatedEnvironment") ? Boolean.valueOf(Launch.blackboard.get("fml.deobfuscatedEnvironment").toString()) : false;
 
-        if (Strings.isNullOrEmpty(TwitchChecker.INSTANCE.getChannel()) && !MetricsHelper.metrics.isOptOut() && event.getSide().isClient() && !deobf)
+        if (Strings.isNullOrEmpty(Pay2Spawn.getConfig().channel) && !MetricsHelper.metrics.isOptOut() && event.getSide().isClient() && !deobf)
         {
             JOptionPane.showMessageDialog(null, "You must provide your channel in the config for statistics.\n" +
                             "If you don't agree with this, opt out of the statistics program all together trough the 'PluginMetrics' config file.\n\n" +

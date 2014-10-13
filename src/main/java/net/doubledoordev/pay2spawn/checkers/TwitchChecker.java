@@ -32,6 +32,7 @@ package net.doubledoordev.pay2spawn.checkers;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.hud.DonationsBasedHudEntry;
 import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.util.Donation;
@@ -64,7 +65,6 @@ public class TwitchChecker extends AbstractChecker implements Runnable
     boolean enabled  = false;
     int     interval = 20;
     double  amount   = 5;
-    String  channel  = "";
     URL url;
     boolean firstrun = true;
     String  note     = "I subscribed on Twitch.tv!";
@@ -91,7 +91,7 @@ public class TwitchChecker extends AbstractChecker implements Runnable
     @Override
     public boolean enabled()
     {
-        return enabled && !APIKey.isEmpty() && !channel.isEmpty();
+        return enabled && !APIKey.isEmpty() && !Pay2Spawn.getConfig().channel.isEmpty();
     }
 
     @Override
@@ -101,7 +101,6 @@ public class TwitchChecker extends AbstractChecker implements Runnable
 
         enabled = configuration.get(CAT, "enabled", enabled).getBoolean(enabled);
         APIKey = configuration.get(CAT, "APIKey", APIKey, "Get this from http://dries007.net/ccm/p2s/").getString();
-        channel = configuration.get(CAT, "channel", channel, "Your exact channel name").getString();
         interval = configuration.get(CAT, "interval", interval, "The time in between polls (in seconds).").getInt();
         amount = configuration.get(CAT, "amount", amount, "The amount of currency a sub counts for.").getDouble(amount);
         note = configuration.get(CAT, "note", note, "The note attached to the 'fake' donation.").getString();
@@ -110,7 +109,7 @@ public class TwitchChecker extends AbstractChecker implements Runnable
 
         try
         {
-            url = new URL("https://api.twitch.tv/kraken/channels/" + channel + "/subscriptions?limit=100&oauth_token=" + APIKey);
+            url = new URL("https://api.twitch.tv/kraken/channels/" + Pay2Spawn.getConfig().channel + "/subscriptions?limit=100&oauth_token=" + APIKey);
         }
         catch (MalformedURLException e)
         {
@@ -165,11 +164,6 @@ public class TwitchChecker extends AbstractChecker implements Runnable
         {
             subs.put(sub.getAsJsonObject().getAsJsonObject("user").get("_id").getAsString(), sub.getAsJsonObject().getAsJsonObject("user").get("display_name").getAsString());
         }
-    }
-
-    public String getChannel()
-    {
-        return channel;
     }
 
     public void reset()
