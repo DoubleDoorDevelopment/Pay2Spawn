@@ -83,7 +83,7 @@ public class ConnectionHandler
                 @Override
                 public void run()
                 {
-                    if (!StatusMessage.doesPlayerHaveValidConfig(username))
+                    if (!Pay2Spawn.doesPlayerHaveValidConfig(username))
                         MinecraftServer.getServer().getConfigurationManager().func_152612_a(username).playerNetServerHandler.kickPlayerFromServer("Pay2Spawn is required on this server.\nIt needs to be configured properly.");
                 }
             }, 5 * 1000);
@@ -94,13 +94,13 @@ public class ConnectionHandler
     public void disconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event)
     {
         Pay2Spawn.reloadDB();
-        StatusMessage.resetServerStatus();
+        Pay2Spawn.resetServerStatus();
         new Timer().schedule(new TimerTask()
         {
             @Override
             public void run()
             {
-                if (!StatusMessage.doesServerHaveMod()) Helper.msg(EnumChatFormatting.RED + NAME + " isn't on the server. No rewards will spawn!");
+                if (!Pay2Spawn.doesServerHaveMod()) Helper.msg(EnumChatFormatting.RED + NAME + " isn't on the server. No rewards will spawn!");
             }
         }, 5 * 1000);
     }

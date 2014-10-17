@@ -30,7 +30,6 @@
 
 package net.doubledoordev.pay2spawn.network;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -44,8 +43,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 
-import java.util.HashSet;
-
 /**
  * Used for status things
  * - Handshake
@@ -57,9 +54,7 @@ import java.util.HashSet;
  */
 public class StatusMessage implements IMessage
 {
-    private static final HashSet<String> playersWithValidConfig = new HashSet<>();
     public static String serverConfig;
-    private static boolean serverHasMod = false;
     private Type     type;
     private String[] extraData;
 
@@ -72,23 +67,6 @@ public class StatusMessage implements IMessage
     public StatusMessage()
     {
 
-    }
-
-    public static boolean doesServerHaveMod()
-    {
-        return serverHasMod;
-    }
-
-    public static boolean doesPlayerHaveValidConfig(String username)
-    {
-        return playersWithValidConfig.contains(username);
-    }
-
-    public static void resetServerStatus()
-    {
-        Pay2Spawn.enable = true;
-        Pay2Spawn.forceOn = false;
-        serverHasMod = false;
     }
 
     public static void sendHandshakeToPlayer(EntityPlayerMP player)
@@ -116,7 +94,7 @@ public class StatusMessage implements IMessage
     {
         type = Type.values()[buf.readInt()];
         extraData = new String[buf.readInt()];
-        for (int i = 0; i < extraData.length; i++) extraData[i] = ByteBufUtils.readUTF8String(buf);
+        for (int i = 0; i < extraData.length; i++) extraData[i] = Helper.readLongStringToByteBuf(buf);
     }
 
     @Override
@@ -124,7 +102,7 @@ public class StatusMessage implements IMessage
     {
         buf.writeInt(type.ordinal());
         buf.writeInt(extraData.length);
-        for (String s : extraData) ByteBufUtils.writeUTF8String(buf, s);
+        for (String s : extraData) Helper.writeLongStringToByteBuf(buf, s);
     }
 
     public static enum Type
@@ -146,7 +124,6 @@ public class StatusMessage implements IMessage
                 switch (message.type)
                 {
                     case HANDSHAKE:
-                        serverHasMod = true;
                         return new StatusMessage(Type.HANDSHAKE);
                     case CONFIGSYNC:
                         Pay2Spawn.reloadDBFromServer(message.extraData[0]);
@@ -169,7 +146,7 @@ public class StatusMessage implements IMessage
                 {
                     case HANDSHAKE:
                         PermissionsHandler.getDB().newPlayer(ctx.getServerHandler().playerEntity.getCommandSenderName());
-                        playersWithValidConfig.add(ctx.getServerHandler().playerEntity.getCommandSenderName());
+                        Pay2Spawn.playersWithValidConfig.add(ctx.getServerHandler().playerEntity.getCommandSenderName());
                         // Can't use return statement here cause you can't return multiple packets
                         if (MinecraftServer.getServer().isDedicatedServer() && Pay2Spawn.getConfig().forceServerconfig) sendConfigToPlayer(ctx.getServerHandler().playerEntity);
                         if (MinecraftServer.getServer().isDedicatedServer() && Pay2Spawn.getConfig().forceP2S) sendForceToPlayer(ctx.getServerHandler().playerEntity);

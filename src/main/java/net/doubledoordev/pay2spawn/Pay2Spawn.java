@@ -40,6 +40,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
@@ -68,7 +69,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import static net.doubledoordev.pay2spawn.util.Constants.*;
 
@@ -80,10 +83,12 @@ import static net.doubledoordev.pay2spawn.util.Constants.*;
 @Mod(modid = MODID, name = NAME)
 public class Pay2Spawn implements ID3Mod
 {
+    public static final HashSet<String> playersWithValidConfig = new HashSet<>();
     @Mod.Instance(MODID)
     public static Pay2Spawn instance;
     public static boolean enable  = true;
     public static boolean forceOn = false;
+    private static boolean serverHasMod = false;
 
     @Mod.Metadata(MODID)
     private ModMetadata          metadata;
@@ -153,6 +158,29 @@ public class Pay2Spawn implements ID3Mod
     {
         instance.rewardsDB = new RewardsDB(input);
         ConfiguratorManager.reload();
+    }
+
+    public static boolean doesServerHaveMod()
+    {
+        return serverHasMod;
+    }
+
+    public static boolean doesPlayerHaveValidConfig(String username)
+    {
+        return playersWithValidConfig.contains(username);
+    }
+
+    public static void resetServerStatus()
+    {
+        enable = true;
+        forceOn = false;
+    }
+
+    @NetworkCheckHandler
+    public boolean networkCheckHandler(Map<String, String> data, Side side)
+    {
+        if (side.isClient()) serverHasMod = data.containsKey(MODID);
+        return !data.containsKey(MODID) || data.get(MODID).equals(metadata.version);
     }
 
     @Mod.EventHandler
