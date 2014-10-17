@@ -178,7 +178,8 @@ public class CustomEntityType extends TypeBase
         {
             case "entity":
                 StringBuilder sb = new StringBuilder();
-                sb.append(jsonObject.get("id").getAsString().replace("STRING:", ""));
+                if (jsonObject.has("id")) sb.append(jsonObject.get("id").getAsString().replace("STRING:", ""));
+                else sb.append("null");
                 while (jsonObject.has(RIDING_KEY))
                 {
                     jsonObject = jsonObject.getAsJsonObject(RIDING_KEY);

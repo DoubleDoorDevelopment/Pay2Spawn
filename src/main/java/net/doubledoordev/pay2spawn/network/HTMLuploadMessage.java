@@ -82,9 +82,6 @@ public class HTMLuploadMessage implements IMessage
 
                 File file = new File(DimensionManager.getCurrentSaveRootDirectory().getParentFile(), "pay2spawn/" + ctx.getServerHandler().playerEntity.getCommandSenderName() + ".html");
                 file.getParentFile().mkdir();
-
-                System.out.println(file);
-
                 FileUtils.writeStringToFile(file, message.text);
             }
             catch (IOException ignored)

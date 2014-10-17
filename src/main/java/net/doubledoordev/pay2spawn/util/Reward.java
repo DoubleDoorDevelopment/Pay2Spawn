@@ -36,6 +36,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.random.RandomRegistry;
+import net.doubledoordev.pay2spawn.types.TypeBase;
 import net.doubledoordev.pay2spawn.types.TypeRegistry;
 
 import java.io.IOException;
@@ -132,7 +133,12 @@ public class Reward
         {
             JsonObject object = element.getAsJsonObject();
             if (object.has(CUSTOMHTML) && !Strings.isNullOrEmpty(object.get(CUSTOMHTML).getAsString())) sb.append(object.get(CUSTOMHTML).getAsString());
-            else sb.append(TypeRegistry.getByName(object.get("type").getAsString()).getHTML(object.getAsJsonObject("data")));
+            else
+            {
+                TypeBase typeBase = TypeRegistry.getByName(object.get("type").getAsString());
+                if (typeBase == null) Pay2Spawn.getLogger().warn("The reward type " + object.get("type") + " does not exist (anymore).");
+                else sb.append(typeBase.getHTML(object.getAsJsonObject("data")));
+            }
         }
         return sb.toString();
     }
