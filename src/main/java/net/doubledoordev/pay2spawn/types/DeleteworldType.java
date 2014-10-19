@@ -78,6 +78,12 @@ public class DeleteworldType extends TypeBase
     }
 
     @Override
+    public boolean isInDefaultConfig()
+    {
+        return false;
+    }
+
+    @Override
     public void spawnServerSide(EntityPlayerMP player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
     {
         for (int i = 0; i < MinecraftServer.getServer().getConfigurationManager().playerEntityList.size(); ++i)
