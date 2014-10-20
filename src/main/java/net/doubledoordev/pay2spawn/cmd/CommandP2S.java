@@ -123,11 +123,13 @@ public class CommandP2S extends CommandBase
                 }
                 break;
             case "donate":
-                if (args.length == 1) Helper.msg(EnumChatFormatting.RED + "Use '/p2s donate <amount>'.");
+                if (args.length == 1) Helper.msg(EnumChatFormatting.RED + "Use '/p2s donate <amount> [name]'.");
                 else
                 {
+                    String name = "Anonymous";
+                    if (args.length == 3) name = args[2];
                     double amount = CommandBase.parseDouble(sender, args[1]);
-                    CheckerHandler.fakeDonation(amount);
+                    CheckerHandler.fakeDonation(amount, name);
                 }
                 break;
             case "adjusttotal":
