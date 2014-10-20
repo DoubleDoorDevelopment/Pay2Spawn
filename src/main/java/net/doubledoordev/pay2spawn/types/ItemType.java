@@ -93,16 +93,21 @@ public class ItemType extends TypeBase
     {
         try
         {
-            int id = dataFromClient.hasKey(SLOT_KEY) ? dataFromClient.getInteger(SLOT_KEY) : -1;
-            if (id != -1 && player.inventory.getStackInSlot(id) == null)
+            ItemStack itemStack = ItemStack.loadItemStackFromNBT(dataFromClient);
+            while (itemStack.stackSize != 0)
             {
-                player.inventory.setInventorySlotContents(id, ItemStack.loadItemStackFromNBT(dataFromClient));
-            }
-            else
-            {
-                EntityItem entityitem = player.dropPlayerItemWithRandomChoice(ItemStack.loadItemStackFromNBT(dataFromClient), false);
-                entityitem.delayBeforeCanPickup = 0;
-                entityitem.func_145797_a(player.getCommandSenderName());
+                ItemStack itemStack1 = itemStack.splitStack(Math.max(itemStack.getMaxStackSize(), itemStack.stackSize));
+                int id = dataFromClient.hasKey(SLOT_KEY) ? dataFromClient.getInteger(SLOT_KEY) : -1;
+                if (id != -1 && player.inventory.getStackInSlot(id) == null)
+                {
+                    player.inventory.setInventorySlotContents(id, itemStack1);
+                }
+                else
+                {
+                    EntityItem entityitem = player.dropPlayerItemWithRandomChoice(itemStack1, false);
+                    entityitem.delayBeforeCanPickup = 0;
+                    entityitem.func_145797_a(player.getCommandSenderName());
+                }
             }
         }
         catch (Exception e)
