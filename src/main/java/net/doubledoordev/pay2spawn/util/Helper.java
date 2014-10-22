@@ -135,10 +135,10 @@ public class Helper
 
     public static String getUUIDFromUsername(String name)
     {
+        // This variable is used so it will only ever check any UUID once. Even if its name is null.
+        String uuid = "";
         if (!UUID_USERNMAME_MAP.containsKey(name))
         {
-            // This variable is used so it will only ever check any UUID once. Even if its name is null.
-            String uuid = null;
             try
             {
                 URL url = new URL("https://api.mojang.com/profiles/minecraft");
@@ -160,12 +160,13 @@ public class Helper
             }
             catch (Exception ignored)
             {
-                ignored.printStackTrace();
+                // No uuid available
             }
-            if (uuid == null) uuid = "";
             UUID_USERNMAME_MAP.put(name, uuid);
         }
-        return UUID_USERNMAME_MAP.get(name);
+        else uuid = UUID_USERNMAME_MAP.get(name);
+
+        return uuid;
     }
 
     /**
