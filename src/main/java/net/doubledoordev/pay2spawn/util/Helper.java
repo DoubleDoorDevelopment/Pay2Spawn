@@ -154,7 +154,6 @@ public class Helper
                 stream.close();
                 InputStream in = uc.getInputStream();
                 JsonElement element = JSON_PARSER.parse(new InputStreamReader(in));
-                System.out.println(String.format("Name: %s element: %s", name, element));
                 uuid = element.getAsJsonArray().get(0).getAsJsonObject().get("id").getAsString();
                 in.close();
             }
