@@ -96,7 +96,7 @@ public class ItemType extends TypeBase
             ItemStack itemStack = ItemStack.loadItemStackFromNBT(dataFromClient);
             while (itemStack.stackSize != 0)
             {
-                ItemStack itemStack1 = itemStack.splitStack(Math.max(itemStack.getMaxStackSize(), itemStack.stackSize));
+                ItemStack itemStack1 = itemStack.splitStack(Math.min(itemStack.getMaxStackSize(), itemStack.stackSize));
                 int id = dataFromClient.hasKey(SLOT_KEY) ? dataFromClient.getInteger(SLOT_KEY) : -1;
                 if (id != -1 && player.inventory.getStackInSlot(id) == null)
                 {

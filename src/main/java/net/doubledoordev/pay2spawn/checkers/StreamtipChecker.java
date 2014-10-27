@@ -188,6 +188,6 @@ public class StreamtipChecker extends AbstractChecker implements Runnable
         {
             e.printStackTrace();
         }
-        return new Donation(jsonObject.get("_id").getAsString(), jsonObject.get("amount").getAsDouble(), time, jsonObject.get("username").getAsString(), jsonObject.get("note").getAsString());
+        return new Donation(jsonObject.get("_id").getAsString(), jsonObject.get("amount").getAsDouble(), time, jsonObject.get("username").getAsString(), jsonObject.has("note") ? jsonObject.get("note").getAsString() : "");
     }
 }

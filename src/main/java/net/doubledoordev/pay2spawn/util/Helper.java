@@ -131,13 +131,13 @@ public class Helper
         return format;
     }
 
-    public static final  Map<String, String> UUID_USERNMAME_MAP = new HashMap<>();
+    public static final  Map<String, String> UUID_USERNAME_MAP = new HashMap<>();
 
     public static String getUUIDFromUsername(String name)
     {
         // This variable is used so it will only ever check any UUID once. Even if its name is null.
         String uuid = "";
-        if (!UUID_USERNMAME_MAP.containsKey(name))
+        if (!UUID_USERNAME_MAP.containsKey(name))
         {
             try
             {
@@ -161,9 +161,9 @@ public class Helper
             {
                 // No uuid available
             }
-            UUID_USERNMAME_MAP.put(name, uuid);
+            UUID_USERNAME_MAP.put(name, uuid);
         }
-        else uuid = UUID_USERNMAME_MAP.get(name);
+        else uuid = UUID_USERNAME_MAP.get(name);
 
         return uuid;
     }
