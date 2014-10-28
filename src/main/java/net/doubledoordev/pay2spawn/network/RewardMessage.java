@@ -42,11 +42,8 @@ import net.doubledoordev.pay2spawn.permissions.PermissionsHandler;
 import net.doubledoordev.pay2spawn.types.TypeBase;
 import net.doubledoordev.pay2spawn.types.TypeRegistry;
 import net.doubledoordev.pay2spawn.util.Helper;
-import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
-
-import java.io.IOException;
 
 /**
  *

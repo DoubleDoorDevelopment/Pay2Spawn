@@ -46,7 +46,6 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import net.doubledoordev.d3core.util.ID3Mod;
 import net.doubledoordev.pay2spawn.checkers.CheckerHandler;
-import net.doubledoordev.pay2spawn.checkers.TwitchChecker;
 import net.doubledoordev.pay2spawn.cmd.CommandP2S;
 import net.doubledoordev.pay2spawn.cmd.CommandP2SPermissions;
 import net.doubledoordev.pay2spawn.cmd.CommandP2SServer;

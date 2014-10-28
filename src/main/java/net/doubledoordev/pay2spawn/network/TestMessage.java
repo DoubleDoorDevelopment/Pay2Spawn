@@ -46,14 +46,8 @@ import net.doubledoordev.pay2spawn.types.TypeRegistry;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
-
-import javax.swing.*;
-import java.io.IOException;
-
-import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
 
 /**
  * Allows testing of rewards

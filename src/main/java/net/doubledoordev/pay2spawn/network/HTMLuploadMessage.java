@@ -35,7 +35,6 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.doubledoordev.pay2spawn.util.Helper;
-import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.DimensionManager;
 import org.apache.commons.io.FileUtils;
 

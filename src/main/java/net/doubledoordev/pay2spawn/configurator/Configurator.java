@@ -36,7 +36,6 @@ import net.doubledoordev.pay2spawn.types.TypeRegistry;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.IIHasCallback;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
-import net.minecraft.nbt.CompressedStreamTools;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

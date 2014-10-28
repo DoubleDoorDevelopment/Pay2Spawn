@@ -42,11 +42,8 @@ import net.doubledoordev.pay2spawn.hud.DonationTrainEntry;
 import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.hud.SaleEntry;
 import net.doubledoordev.pay2spawn.network.RewardMessage;
-import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 
-import javax.swing.*;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 

@@ -35,7 +35,6 @@ import net.doubledoordev.libs.org.mcstats.Metrics;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.checkers.AbstractChecker;
 import net.doubledoordev.pay2spawn.checkers.CheckerHandler;
-import net.doubledoordev.pay2spawn.checkers.TwitchChecker;
 
 import java.io.IOException;
 

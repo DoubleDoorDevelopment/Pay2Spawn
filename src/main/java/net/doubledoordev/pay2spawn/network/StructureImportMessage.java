@@ -30,32 +30,21 @@
 
 package net.doubledoordev.pay2spawn.network;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.types.guis.StructureTypeGui;
-import net.doubledoordev.pay2spawn.util.Helper;
-import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
 import net.doubledoordev.pay2spawn.util.shapes.PointI;
-import net.doubledoordev.pay2spawn.util.shapes.Shapes;
 import net.minecraft.block.Block;
-import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-import java.io.IOException;
-
 import static net.doubledoordev.pay2spawn.types.StructureType.*;
 import static net.doubledoordev.pay2spawn.util.Constants.COMPOUND;
-import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
 
 /**
  * Reads all blockID, metadata and NBT from a list of points

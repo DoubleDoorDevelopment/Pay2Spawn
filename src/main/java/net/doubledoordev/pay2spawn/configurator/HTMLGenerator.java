@@ -31,7 +31,6 @@
 package net.doubledoordev.pay2spawn.configurator;
 
 import net.doubledoordev.pay2spawn.Pay2Spawn;
-import net.doubledoordev.pay2spawn.checkers.TwitchChecker;
 import net.doubledoordev.pay2spawn.network.HTMLuploadMessage;
 import net.doubledoordev.pay2spawn.types.TypeRegistry;
 import net.doubledoordev.pay2spawn.util.Reward;
