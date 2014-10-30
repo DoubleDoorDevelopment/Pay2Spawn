@@ -101,9 +101,9 @@ public class CheckerHandler
         }
     }
 
-    public static void fakeDonation(double amount, String name)
+    public static void fakeDonation(double amount)
     {
-        Donation donation = new Donation(UUID.randomUUID().toString(), amount, new Date().getTime(), name);
+        Donation donation = new Donation(UUID.randomUUID().toString(), amount, new Date().getTime());
         Helper.msg(EnumChatFormatting.GOLD + "[P2S] Faking donation of " + amount + ".");
         Pay2Spawn.getRewardsDB().process(donation, false);
     }
