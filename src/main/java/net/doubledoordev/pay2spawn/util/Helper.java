@@ -119,7 +119,11 @@ public class Helper
         format = format.replace("$name", donation.username);
         format = format.replace("$amount", donation.amount + "");
         format = format.replace("$note", donation.note);
-        if (Minecraft.getMinecraft().thePlayer != null) format = format.replace("$streamer", Minecraft.getMinecraft().thePlayer.getCommandSenderName());
+        if (Minecraft.getMinecraft().thePlayer != null)
+        {
+            format = format.replace("$streamer", Minecraft.getMinecraft().thePlayer.getCommandSenderName());
+            format = format.replace("$streameruuid", Minecraft.getMinecraft().thePlayer.getUniqueID().toString());
+        }
 
         if (reward != null)
         {
