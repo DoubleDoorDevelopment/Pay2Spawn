@@ -120,7 +120,7 @@ public class Helper
         if (Minecraft.getMinecraft().thePlayer != null)
         {
             format = format.replace("$streamer", Minecraft.getMinecraft().thePlayer.getCommandSenderName());
-            //format = format.replace("$streameruuid", Minecraft.getMinecraft().thePlayer.getUniqueID().toString());
+            format = format.replace("$streameruuid", Minecraft.getMinecraft().thePlayer.getUniqueID().toString());
         }
 
         if (reward != null)
