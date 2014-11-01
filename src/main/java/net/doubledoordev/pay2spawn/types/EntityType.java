@@ -222,25 +222,35 @@ public class EntityType extends TypeBase
 
             pw.println("This is a list of all the entities you can use in the json file.");
 
-            ArrayList<String> ids = new ArrayList<>();
-            ArrayList<String> names = new ArrayList<>();
+            ArrayList<String> ids = new ArrayList<>(EntityList.stringToClassMapping.size());
+            ArrayList<String> names = new ArrayList<>(EntityList.stringToClassMapping.size());
+            ArrayList<String> classes = new ArrayList<>(EntityList.stringToClassMapping.size());
 
-            ArrayList<Integer> list = new ArrayList<Integer>(EntityList.IDtoClassMapping.size());
-            for (Object key : EntityList.IDtoClassMapping.keySet())
+            for (Object entry : EntityList.IDtoClassMapping.entrySet())
             {
-                list.add((Integer) key);
-            }
-            Collections.sort(list);
-            for (Object key : list)
-            {
-                Integer id = (Integer) key;
+                Integer id = (Integer) (((Map.Entry) entry).getKey());
                 String name = EntityList.getStringFromID(id);
-
-                NAMES.add(name);
-                ids.add(id + "");
+                Class clazz = (Class) ((Map.Entry) entry).getValue();
+                ids.add(String.valueOf(id));
                 names.add(name);
+                NAMES.add(name);
+                classes.add(clazz.getName());
             }
-            pw.print(Helper.makeTable(new Helper.TableData("ID", ids), new Helper.TableData("name", names)));
+
+            for (Object entry : EntityList.stringToClassMapping.entrySet())
+            {
+                String name = (String) ((Map.Entry) entry).getKey();
+                Class clazz = (Class) ((Map.Entry) entry).getValue();
+                if (!names.contains(name))
+                {
+                    ids.add("???");
+                    names.add(name);
+                    NAMES.add(name);
+                    classes.add(clazz.getName());
+                }
+            }
+
+            pw.print(Helper.makeTable(new Helper.TableData("IDs", ids), new Helper.TableData("name", names), new Helper.TableData("Class", classes)));
 
             pw.close();
         }
