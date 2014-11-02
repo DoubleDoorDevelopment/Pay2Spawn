@@ -51,12 +51,6 @@ public class RndColors implements IRandomResolver
     private static final Pattern PATTERN = Pattern.compile("\\$randomRGB\\((\\w+)\\)");
 
     @Override
-    public String getIdentifier()
-    {
-        return "$randomRGB";
-    }
-
-    @Override
     public String solverRandom(int type, String value)
     {
         Matcher mRGB = PATTERN.matcher(value);

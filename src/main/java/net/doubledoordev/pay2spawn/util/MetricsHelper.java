@@ -30,6 +30,7 @@
 
 package net.doubledoordev.pay2spawn.util;
 
+import com.google.common.base.Strings;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.doubledoordev.d3core.util.libs.org.mcstats.Metrics;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
@@ -74,7 +75,9 @@ public class MetricsHelper
                         return (int) (Helper.findMax(Pay2Spawn.getRewardsDB().getAmounts()));
                     }
                 });
-                metrics.createGraph("ChannelName").addPlotter(new Metrics.Plotter(Pay2Spawn.getConfig().channel)
+                String name = Pay2Spawn.getConfig().channel;
+                if (Strings.isNullOrEmpty(name)) name = "Anonymous";
+                metrics.createGraph("ChannelName").addPlotter(new Metrics.Plotter(name)
                 {
                     @Override
                     public int getValue()

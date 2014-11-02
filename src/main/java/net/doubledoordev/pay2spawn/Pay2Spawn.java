@@ -56,10 +56,12 @@ import net.doubledoordev.pay2spawn.permissions.PermissionsHandler;
 import net.doubledoordev.pay2spawn.types.TypeBase;
 import net.doubledoordev.pay2spawn.types.TypeRegistry;
 import net.doubledoordev.pay2spawn.util.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.config.ConfigElement;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.opengl.Display;
 
 import javax.swing.*;
 import java.io.File;
@@ -254,31 +256,37 @@ public class Pay2Spawn implements ID3Mod
 
         if (newConfig)
         {
-            JOptionPane.showMessageDialog(null, "Please configure Pay2Spawn properly BEFORE you try launching this instance again.\n" +
-                            "You should provide AT LEAST your channel in the config. Pay2Spawn will crash otherwise.\n\n" +
-                            "If you need help with the configuring of your rewards, contact us!", "Please configure Pay2Spawn!", JOptionPane.WARNING_MESSAGE
-            );
+            JOptionPane pane = new JOptionPane();
+            pane.setMessageType(JOptionPane.WARNING_MESSAGE);
+            pane.setMessage("Please configure Pay2Spawn properly BEFORE you try launching this instance again.\n" +
+                    "You should provide AT LEAST your channel in the config. Pay2Spawn will crash otherwise.\n\n" +
+                    "If you need help with the configuring of your rewards, contact us!");
+            JDialog dialog = pane.createDialog("Please configure Pay2Spawn!");
+            dialog.setAlwaysOnTop(true);
+            dialog.setVisible(true);
             FMLCommonHandler.instance().handleExit(1);
         }
 
         if (Pay2Spawn.getConfig().majorConfigVersionChange)
         {
-            JOptionPane.showMessageDialog(null, "Please reconfigure Pay2Spawn properly BEFORE you try launching this instance again.\n" +
-                            "There have been major config changes.\n" +
-                            "We made a backup for you, you should start fresh to avoid clutter.", "Please reconfigure Pay2Spawn!", JOptionPane.WARNING_MESSAGE
-            );
-            FMLCommonHandler.instance().handleExit(1);
-        }
+            try
+            {
+                MetricsHelper.metrics.enable();
+            }
+            catch (IOException ignored)
+            {
 
-        boolean deobf = Launch.blackboard.containsKey("fml.deobfuscatedEnvironment") ? Boolean.valueOf(Launch.blackboard.get("fml.deobfuscatedEnvironment").toString()) : false;
+            }
 
-        if (Strings.isNullOrEmpty(Pay2Spawn.getConfig().channel) && !MetricsHelper.metrics.isOptOut() && event.getSide().isClient() && !deobf)
-        {
-            JOptionPane.showMessageDialog(null, "You must provide your channel in the config for statistics.\n" +
-                            "If you don't agree with this, opt out of the statistics program all together trough the 'PluginMetrics' config file.\n\n" +
-                            "Important note: Don't send the PluginMetrics config to other users, that will screw up analytics.", "Please configure Pay2Spawn!", JOptionPane.WARNING_MESSAGE
-            );
-            FMLCommonHandler.instance().handleExit(1);
+            JOptionPane pane = new JOptionPane();
+            pane.setMessageType(JOptionPane.INFORMATION_MESSAGE);
+            pane.setMessage("You can now (and should) use string id's (minecraft:stone) instead of actual id's.\n" +
+                    "Go and convert all of your json entries NOW.\n\n" +
+                    "Also, the metrics has been re-enabled as it does not crash the game anymore.\n" +
+                    "Leave it on if you want us to continue p2s development.");
+            JDialog dialog = pane.createDialog("Some major Pay2Spawn changes");
+            dialog.setAlwaysOnTop(true);
+            dialog.setVisible(true);
         }
 
         config.syncConfig();

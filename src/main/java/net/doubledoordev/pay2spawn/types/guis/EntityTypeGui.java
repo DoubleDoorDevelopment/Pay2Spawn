@@ -89,7 +89,7 @@ public class EntityTypeGui extends HelperGuiBase
 
         ArrayList<String> list = new ArrayList<>();
         list.addAll(EntityType.NAMES);
-        list.add(RandomRegistry.getInstanceFromClass(RndEntity.class).getIdentifier());
+        list.add(RndEntity.TAG);
         Collections.sort(list);
         entityNameComboBox.setModel(new DefaultComboBoxModel<>(list.toArray(new String[list.size()])));
 
@@ -105,7 +105,7 @@ public class EntityTypeGui extends HelperGuiBase
 
         ArrayList<String> list = new ArrayList<>();
         list.addAll(EntityType.NAMES);
-        list.add(RandomRegistry.getInstanceFromClass(RndEntity.class).getIdentifier());
+        list.add(RndEntity.TAG);
         Collections.sort(list);
         entityNameComboBox.setModel(new DefaultComboBoxModel<>(list.toArray(new String[list.size()])));
 

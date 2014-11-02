@@ -48,12 +48,6 @@ public class RndNumberRange implements IRandomResolver
     private final static Pattern PATTERN = Pattern.compile("\\$random\\((-?\\w+), ?(-?\\w+)\\)");
 
     @Override
-    public String getIdentifier()
-    {
-        return "$random(";
-    }
-
-    @Override
     public String solverRandom(int type, String value)
     {
         Matcher matcher = PATTERN.matcher(value);

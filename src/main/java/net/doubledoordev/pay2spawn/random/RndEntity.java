@@ -46,13 +46,8 @@ import static net.doubledoordev.pay2spawn.util.Constants.STRING;
  */
 public class RndEntity implements IRandomResolver
 {
+    public static final String TAG = "$randomEntity";
     private static final Pattern PATTERN = Pattern.compile("\\$randomEntity");
-
-    @Override
-    public String getIdentifier()
-    {
-        return "$randomEntity";
-    }
 
     @Override
     public String solverRandom(int type, String value)

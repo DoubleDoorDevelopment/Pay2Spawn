@@ -30,51 +30,32 @@
 
 package net.doubledoordev.pay2spawn.random;
 
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import cpw.mods.fml.common.registry.GameData;
+
+import static net.doubledoordev.pay2spawn.util.Constants.INT;
+import static net.doubledoordev.pay2spawn.util.Constants.SHORT;
 
 /**
- * I'm insane for doing this but oh well.
- * <p/>
- * Use case: You want the same random value in 2 or more places.
- * You need to use the full expression everywhere.
- * The first time the solver comes across the tag with a new name, it will solve the random.
- * The second (or more) time if just fills in the value from memory.
- * <p/>
- * How to use: $var(name, somerandomthing)
- * <p/>
- * Example: $var(1, random(1, 10))
+ * Converts a
+ * Expected syntax: $random
+ * Outcome: 0 or 1
+ * Works with: BYTE, STRING
  *
  * @author Dries007
  */
-public class RndVariable implements IRandomResolver
+public class ItemId implements IRandomResolver
 {
-    private static final Pattern                 PATTERN = Pattern.compile("\\$var\\((.*?), ?([^$]*)\\)");
-    private static final HashMap<String, String> VARMAP  = new HashMap<>();
-
-    public static void reset()
-    {
-        VARMAP.clear();
-    }
-
     @Override
     public String solverRandom(int type, String value)
     {
-        Matcher matcher = PATTERN.matcher(value);
-        if (matcher.find())
-        {
-            String var = matcher.group(1);
-            if (!VARMAP.containsKey(var)) VARMAP.put(var, RandomRegistry.solveRandom(type, "$" + matcher.group(2)));
-            return matcher.replaceFirst(VARMAP.get(var));
-        }
-
-        return value;
+        int id = GameData.getItemRegistry().getId(value);
+        if (id == -1) GameData.getBlockRegistry().getId(value);
+        return id == -1 ? value : String.valueOf(id);
     }
 
     @Override
     public boolean matches(int type, String value)
     {
-        return PATTERN.matcher(value).find();
+        return (type == SHORT || type == INT) && value.indexOf(':') != -1;
     }
 }

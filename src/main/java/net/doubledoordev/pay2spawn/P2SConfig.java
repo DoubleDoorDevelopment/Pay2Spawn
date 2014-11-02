@@ -54,7 +54,7 @@ import static net.doubledoordev.pay2spawn.util.Constants.*;
 public class P2SConfig
 {
     public final static String HUD           = MODID + ".Hud";
-    public static final String CONFIGVERSION = "2";
+    public static final String CONFIGVERSION = "3";
     public final boolean       majorConfigVersionChange;
     public       Configuration configuration;
     public boolean forceServerconfig = true;
@@ -84,16 +84,6 @@ public class P2SConfig
 
         if (majorConfigVersionChange)
         {
-            try
-            {
-                Files.copy(file, new File(file.getParentFile(), "Pay2SpawnBackup_" + new SimpleDateFormat("yyyy-MM-dd_HH'h'mm'm'ss's'").format(new Date()) + ".cfg"));
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-            file.delete();
-
             configuration = new Configuration(file);
             configuration.get(MODID, cvk, CONFIGVERSION).set(CONFIGVERSION);
         }
