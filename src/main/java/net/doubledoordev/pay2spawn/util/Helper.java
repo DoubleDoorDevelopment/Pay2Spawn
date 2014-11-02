@@ -114,13 +114,13 @@ public class Helper
     public static String formatText(String format, Donation donation, Reward reward)
     {
         format = format.replace("$name", donation.username);
-        format = format.replace("$uuid", getUUIDFromUsername(donation.username));
+//        format = format.replace("$uuid", getUUIDFromUsername(donation.username));
         format = format.replace("$amount", donation.amount + "");
         format = format.replace("$note", donation.note);
         if (Minecraft.getMinecraft().thePlayer != null)
         {
             format = format.replace("$streamer", Minecraft.getMinecraft().thePlayer.getCommandSenderName());
-            format = format.replace("$streameruuid", getUUIDFromUsername(Minecraft.getMinecraft().thePlayer.getCommandSenderName()));
+//            format = format.replace("$streameruuid", getUUIDFromUsername(Minecraft.getMinecraft().thePlayer.getCommandSenderName()));
         }
 
         if (reward != null)
@@ -133,43 +133,43 @@ public class Helper
 
         return format;
     }
-
-    public static final  Map<String, String> UUID_USERNAME_MAP = new HashMap<>();
-
-    public static String getUUIDFromUsername(String name)
-    {
-        // This variable is used so it will only ever check any UUID once. Even if its name is null.
-        String uuid = "";
-        if (!UUID_USERNAME_MAP.containsKey(name))
-        {
-            try
-            {
-                URL url = new URL("https://api.mojang.com/profiles/minecraft");
-                URLConnection uc = url.openConnection();
-                uc.setUseCaches(false);
-                uc.setDoOutput(true);
-                uc.setDefaultUseCaches(false);
-                uc.addRequestProperty("User-Agent", "minecraft");
-                uc.addRequestProperty("Content-Type", "application/json");
-                OutputStream stream = uc.getOutputStream();
-                stream.write(String.format("[\"%s\"]", name).getBytes());
-                stream.flush();
-                stream.close();
-                InputStream in = uc.getInputStream();
-                JsonElement element = JSON_PARSER.parse(new InputStreamReader(in));
-                uuid = element.getAsJsonArray().get(0).getAsJsonObject().get("id").getAsString();
-                in.close();
-            }
-            catch (Exception ignored)
-            {
-                // No uuid available
-            }
-            UUID_USERNAME_MAP.put(name, uuid);
-        }
-        else uuid = UUID_USERNAME_MAP.get(name);
-
-        return uuid;
-    }
+//
+//    public static final  Map<String, String> UUID_USERNAME_MAP = new HashMap<>();
+//
+//    public static String getUUIDFromUsername(String name)
+//    {
+//        // This variable is used so it will only ever check any UUID once. Even if its name is null.
+//        String uuid = "";
+//        if (!UUID_USERNAME_MAP.containsKey(name))
+//        {
+//            try
+//            {
+//                URL url = new URL("https://api.mojang.com/profiles/minecraft");
+//                URLConnection uc = url.openConnection();
+//                uc.setUseCaches(false);
+//                uc.setDoOutput(true);
+//                uc.setDefaultUseCaches(false);
+//                uc.addRequestProperty("User-Agent", "minecraft");
+//                uc.addRequestProperty("Content-Type", "application/json");
+//                OutputStream stream = uc.getOutputStream();
+//                stream.write(String.format("[\"%s\"]", name).getBytes());
+//                stream.flush();
+//                stream.close();
+//                InputStream in = uc.getInputStream();
+//                JsonElement element = JSON_PARSER.parse(new InputStreamReader(in));
+//                uuid = element.getAsJsonArray().get(0).getAsJsonObject().get("id").getAsString();
+//                in.close();
+//            }
+//            catch (Exception ignored)
+//            {
+//                // No uuid available
+//            }
+//            UUID_USERNAME_MAP.put(name, uuid);
+//        }
+//        else uuid = UUID_USERNAME_MAP.get(name);
+//
+//        return uuid;
+//    }
 
     /**
      * Fill in variables from a donation
