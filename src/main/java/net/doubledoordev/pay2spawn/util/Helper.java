@@ -31,10 +31,18 @@
 package net.doubledoordev.pay2spawn.util;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.Iterables;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.mojang.authlib.Agent;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.GameProfileRepository;
+import com.mojang.authlib.ProfileLookupCallback;
+import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
+import cpw.mods.fml.common.FMLCommonHandler;
 import io.netty.buffer.ByteBuf;
 import net.doubledoordev.pay2spawn.util.shapes.PointI;
 import net.minecraft.client.Minecraft;
@@ -45,10 +53,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.*;
 import org.lwjgl.opengl.GL11;
 
 import javax.swing.*;
@@ -60,8 +65,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
-import static net.doubledoordev.pay2spawn.util.Constants.RANDOM;
+import static net.doubledoordev.pay2spawn.util.Constants.*;
 
 /**
  * Static helper functions with no other home
@@ -114,13 +118,13 @@ public class Helper
     public static String formatText(String format, Donation donation, Reward reward)
     {
         format = format.replace("$name", donation.username);
-//        format = format.replace("$uuid", getUUIDFromUsername(donation.username));
+        format = format.replace("$uuid", getGameProfileFromName(donation.username).getId().toString());
         format = format.replace("$amount", donation.amount + "");
         format = format.replace("$note", donation.note);
         if (Minecraft.getMinecraft().thePlayer != null)
         {
             format = format.replace("$streamer", Minecraft.getMinecraft().thePlayer.getCommandSenderName());
-//            format = format.replace("$streameruuid", getUUIDFromUsername(Minecraft.getMinecraft().thePlayer.getCommandSenderName()));
+            format = format.replace("$streameruuid", Minecraft.getMinecraft().thePlayer.getGameProfile().getId().toString());
         }
 
         if (reward != null)
@@ -133,43 +137,55 @@ public class Helper
 
         return format;
     }
-//
-//    public static final  Map<String, String> UUID_USERNAME_MAP = new HashMap<>();
-//
-//    public static String getUUIDFromUsername(String name)
-//    {
-//        // This variable is used so it will only ever check any UUID once. Even if its name is null.
-//        String uuid = "";
-//        if (!UUID_USERNAME_MAP.containsKey(name))
-//        {
-//            try
-//            {
-//                URL url = new URL("https://api.mojang.com/profiles/minecraft");
-//                URLConnection uc = url.openConnection();
-//                uc.setUseCaches(false);
-//                uc.setDoOutput(true);
-//                uc.setDefaultUseCaches(false);
-//                uc.addRequestProperty("User-Agent", "minecraft");
-//                uc.addRequestProperty("Content-Type", "application/json");
-//                OutputStream stream = uc.getOutputStream();
-//                stream.write(String.format("[\"%s\"]", name).getBytes());
-//                stream.flush();
-//                stream.close();
-//                InputStream in = uc.getInputStream();
-//                JsonElement element = JSON_PARSER.parse(new InputStreamReader(in));
-//                uuid = element.getAsJsonArray().get(0).getAsJsonObject().get("id").getAsString();
-//                in.close();
-//            }
-//            catch (Exception ignored)
-//            {
-//                // No uuid available
-//            }
-//            UUID_USERNAME_MAP.put(name, uuid);
-//        }
-//        else uuid = UUID_USERNAME_MAP.get(name);
-//
-//        return uuid;
-//    }
+
+    private static GameProfileRepository profileRepo;
+    private static HashMap<String, GameProfile> nameToProfileMap = new HashMap<>();
+
+    /**
+     * Modified method from iChunUtil's EntityHelperBase class
+     * @author iChun
+     */
+    public static GameProfile getGameProfileFromName(String name)
+    {
+        if (name == null)
+        {
+            UUID uuid = EntityPlayer.func_146094_a(new GameProfile(null, ANONYMOUS));
+            return new GameProfile(uuid, ANONYMOUS);
+        }
+        if (nameToProfileMap.containsKey(name)) return nameToProfileMap.get(name);
+
+        final GameProfile[] agameprofile = new GameProfile[1];
+        ProfileLookupCallback profilelookupcallback = new ProfileLookupCallback()
+        {
+            public void onProfileLookupSucceeded(GameProfile p_onProfileLookupSucceeded_1_)
+            {
+                agameprofile[0] = p_onProfileLookupSucceeded_1_;
+            }
+
+            public void onProfileLookupFailed(GameProfile p_onProfileLookupFailed_1_, Exception p_onProfileLookupFailed_2_)
+            {
+                agameprofile[0] = null;
+            }
+        };
+        if (profileRepo == null)
+        {
+            profileRepo = ((new YggdrasilAuthenticationService(Minecraft.getMinecraft().getProxy(), String.format("%s_%s", NAME, UUID.randomUUID())))).createProfileRepository();
+        }
+        profileRepo.findProfilesByNames(new String[]{name}, Agent.MINECRAFT, profilelookupcallback);
+
+        if (agameprofile[0] == null)
+        {
+            UUID uuid = EntityPlayer.func_146094_a(new GameProfile(null, name));
+            GameProfile gameprofile = new GameProfile(uuid, name);
+            profilelookupcallback.onProfileLookupSucceeded(gameprofile);
+        }
+        else
+        {
+            nameToProfileMap.put(agameprofile[0].getName(), agameprofile[0]);
+        }
+
+        return agameprofile[0];
+    }
 
     /**
      * Fill in variables from a donation
