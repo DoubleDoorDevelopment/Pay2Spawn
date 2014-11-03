@@ -254,12 +254,12 @@ public class Pay2Spawn implements ID3Mod
             e.printStackTrace();
         }
 
-        if (newConfig)
+        if (newConfig && event.getSide().isClient())
         {
             JOptionPane pane = new JOptionPane();
             pane.setMessageType(JOptionPane.WARNING_MESSAGE);
             pane.setMessage("Please configure Pay2Spawn properly BEFORE you try launching this instance again.\n" +
-                    "You should provide AT LEAST your channel in the config. Pay2Spawn will crash otherwise.\n\n" +
+                    "You should provide AT LEAST your channel in the config.\n\n" +
                     "If you need help with the configuring of your rewards, contact us!");
             JDialog dialog = pane.createDialog("Please configure Pay2Spawn!");
             dialog.setAlwaysOnTop(true);
@@ -278,15 +278,18 @@ public class Pay2Spawn implements ID3Mod
 
             }
 
-            JOptionPane pane = new JOptionPane();
-            pane.setMessageType(JOptionPane.INFORMATION_MESSAGE);
-            pane.setMessage("You can now (and should) use string id's (minecraft:stone) instead of actual id's.\n" +
-                    "Go and convert all of your json entries NOW.\n\n" +
-                    "Also, the metrics has been re-enabled as it does not crash the game anymore.\n" +
-                    "Leave it on if you want us to continue p2s development.");
-            JDialog dialog = pane.createDialog("Some major Pay2Spawn changes");
-            dialog.setAlwaysOnTop(true);
-            dialog.setVisible(true);
+            if (event.getSide().isClient())
+            {
+                JOptionPane pane = new JOptionPane();
+                pane.setMessageType(JOptionPane.INFORMATION_MESSAGE);
+                pane.setMessage("You can now (and should) use string id's (minecraft:stone) instead of actual id's.\n" +
+                        "Go and convert all of your json entries NOW.\n\n" +
+                        "Also, the metrics has been re-enabled as it does not crash the game anymore.\n" +
+                        "Leave it on if you want us to continue p2s development.");
+                JDialog dialog = pane.createDialog("Some major Pay2Spawn changes");
+                dialog.setAlwaysOnTop(true);
+                dialog.setVisible(true);
+            }
         }
 
         config.syncConfig();
