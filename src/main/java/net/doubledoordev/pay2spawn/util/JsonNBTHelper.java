@@ -34,7 +34,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import cpw.mods.fml.common.registry.GameData;
 import net.doubledoordev.pay2spawn.random.RandomRegistry;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.*;
 
 import java.util.Map;
@@ -136,7 +138,14 @@ public class JsonNBTHelper
         JsonObject jsonObject = new JsonObject();
         for (Object object : compound.func_150296_c())
         {
-            jsonObject.add(object.toString(), parseNBT(compound.getTag(object.toString())));
+            if (object.equals("id") && compound.getTag(object.toString()).getId() == SHORT) // Itemstack!
+            {
+                int id = compound.getShort("id");
+                Item item = GameData.getItemRegistry().getObjectById(id);
+                jsonObject.addProperty(object.toString(), NBTTypes[SHORT] + ":" + (item == null ? id : GameData.getItemRegistry().getNameForObject(item)));
+            }
+            else
+                jsonObject.add(object.toString(), parseNBT(compound.getTag(object.toString())));
         }
         return jsonObject;
     }
@@ -168,9 +177,9 @@ public class JsonNBTHelper
                     {
                         // 0 = END
                         case BYTE:
-                            return new NBTTagByte(Byte.parseByte(value));
+                            //return new NBTTagByte(Byte.parseByte(value));
                         case SHORT:
-                            return new NBTTagShort(Short.parseShort(value));
+                            //return new NBTTagShort(Short.parseShort(value));
                         case INT:
                             return new NBTTagInt(Integer.parseInt(value));
                         case LONG:

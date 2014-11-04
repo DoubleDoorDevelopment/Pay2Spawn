@@ -43,6 +43,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.io.File;
@@ -94,6 +95,7 @@ public class ItemType extends TypeBase
         try
         {
             ItemStack itemStack = ItemStack.loadItemStackFromNBT(dataFromClient);
+            itemStack.stackSize = ((NBTBase.NBTPrimitive) dataFromClient.getTag("Count")).func_150287_d();
             while (itemStack.stackSize != 0)
             {
                 ItemStack itemStack1 = itemStack.splitStack(Math.min(itemStack.getMaxStackSize(), itemStack.stackSize));
