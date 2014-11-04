@@ -36,11 +36,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import cpw.mods.fml.common.registry.GameData;
 import net.doubledoordev.pay2spawn.random.RandomRegistry;
+import net.doubledoordev.pay2spawn.types.StructureType;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.*;
 
 import java.util.Map;
 
+import static net.doubledoordev.pay2spawn.types.StructureType.BLOCKID_KEY;
 import static net.doubledoordev.pay2spawn.util.Constants.*;
 
 /**
@@ -142,7 +145,13 @@ public class JsonNBTHelper
             {
                 int id = compound.getShort("id");
                 Item item = GameData.getItemRegistry().getObjectById(id);
-                jsonObject.addProperty(object.toString(), NBTTypes[SHORT] + ":" + (item == null ? id : GameData.getItemRegistry().getNameForObject(item)));
+                jsonObject.addProperty(object.toString(), NBTTypes[SHORT] + ":" + (item == GameData.getItemRegistry().getDefaultValue() ? id : GameData.getItemRegistry().getNameForObject(item)));
+            }
+            else if (object.equals(BLOCKID_KEY) && compound.getTag(object.toString()).getId() == INT) // Itemstack!
+            {
+                int id = compound.getInteger(BLOCKID_KEY);
+                Block block = GameData.getBlockRegistry().getObjectById(id);
+                jsonObject.addProperty(object.toString(), NBTTypes[INT] + ":" + (block == GameData.getBlockRegistry().getDefaultValue() ? id : GameData.getBlockRegistry().getNameForObject(block)));
             }
             else
                 jsonObject.add(object.toString(), parseNBT(compound.getTag(object.toString())));

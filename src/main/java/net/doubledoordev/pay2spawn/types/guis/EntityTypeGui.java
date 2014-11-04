@@ -34,7 +34,6 @@ import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.configurator.Configurator;
 import net.doubledoordev.pay2spawn.network.TestMessage;
-import net.doubledoordev.pay2spawn.random.RandomRegistry;
 import net.doubledoordev.pay2spawn.random.RndEntity;
 import net.doubledoordev.pay2spawn.types.EntityType;
 

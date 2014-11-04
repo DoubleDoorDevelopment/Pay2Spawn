@@ -31,7 +31,6 @@
 package net.doubledoordev.pay2spawn.util;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.Iterables;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -40,9 +39,7 @@ import com.mojang.authlib.Agent;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.GameProfileRepository;
 import com.mojang.authlib.ProfileLookupCallback;
-import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
-import cpw.mods.fml.common.FMLCommonHandler;
 import io.netty.buffer.ByteBuf;
 import net.doubledoordev.pay2spawn.util.shapes.PointI;
 import net.minecraft.client.Minecraft;
@@ -53,13 +50,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.*;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
 
 import javax.swing.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.util.*;
 import java.util.regex.Matcher;

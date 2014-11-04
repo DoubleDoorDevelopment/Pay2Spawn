@@ -35,9 +35,9 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import net.doubledoordev.pay2spawn.util.javazoom.jl.decoder.JavaLayerException;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.types.MusicType;
+import net.doubledoordev.pay2spawn.util.javazoom.jl.decoder.JavaLayerException;
 
 import java.io.File;
 import java.io.FileInputStream;

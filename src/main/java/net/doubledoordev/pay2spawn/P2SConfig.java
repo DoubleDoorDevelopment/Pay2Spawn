@@ -30,7 +30,6 @@
 
 package net.doubledoordev.pay2spawn;
 
-import com.google.common.io.Files;
 import net.doubledoordev.pay2spawn.checkers.CheckerHandler;
 import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.types.TypeRegistry;
@@ -38,9 +37,6 @@ import net.doubledoordev.pay2spawn.util.Helper;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.regex.Pattern;
 
 import static net.doubledoordev.pay2spawn.util.Constants.*;

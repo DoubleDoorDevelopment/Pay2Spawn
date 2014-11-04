@@ -30,7 +30,6 @@
 
 package net.doubledoordev.pay2spawn;
 
-import com.google.common.base.Strings;
 import cpw.mods.fml.client.config.DummyConfigElement;
 import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -56,12 +55,9 @@ import net.doubledoordev.pay2spawn.permissions.PermissionsHandler;
 import net.doubledoordev.pay2spawn.types.TypeBase;
 import net.doubledoordev.pay2spawn.types.TypeRegistry;
 import net.doubledoordev.pay2spawn.util.*;
-import net.minecraft.client.Minecraft;
-import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.config.ConfigElement;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.opengl.Display;
 
 import javax.swing.*;
 import java.io.File;
