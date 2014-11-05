@@ -41,6 +41,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -84,7 +85,7 @@ public class ItemType extends TypeBase
     @Override
     public NBTTagCompound getExample()
     {
-        ItemStack is = new ItemStack((Item) Item.itemRegistry.getObject("minecraft:golden_apple"));
+        ItemStack is = new ItemStack(Items.golden_apple);
         is.setStackDisplayName("$name");
         return is.writeToNBT(new NBTTagCompound());
     }
