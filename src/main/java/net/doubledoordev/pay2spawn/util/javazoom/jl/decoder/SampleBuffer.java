@@ -100,7 +100,6 @@ public class SampleBuffer extends Obuffer
         bufferp[channel] = pos;
     }
 
-
     /**
      * Write the samples to the file (Random Acces).
      */

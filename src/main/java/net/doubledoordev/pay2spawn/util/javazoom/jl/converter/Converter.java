@@ -57,7 +57,6 @@ public class Converter
         convert(sourceName, destName, progressListener, null);
     }
 
-
     public void convert(String sourceName, String destName,
                         ProgressListener progressListener, Decoder.Params decoderParams)
             throws JavaLayerException
@@ -95,7 +94,6 @@ public class Converter
                 sourceStream.reset();
             }
             progressListener.converterUpdate(ProgressListener.UPDATE_FRAME_COUNT, frameCount, 0);
-
 
             Obuffer output = null;
             Decoder decoder = new Decoder(decoderParams);
@@ -139,7 +137,6 @@ public class Converter
                         if (decoderOutput != output)
                             throw new InternalError("Output buffers are different.");
 
-
                         progressListener.decodedFrame(frame, header, output);
 
                         stream.closeFrame();
@@ -174,12 +171,10 @@ public class Converter
         }
     }
 
-
     protected int countFrames(InputStream in)
     {
         return -1;
     }
-
 
     protected InputStream openInput(String fileName)
             throws IOException
@@ -191,7 +186,6 @@ public class Converter
 
         return bufIn;
     }
-
 
     /**
      * This interface is used by the Converter to provide
@@ -209,7 +203,6 @@ public class Converter
          * of MPEG audio frames converted.
          */
         public static final int UPDATE_CONVERT_COMPLETE = 2;
-
 
         /**
          * Notifies the listener that new information is available.
@@ -268,7 +261,6 @@ public class Converter
         public boolean converterException(Throwable t);
 
     }
-
 
     /**
      * Implementation of <code>ProgressListener</code> that writes
@@ -399,6 +391,5 @@ public class Converter
         }
 
     }
-
 
 }

@@ -34,7 +34,6 @@ import net.doubledoordev.pay2spawn.util.javazoom.jl.decoder.Obuffer;
  * @since 0.0
  */
 
-
 public class WaveFileObuffer extends Obuffer
 {
     /**

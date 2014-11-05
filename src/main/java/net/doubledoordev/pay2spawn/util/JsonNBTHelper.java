@@ -36,7 +36,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import cpw.mods.fml.common.registry.GameData;
 import net.doubledoordev.pay2spawn.random.RandomRegistry;
-import net.doubledoordev.pay2spawn.types.StructureType;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.*;

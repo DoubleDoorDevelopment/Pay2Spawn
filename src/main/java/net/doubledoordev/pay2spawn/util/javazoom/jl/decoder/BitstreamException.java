@@ -66,5 +66,4 @@ public class BitstreamException extends JavaLayerException
         return errorcode;
     }
 
-
 }

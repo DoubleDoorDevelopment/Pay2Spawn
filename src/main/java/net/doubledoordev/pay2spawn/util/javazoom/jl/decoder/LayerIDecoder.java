@@ -378,7 +378,6 @@ class LayerIDecoder implements FrameDecoder
         protected float channel2_sample;
         protected float channel2_factor, channel2_offset;
 
-
         /**
          * Constructor
          */

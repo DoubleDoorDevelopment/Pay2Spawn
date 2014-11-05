@@ -75,13 +75,17 @@ public class RandomRegistry
      */
     public static String solveRandom(int type, String value)
     {
-        for (IRandomResolver resolver : RANDOM_RESOLVERS.values())
+        String oldValue;
+        do
         {
-            while (resolver.matches(type, value))
+            oldValue = value;
+            for (IRandomResolver resolver : RANDOM_RESOLVERS.values())
             {
-                value = resolver.solverRandom(type, value);
+                if (resolver.matches(type, value)) value = resolver.solverRandom(type, value);
             }
         }
+        while (!oldValue.equals(value));
+
         return value;
     }
 

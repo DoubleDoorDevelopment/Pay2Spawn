@@ -28,7 +28,6 @@ package net.doubledoordev.pay2spawn.util.javazoom.jl.converter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-
 /**
  * Class to manage RIFF files
  */
@@ -193,7 +192,6 @@ public class RiffFile
         return DDC_SUCCESS;
     }
 
-
     /**
      * Write NumBytes data.
      */
@@ -310,7 +308,6 @@ public class RiffFile
         riff_header.ckSize += NumBytes;
         return DDC_SUCCESS;
     }
-
 
     /**
      * Read NumBytes data.
@@ -460,7 +457,6 @@ public class RiffFile
         }
         return Write(Data, NumBytes);
     }
-
 
     /**
      * Seek in the File.

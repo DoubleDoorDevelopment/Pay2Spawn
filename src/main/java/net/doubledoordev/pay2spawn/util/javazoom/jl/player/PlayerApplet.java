@@ -51,7 +51,6 @@ public class PlayerApplet extends Applet implements Runnable
 
     private String fileName = null;
 
-
     /**
      * Retrieves the <code>AudioDevice</code> instance that will
      * be used to sound the audio data.

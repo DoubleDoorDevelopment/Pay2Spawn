@@ -66,7 +66,6 @@ final class BitReserve
         buf_byte_idx = 0;
     }
 
-
     /**
      * Return totbit Field.
      */
@@ -107,7 +106,6 @@ final class BitReserve
         buf_byte_idx = pos;
         return val;
     }
-
 
     /**
      * Read 1 bit from the bit stream.

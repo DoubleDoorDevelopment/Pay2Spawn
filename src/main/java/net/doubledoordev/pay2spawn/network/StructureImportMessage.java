@@ -48,7 +48,7 @@ import static net.doubledoordev.pay2spawn.util.Constants.COMPOUND;
 
 /**
  * Reads all blockID, metadata and NBT from a list of points
- *
+ * <p/>
  * Uses NBT instead of a stringified JSON array because of network efficiency
  *
  * @author Dries007

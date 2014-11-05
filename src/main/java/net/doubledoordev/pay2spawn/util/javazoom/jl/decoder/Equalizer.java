@@ -18,7 +18,6 @@
  *----------------------------------------------------------------------
  */
 
-
 package net.doubledoordev.pay2spawn.util.javazoom.jl.decoder;
 
 /**
@@ -104,7 +103,6 @@ public final class Equalizer
         }
     }
 
-
     /**
      * Sets all bands to 0.0
      */
@@ -115,7 +113,6 @@ public final class Equalizer
             settings[i] = 0.0f;
         }
     }
-
 
     /**
      * Retrieves the number of bands present in this equalizer.
@@ -137,7 +134,6 @@ public final class Equalizer
 
         return eq;
     }
-
 
     /**
      * Retrieves the eq setting for a given band.
@@ -199,7 +195,6 @@ public final class Equalizer
         float f = (float) Math.pow(2.0, eq);
         return f;
     }
-
 
     static abstract public class EQFunction
     {

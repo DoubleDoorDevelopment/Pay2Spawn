@@ -339,7 +339,6 @@ public class Base64
         return dArr;
     }
 
-
     /**
      * Decodes a BASE64 encoded byte array that is known to be resonably well formatted. The method is about twice as
      * fast as {@link #decode(byte[])}. The preconditions are:<br>

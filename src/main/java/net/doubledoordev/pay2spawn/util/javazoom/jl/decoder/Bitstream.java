@@ -37,7 +37,6 @@ package net.doubledoordev.pay2spawn.util.javazoom.jl.decoder;
 
 import java.io.*;
 
-
 /**
  * The <code>Bistream</code> class is responsible for parsing
  * an MPEG audio bitstream.
@@ -113,7 +112,6 @@ public final class Bitstream implements BitstreamErrors
     private byte[] rawid3v2 = null;
 
     private boolean firstframe = true;
-
 
     /**
      * Construct a IBitstream that reads data from a
@@ -309,7 +307,6 @@ public final class Bitstream implements BitstreamErrors
         return header;
     }
 
-
     /**
      * Read next MP3 frame.
      *
@@ -382,7 +379,6 @@ public final class Bitstream implements BitstreamErrors
 
         return sync;
     }
-
 
     // REVIEW: this class should provide inner classes to
     // parse the frame contents. Eventually, readBits will

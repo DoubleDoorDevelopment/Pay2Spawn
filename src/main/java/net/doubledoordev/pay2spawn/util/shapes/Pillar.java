@@ -57,7 +57,6 @@ public class Pillar extends AbstractShape
 
     int height = 0;
 
-
     public Pillar(int height)
     {
         super();

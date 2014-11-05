@@ -77,6 +77,8 @@ public class Helper
 {
     public static final String  FORMAT_WITH_DELIMITER = "((?<=\u00a7[0123456789AaBbCcDdEeFfKkLlMmNnOoRr])|(?=\u00a7[0123456789AaBbCcDdEeFfKkLlMmNnOoRr]))";
     public static final Pattern DOUBLE_QUOTES         = Pattern.compile("\"(.*)\"");
+    private static GameProfileRepository profileRepo;
+    private static HashMap<String, GameProfile> nameToProfileMap = new HashMap<>();
 
     /**
      * Convert & into § if the next char is a chat formatter char
@@ -139,11 +141,9 @@ public class Helper
         return format;
     }
 
-    private static GameProfileRepository profileRepo;
-    private static HashMap<String, GameProfile> nameToProfileMap = new HashMap<>();
-
     /**
      * Modified method from iChunUtil's EntityHelperBase class
+     *
      * @author iChun
      */
     public static GameProfile getGameProfileFromName(String name)

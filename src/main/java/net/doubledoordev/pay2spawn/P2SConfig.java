@@ -55,7 +55,7 @@ public class P2SConfig
     public       Configuration configuration;
     public boolean forceServerconfig = true;
     public boolean forceP2S          = false;
-    public String  channel      = "";
+    public String  channel           = "";
     public Pattern[] blacklist_Name_p;
     public Pattern[] blacklist_Note_p;
     public Pattern[] whitelist_Name_p;

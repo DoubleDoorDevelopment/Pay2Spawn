@@ -39,7 +39,6 @@ class LayerIIDecoder extends LayerIDecoder implements FrameDecoder
     {
     }
 
-
     protected void createSubbands()
     {
         int i;
@@ -66,7 +65,6 @@ class LayerIIDecoder extends LayerIDecoder implements FrameDecoder
         for (int i = 0; i < num_subbands; ++i)
             ((SubbandLayer2) subbands[i]).read_scalefactor_selection(stream, crc);
     }
-
 
     /**
      * Class for layer II subbands in single channel mode.
@@ -464,7 +462,6 @@ class LayerIIDecoder extends LayerIDecoder implements FrameDecoder
                         0.00195312500f, 0.00097656250f, 0.00048828125f, 0.00024414063f, 0.00012207031f,
                         0.00006103516f};
 
-
         protected int   subbandnumber;
         protected int   allocation;
         protected int   scfsi;
@@ -487,7 +484,6 @@ class LayerIIDecoder extends LayerIDecoder implements FrameDecoder
             this.subbandnumber = subbandnumber;
             groupnumber = samplenumber = 0;
         }
-
 
         /**
          *
@@ -597,7 +593,6 @@ class LayerIIDecoder extends LayerIDecoder implements FrameDecoder
                 }
             }
         }
-
 
         /**
          *

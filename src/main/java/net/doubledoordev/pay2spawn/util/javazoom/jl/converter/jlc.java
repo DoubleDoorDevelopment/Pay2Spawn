@@ -79,7 +79,6 @@ public class jlc
         System.exit(0);
     }
 
-
     /**
      * Class to contain arguments for maplay.
      */
@@ -166,7 +165,7 @@ public class jlc
                         output_filename = argv[i];
                     }
              /*else if (argv[i].equals("-f"))
-			 {
+             {
 		        if (++i == argc)
 				{
 		           System.out.println("Please specify a new scalefactor after the -f option!");
@@ -190,7 +189,6 @@ public class jlc
 
             return true;
         }
-
 
         /**
          * Usage of JavaLayer.

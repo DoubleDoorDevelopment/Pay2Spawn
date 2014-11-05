@@ -55,6 +55,5 @@ public class DecoderException extends JavaLayerException
         return errorcode;
     }
 
-
 }
 

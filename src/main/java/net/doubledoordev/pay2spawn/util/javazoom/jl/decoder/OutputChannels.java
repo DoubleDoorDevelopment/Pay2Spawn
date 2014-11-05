@@ -20,7 +20,6 @@
 
 package net.doubledoordev.pay2spawn.util.javazoom.jl.decoder;
 
-
 /**
  * A Type-safe representation of the the supported output channel
  * constants.
@@ -52,7 +51,6 @@ public class OutputChannels
      */
     public static final int            DOWNMIX_CHANNELS = 3;
     public static final OutputChannels DOWNMIX          = new OutputChannels(DOWNMIX_CHANNELS);
-
 
     private /*final*/ int outputChannels;
 

@@ -313,7 +313,6 @@ final class SynthesisFilter
                         new_v20 = new_v21 = new_v22 = new_v23 = new_v24 = new_v25 = new_v26 = new_v27 = new_v28 = new_v29 =
                                 new_v30 = new_v31 = 0.0f;
 
-
 //	float[] new_v = new float[32]; // new V[0-15] and V[33-48] of Figure 3-A.2 in ISO DIS 11172-3
 //	float[] p = new float[16];
 //	float[] pp = new float[16];
@@ -404,7 +403,6 @@ final class SynthesisFilter
         p14 = (pp10 - pp13) * cos5_16;
         p15 = (pp11 - pp12) * cos7_16;
 
-
         pp0 = p0 + p3;
         pp1 = p1 + p2;
         pp2 = (p0 - p3) * cos1_8;
@@ -469,7 +467,6 @@ final class SynthesisFilter
         p14 = (s14 - s17) * cos29_64;
         p15 = (s15 - s16) * cos31_64;
 
-
         pp0 = p0 + p15;
         pp1 = p1 + p14;
         pp2 = p2 + p13;
@@ -486,7 +483,6 @@ final class SynthesisFilter
         pp13 = (p5 - p10) * cos11_32;
         pp14 = (p6 - p9) * cos13_32;
         pp15 = (p7 - p8) * cos15_32;
-
 
         p0 = pp0 + pp7;
         p1 = pp1 + pp6;
@@ -505,7 +501,6 @@ final class SynthesisFilter
         p14 = (pp10 - pp13) * cos5_16;
         p15 = (pp11 - pp12) * cos7_16;
 
-
         pp0 = p0 + p3;
         pp1 = p1 + p2;
         pp2 = (p0 - p3) * cos1_8;
@@ -523,7 +518,6 @@ final class SynthesisFilter
         pp14 = (p12 - p15) * cos1_8;
         pp15 = (p13 - p14) * cos3_8;
 
-
         p0 = pp0 + pp1;
         p1 = (pp0 - pp1) * cos1_4;
         p2 = pp2 + pp3;
@@ -540,7 +534,6 @@ final class SynthesisFilter
         p13 = (pp12 - pp13) * cos1_4;
         p14 = pp14 + pp15;
         p15 = (pp14 - pp15) * cos1_4;
-
 
         // manually doing something that a compiler should handle sucks
         // coding like this is hard to read
@@ -641,7 +634,7 @@ final class SynthesisFilter
         dest[480 + pos] = new_v17;
         dest[496 + pos] = new_v16;
 /*
-	}
+    }
 	else
 	{
 		v1[0 + actual_write_pos] = -new_v0;
@@ -698,7 +691,6 @@ final class SynthesisFilter
         float[] new_v = new float[32]; // new V[0-15] and V[33-48] of Figure 3-A.2 in ISO DIS 11172-3
         float[] p = new float[16];
         float[] pp = new float[16];
-
 
         for (int i = 31; i >= 0; i--)
         {
@@ -761,7 +753,6 @@ final class SynthesisFilter
         p[13] = (pp[9] - pp[14]) * cos3_16;
         p[14] = (pp[10] - pp[13]) * cos5_16;
         p[15] = (pp[11] - pp[12]) * cos7_16;
-
 
         pp[0] = p[0] + p[3];
         pp[1] = p[1] + p[2];
@@ -827,7 +818,6 @@ final class SynthesisFilter
         p[14] = (x1[14] - x1[17]) * cos29_64;
         p[15] = (x1[15] - x1[16]) * cos31_64;
 
-
         pp[0] = p[0] + p[15];
         pp[1] = p[1] + p[14];
         pp[2] = p[2] + p[13];
@@ -844,7 +834,6 @@ final class SynthesisFilter
         pp[13] = (p[5] - p[10]) * cos11_32;
         pp[14] = (p[6] - p[9]) * cos13_32;
         pp[15] = (p[7] - p[8]) * cos15_32;
-
 
         p[0] = pp[0] + pp[7];
         p[1] = pp[1] + pp[6];
@@ -863,7 +852,6 @@ final class SynthesisFilter
         p[14] = (pp[10] - pp[13]) * cos5_16;
         p[15] = (pp[11] - pp[12]) * cos7_16;
 
-
         pp[0] = p[0] + p[3];
         pp[1] = p[1] + p[2];
         pp[2] = (p[0] - p[3]) * cos1_8;
@@ -881,7 +869,6 @@ final class SynthesisFilter
         pp[14] = (p[12] - p[15]) * cos1_8;
         pp[15] = (p[13] - p[14]) * cos3_8;
 
-
         p[0] = pp[0] + pp[1];
         p[1] = (pp[0] - pp[1]) * cos1_4;
         p[2] = pp[2] + pp[3];
@@ -898,7 +885,6 @@ final class SynthesisFilter
         p[13] = (pp[12] - pp[13]) * cos1_4;
         p[14] = pp[14] + pp[15];
         p[15] = (pp[14] - pp[15]) * cos1_4;
-
 
         // manually doing something that a compiler should handle sucks
         // coding like this is hard to read

@@ -63,7 +63,6 @@ public class RandomItemTypeGui extends HelperGuiBase
     {
         super(rewardID, name, inputData, typeMap);
 
-
         makeAndOpen();
     }
 

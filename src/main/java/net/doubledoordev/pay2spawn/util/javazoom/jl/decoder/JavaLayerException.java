@@ -22,7 +22,6 @@ package net.doubledoordev.pay2spawn.util.javazoom.jl.decoder;
 
 import java.io.PrintStream;
 
-
 /**
  * The JavaLayerException is the base class for all API-level
  * exceptions thrown by JavaLayer. To facilitate conversion and
@@ -36,7 +35,6 @@ public class JavaLayerException extends Exception
 {
 
     private Throwable exception;
-
 
     public JavaLayerException()
     {
@@ -58,7 +56,6 @@ public class JavaLayerException extends Exception
         return exception;
     }
 
-
     public void printStackTrace()
     {
         printStackTrace(System.err);
@@ -75,6 +72,5 @@ public class JavaLayerException extends Exception
             exception.printStackTrace();
         }
     }
-
 
 }

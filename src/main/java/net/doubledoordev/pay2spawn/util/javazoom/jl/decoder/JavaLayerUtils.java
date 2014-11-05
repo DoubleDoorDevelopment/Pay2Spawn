@@ -112,7 +112,6 @@ public class JavaLayerUtils
 
         Class cls = obj.getClass();
 
-
         if (!cls.isArray())
             throw new InvalidObjectException("object is not an array");
 

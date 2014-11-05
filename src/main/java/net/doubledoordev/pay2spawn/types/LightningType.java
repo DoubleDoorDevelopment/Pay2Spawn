@@ -69,7 +69,6 @@ public class LightningType extends TypeBase
     public static final int RND_ENTITY     = 2;
     public static final int RND_SPOT       = 3;
 
-
     public static final HashMap<String, String> typeMap = new HashMap<>();
 
     static

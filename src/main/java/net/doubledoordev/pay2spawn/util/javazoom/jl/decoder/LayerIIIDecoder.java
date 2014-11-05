@@ -445,7 +445,7 @@ final class LayerIIIDecoder implements FrameDecoder
     /**
      * Loads the data for the reorder
      */
-	/*private static int[][] loadReorderTable()	// SZD: table will be generated
+    /*private static int[][] loadReorderTable()	// SZD: table will be generated
 	{
 		try
 		{
@@ -608,7 +608,6 @@ final class LayerIIIDecoder implements FrameDecoder
                 }
             }    // channels
         }    // granule
-
 
         // System.out.println("Counter = ................................."+counter);
         //if (counter <  609)
@@ -1876,7 +1875,6 @@ final class LayerIIIDecoder implements FrameDecoder
 
             inv_mdct(tsOutCopy, rawout, bt);
 
-
             for (int cc = 0; cc < 18; cc++)
                 tsOut[cc + sb18] = tsOutCopy[cc];
             // Fin Modif
@@ -1953,7 +1951,6 @@ final class LayerIIIDecoder implements FrameDecoder
 
         tmpf_0 = tmpf_1 = tmpf_2 = tmpf_3 = tmpf_4 = tmpf_5 = tmpf_6 = tmpf_7 = tmpf_8 = tmpf_9 =
                 tmpf_10 = tmpf_11 = tmpf_12 = tmpf_13 = tmpf_14 = tmpf_15 = tmpf_16 = tmpf_17 = 0.0f;
-
 
         if (block_type == 2)
         {
@@ -2553,7 +2550,6 @@ final class LayerIIIDecoder implements FrameDecoder
 	/*                            L3TYPE                        */
     /************************************************************/
 
-
     /***************************************************************/
 	/*                          END OF L3TYPE                      */
     /***************************************************************/
@@ -2639,6 +2635,5 @@ final class LayerIIIDecoder implements FrameDecoder
             s = thes;
         }
     }
-
 
 }

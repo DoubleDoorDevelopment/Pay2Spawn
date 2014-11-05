@@ -69,7 +69,6 @@ public class Decoder implements DecoderErrors
 
     private boolean initialized;
 
-
     /**
      * Creates a new <code>Decoder</code> instance with default
      * parameters.
@@ -201,7 +200,6 @@ public class Decoder implements DecoderErrors
         return Obuffer.OBUFFERSIZE;
     }
 
-
     protected DecoderException newDecoderException(int errorcode)
     {
         return new DecoderException(errorcode, null);
@@ -271,7 +269,6 @@ public class Decoder implements DecoderErrors
         int mode = header.mode();
         int layer = header.layer();
         int channels = mode == Header.SINGLE_CHANNEL ? 1 : 2;
-
 
         // set up output buffer if not set up by client.
         if (output == null)

@@ -46,7 +46,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 
 /**
- *
  * Uses NBT instead of a stringified JSON array because of network efficiency
  *
  * @author Dries007

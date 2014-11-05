@@ -104,7 +104,6 @@ public class WaveFile extends RiffFile
 	        br[15] = (byte) (wave_format.data.nBitsPerSample & 0x00FF);
    		 	retcode = Write (br, 16); */
 
-
                 if (retcode == DDC_SUCCESS)
                 {
                     pcm_data_offset = CurrentFilePosition();
@@ -306,7 +305,6 @@ public class WaveFile extends RiffFile
      *
      public int ReadData ( byte[] data, int numData )
      {return super.Read ( data, numData );} */
-
 
     /**
      *

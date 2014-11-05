@@ -414,7 +414,6 @@ final class huffcodetab
         treelen = TREELEN;
     }
 
-
     /**
      * Do the huffman-decoding.
      * note! for counta,countb -the 4 bit value is returned in y,
@@ -484,7 +483,7 @@ final class huffcodetab
 
         // put back any bits not consumed
     /*
-	 int unread = (bitsAvailable-bitIndex);
+     int unread = (bitsAvailable-bitIndex);
 		if (unread>0)
 			br.rewindNbits(unread);
 	 */

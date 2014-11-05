@@ -34,7 +34,6 @@ public interface Source
     public int read(byte[] b, int offs, int len)
             throws IOException;
 
-
     public boolean willReadBlock();
 
     public boolean isSeekable();

@@ -83,8 +83,8 @@ public class Pay2Spawn implements ID3Mod
     public static final HashSet<String> playersWithValidConfig = new HashSet<>();
     @Mod.Instance(MODID)
     public static Pay2Spawn instance;
-    public static boolean enable  = true;
-    public static boolean forceOn = false;
+    public static  boolean enable       = true;
+    public static  boolean forceOn      = false;
     private static boolean serverHasMod = false;
 
     @Mod.Metadata(MODID)

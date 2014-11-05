@@ -54,9 +54,9 @@ import net.minecraft.util.EnumChatFormatting;
  */
 public class StatusMessage implements IMessage
 {
-    public static String serverConfig;
-    private Type     type;
-    private String[] extraData;
+    public static String   serverConfig;
+    private       Type     type;
+    private       String[] extraData;
 
     public StatusMessage(Type type, String... extraData)
     {

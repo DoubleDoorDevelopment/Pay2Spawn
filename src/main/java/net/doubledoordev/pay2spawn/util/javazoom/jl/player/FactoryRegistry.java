@@ -98,7 +98,6 @@ public class FactoryRegistry extends AudioDeviceFactory
         return device;
     }
 
-
     protected AudioDeviceFactory[] getFactoriesPriority()
     {
         AudioDeviceFactory[] fa = null;

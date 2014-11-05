@@ -37,7 +37,6 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
 
-
 /**
  * For structure spawning things
  *

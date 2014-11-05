@@ -40,7 +40,6 @@ public interface Control
 
     public void pause();
 
-
     public boolean isRandomAccess();
 
     /**
@@ -52,6 +51,5 @@ public interface Control
      *
      */
     public void setPosition(double d);
-
 
 }
