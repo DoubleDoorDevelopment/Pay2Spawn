@@ -120,22 +120,22 @@ public class Helper
      */
     public static String formatText(String format, Donation donation, Reward reward)
     {
-        format = format.replace("$name", donation.username);
-        format = format.replace("$uuid", getGameProfileFromName(donation.username).getId().toString());
-        format = format.replace("$amount", donation.amount + "");
-        format = format.replace("$note", donation.note);
+        if (format.contains("$name")) format = format.replace("$name", donation.username);
+        if (format.contains("$uuid")) format = format.replace("$uuid", getGameProfileFromName(donation.username).getId().toString());
+        if (format.contains("$amount")) format = format.replace("$amount", donation.amount + "");
+        if (format.contains("$note")) format = format.replace("$note", donation.note);
         if (Minecraft.getMinecraft().thePlayer != null)
         {
-            format = format.replace("$streamer", Minecraft.getMinecraft().thePlayer.getCommandSenderName());
-            format = format.replace("$streameruuid", Minecraft.getMinecraft().thePlayer.getGameProfile().getId().toString());
+            if (format.contains("$streamer")) format = format.replace("$streamer", Minecraft.getMinecraft().thePlayer.getCommandSenderName());
+            if (format.contains("$streameruuid")) format = format.replace("$streameruuid", Minecraft.getMinecraft().thePlayer.getGameProfile().getId().toString());
         }
 
         if (reward != null)
         {
-            format = format.replace("$reward_message", reward.getMessage());
-            format = format.replace("$reward_name", reward.getName());
-            format = format.replace("$reward_amount", reward.getAmount() + "");
-            format = format.replace("$reward_countdown", reward.getCountdown() + "");
+            if (format.contains("$reward_message")) format = format.replace("$reward_message", reward.getMessage());
+            if (format.contains("$reward_name")) format = format.replace("$reward_name", reward.getName());
+            if (format.contains("$reward_amount")) format = format.replace("$reward_amount", reward.getAmount() + "");
+            if (format.contains("$reward_countdown")) format = format.replace("$reward_countdown", reward.getCountdown() + "");
         }
 
         return format;
@@ -180,10 +180,8 @@ public class Helper
             GameProfile gameprofile = new GameProfile(uuid, name);
             profilelookupcallback.onProfileLookupSucceeded(gameprofile);
         }
-        else
-        {
-            nameToProfileMap.put(agameprofile[0].getName(), agameprofile[0]);
-        }
+
+        nameToProfileMap.put(agameprofile[0].getName(), agameprofile[0]);
 
         return agameprofile[0];
     }
