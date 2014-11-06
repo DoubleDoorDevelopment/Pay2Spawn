@@ -93,30 +93,7 @@ public class ItemType extends TypeBase
     @Override
     public void spawnServerSide(EntityPlayerMP player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
     {
-        try
-        {
-            ItemStack itemStack = ItemStack.loadItemStackFromNBT(dataFromClient);
-            itemStack.stackSize = ((NBTBase.NBTPrimitive) dataFromClient.getTag("Count")).func_150287_d();
-            while (itemStack.stackSize != 0)
-            {
-                ItemStack itemStack1 = itemStack.splitStack(Math.min(itemStack.getMaxStackSize(), itemStack.stackSize));
-                int id = dataFromClient.hasKey(SLOT_KEY) ? dataFromClient.getInteger(SLOT_KEY) : -1;
-                if (id != -1 && player.inventory.getStackInSlot(id) == null)
-                {
-                    player.inventory.setInventorySlotContents(id, itemStack1);
-                }
-                else
-                {
-                    EntityItem entityitem = player.dropPlayerItemWithRandomChoice(itemStack1, false);
-                    entityitem.delayBeforeCanPickup = 0;
-                    entityitem.func_145797_a(player.getCommandSenderName());
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            Pay2Spawn.getLogger().warn("ItemStack could not be spawned. Does the item exists? JSON: " + JsonNBTHelper.parseNBT(dataFromClient));
-        }
+        ItemsType.spawnItemStackOnPlayer(player, dataFromClient);
     }
 
     @Override

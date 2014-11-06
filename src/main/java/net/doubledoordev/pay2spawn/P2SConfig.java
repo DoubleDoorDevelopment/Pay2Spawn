@@ -50,7 +50,7 @@ import static net.doubledoordev.pay2spawn.util.Constants.*;
 public class P2SConfig
 {
     public final static String HUD           = MODID + ".Hud";
-    public static final String CONFIGVERSION = "3";
+    public static final String CONFIGVERSION = "4";
     public final boolean       majorConfigVersionChange;
     public       Configuration configuration;
     public boolean forceServerconfig = true;
@@ -60,8 +60,10 @@ public class P2SConfig
     public Pattern[] blacklist_Note_p;
     public Pattern[] whitelist_Name_p;
     public Pattern[] whitelist_Note_p;
-    public  String   serverMessage  = "$streamer got $$amount from $name and $reward_name was triggered!";
-    public  boolean  sillyness      = true;
+    public String   serverMessage = "$streamer got $$amount from $name and $reward_name was triggered!";
+    public String   allItemName   = "";
+    public String[] allItemLore   = {};
+
     @SuppressWarnings("FieldCanBeLocal")
     private String[] blacklist_Name = {"fuck", "cunt", "dick", "shit"};
     @SuppressWarnings("FieldCanBeLocal")
@@ -85,6 +87,8 @@ public class P2SConfig
         }
 
         channel = configuration.getString("channel", MODID.toLowerCase(), channel, "Your channel name on twitch or any other streaming service.\nYou need this for stats and for the twitch sub tracker.\nTHIS CHANGED PLACE");
+        allItemLore = configuration.getStringList("allItemLore",  MODID.toLowerCase(), allItemLore, "A lore applied to all items spawned via p2s.");
+        allItemName = configuration.getString("allItemName",  MODID.toLowerCase(), allItemName, "A name applied to all items spawned via p2s.");
 
         configuration.setCategoryLanguageKey(MODID, "d3.pay2spawn.config.general");
         configuration.setCategoryLanguageKey(SERVER_CAT, "d3.pay2spawn.config.server");

@@ -125,7 +125,14 @@ public abstract class TypeBase
         {
             Matcher matcher = VAR.matcher(text);
             if (!matcher.find()) break;
-            text = text.replace(matcher.group(), replaceInTemplate(matcher.group(1), data));
+            try
+            {
+                text = text.replace(matcher.group(), replaceInTemplate(matcher.group(1), data));
+            }
+            catch (Exception ignored)
+            {
+
+            }
         }
         return text;
     }

@@ -31,11 +31,14 @@
 package net.doubledoordev.pay2spawn.types.guis;
 
 import com.google.common.base.Strings;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.configurator.Configurator;
 import net.doubledoordev.pay2spawn.network.NbtRequestMessage;
 import net.doubledoordev.pay2spawn.network.TestMessage;
 import net.doubledoordev.pay2spawn.util.IIHasCallback;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.InventoryPlayer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,27 +46,33 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
-import static net.doubledoordev.pay2spawn.types.ItemType.SLOT_KEY;
+import static net.doubledoordev.pay2spawn.types.EntityType.RIDETHISMOB_KEY;
+import static net.doubledoordev.pay2spawn.types.ItemsType.*;
 import static net.doubledoordev.pay2spawn.util.Constants.*;
 
 /**
  * @author Dries007
  */
-public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
+public class ItemsTypeGui extends HelperGuiBase implements IIHasCallback
 {
-    public  JScrollPane scrollPane;
-    public  JTextPane   jsonPane;
-    public  JButton     parseFromJsonButton;
-    public  JButton     saveButton;
-    public  JButton     updateJsonButton;
-    public  JButton     testButton;
-    public  JButton     importItemYouAreButton;
-    public  JPanel      pane1;
-    public  JTextField  HTMLTextField;
-    private JTextField  slotTextField;
-    private ItemTypeGui instance = this;
+    private JPanel       pane1;
+    private JButton      importHandBtn;
+    private JTextField   HTMLTextField;
+    private JScrollPane  scrollPane;
+    private JTextPane    jsonPane;
+    private JButton      parseFromJsonButton;
+    private JButton      saveButton;
+    private JButton      updateJsonButton;
+    private JButton      testButton;
+    private JButton      importHotbarBtn;
+    private JButton      importinventoryBtn;
+    private JRadioButton spawnAllRadioButton;
+    private JRadioButton spawnOneRadioButton;
+    private JRadioButton randomAllOrOneRadioButton;
 
-    public ItemTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
+    private ItemsTypeGui instance = this;
+
+    public ItemsTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
     {
         super(rewardID, name, inputData, typeMap);
 
@@ -73,9 +82,12 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
     @Override
     public void readJson()
     {
-        if (data.has(SLOT_KEY)) slotTextField.setText(readValue(SLOT_KEY, data));
-
         HTMLTextField.setText(readValue(CUSTOMHTML, data));
+
+        String ride = readValue(MODE_KEY, data);
+        spawnAllRadioButton.setSelected(ride.equals(FALSE_BYTE) || ride.equals(""));
+        spawnOneRadioButton.setSelected(ride.equals(TRUE_BYTE));
+        randomAllOrOneRadioButton.setSelected(ride.startsWith(RANDOM_BOOLEAN));
 
         jsonPane.setText(GSON.toJson(data));
     }
@@ -83,7 +95,7 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
     @Override
     public void updateJson()
     {
-        storeValue(SLOT_KEY, data, slotTextField.getText());
+        storeValue(MODE_KEY, data, randomAllOrOneRadioButton.isSelected() ? RANDOM_BOOLEAN : spawnOneRadioButton.isSelected() ? TRUE_BYTE : FALSE_BYTE);
 
         if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
 
@@ -138,12 +150,28 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
                 updateJson();
             }
         });
-        importItemYouAreButton.addActionListener(new ActionListener()
+        importHandBtn.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
                 NbtRequestMessage.requestItem(instance, -1);
+            }
+        });
+        importHotbarBtn.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                for (int i = 0; i < InventoryPlayer.getHotbarSize(); i++) NbtRequestMessage.requestItem(instance, i);
+            }
+        });
+        importinventoryBtn.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                for (int i = 0; i < Minecraft.getMinecraft().thePlayer.inventory.getSizeInventory(); i++) NbtRequestMessage.requestItem(instance, i);
             }
         });
     }
@@ -157,7 +185,8 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
     @Override
     public void callback(Object... data)
     {
-        this.data = JSON_PARSER.parse((String) data[0]).getAsJsonObject();
+        if (!this.data.has(ITEMS_KEY)) this.data.add(ITEMS_KEY, new JsonArray());
+        if (!data[0].equals("{}")) this.data.getAsJsonArray(ITEMS_KEY).add(JSON_PARSER.parse((String) data[0]).getAsJsonObject());
         updateJson();
     }
 
@@ -184,31 +213,21 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         pane1.add(panel1, gbc);
-        importItemYouAreButton = new JButton();
-        importItemYouAreButton.setText("Import item you are holding ingame!");
-        importItemYouAreButton.setToolTipText("Push the button!");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 3;
-        gbc.weightx = 1.0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel1.add(importItemYouAreButton, gbc);
         final JLabel label1 = new JLabel();
         label1.setText("Custom HTML:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         gbc.anchor = GridBagConstraints.EAST;
         panel1.add(label1, gbc);
         HTMLTextField = new JTextField();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         gbc.weightx = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -217,47 +236,98 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
         label2.setText("STRING");
         gbc = new GridBagConstraints();
         gbc.gridx = 2;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         gbc.anchor = GridBagConstraints.WEST;
         panel1.add(label2, gbc);
-        slotTextField = new JTextField();
-        slotTextField.setText("-1");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel1.add(slotTextField, gbc);
         final JLabel label3 = new JLabel();
-        label3.setText("Slot");
+        label3.setHorizontalAlignment(0);
+        label3.setHorizontalTextPosition(0);
+        label3.setText("Import items from:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.WEST;
+        gbc.gridy = 0;
+        gbc.gridwidth = 3;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         panel1.add(label3, gbc);
-        final JLabel label4 = new JLabel();
-        label4.setText("INT");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        panel1.add(label4, gbc);
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridx = 1;
+        gbc.gridy = 1;
         gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
-        pane1.add(panel2, gbc);
-        final JLabel label5 = new JLabel();
-        label5.setText("Json:");
+        panel1.add(panel2, gbc);
+        importHandBtn = new JButton();
+        importHandBtn.setText("Hand");
+        importHandBtn.setToolTipText("Push the button!");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel2.add(importHandBtn, gbc);
+        importHotbarBtn = new JButton();
+        importHotbarBtn.setText("Hotbar");
+        importHotbarBtn.setToolTipText("Push the button!");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel2.add(importHotbarBtn, gbc);
+        importinventoryBtn = new JButton();
+        importinventoryBtn.setText("Inventory");
+        importinventoryBtn.setToolTipText("Push the button!");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel2.add(importinventoryBtn, gbc);
+        final JPanel panel3 = new JPanel();
+        panel3.setLayout(new GridBagLayout());
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.fill = GridBagConstraints.BOTH;
+        panel1.add(panel3, gbc);
+        spawnAllRadioButton = new JRadioButton();
+        spawnAllRadioButton.setText("Spawn All");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        panel2.add(label5, gbc);
+        panel3.add(spawnAllRadioButton, gbc);
+        spawnOneRadioButton = new JRadioButton();
+        spawnOneRadioButton.setText("Spawn one");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel3.add(spawnOneRadioButton, gbc);
+        randomAllOrOneRadioButton = new JRadioButton();
+        randomAllOrOneRadioButton.setText("Random, all or one");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel3.add(randomAllOrOneRadioButton, gbc);
+        final JPanel panel4 = new JPanel();
+        panel4.setLayout(new GridBagLayout());
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        pane1.add(panel4, gbc);
+        final JLabel label4 = new JLabel();
+        label4.setText("Json:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel4.add(label4, gbc);
         scrollPane = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -265,20 +335,20 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
-        panel2.add(scrollPane, gbc);
+        panel4.add(scrollPane, gbc);
         jsonPane = new JTextPane();
         jsonPane.setEnabled(true);
         jsonPane.setText("");
         jsonPane.setToolTipText("Make sure you hit \"Parse from JSON\" after editing this!");
         scrollPane.setViewportView(jsonPane);
-        final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridBagLayout());
+        final JPanel panel5 = new JPanel();
+        panel5.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 2;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
-        pane1.add(panel3, gbc);
+        pane1.add(panel5, gbc);
         parseFromJsonButton = new JButton();
         parseFromJsonButton.setText("Parse from Json");
         parseFromJsonButton.setToolTipText("Push the button!");
@@ -287,7 +357,7 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel3.add(parseFromJsonButton, gbc);
+        panel5.add(parseFromJsonButton, gbc);
         saveButton = new JButton();
         saveButton.setText("Save");
         saveButton.setToolTipText("Push the button!");
@@ -296,7 +366,7 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel3.add(saveButton, gbc);
+        panel5.add(saveButton, gbc);
         updateJsonButton = new JButton();
         updateJsonButton.setText("Update Json");
         updateJsonButton.setToolTipText("Push the button!");
@@ -305,7 +375,7 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel3.add(updateJsonButton, gbc);
+        panel5.add(updateJsonButton, gbc);
         testButton = new JButton();
         testButton.setText("Test");
         testButton.setToolTipText("Push the button!");
@@ -314,18 +384,12 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel3.add(testButton, gbc);
-        final JLabel label6 = new JLabel();
-        label6.setFont(new Font(label6.getFont().getName(), Font.BOLD, 18));
-        label6.setForeground(new Color(-65434));
-        label6.setHorizontalAlignment(0);
-        label6.setHorizontalTextPosition(0);
-        label6.setText("This reward type is depricated. Please use Items in the future!");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        pane1.add(label6, gbc);
+        panel5.add(testButton, gbc);
+        ButtonGroup buttonGroup;
+        buttonGroup = new ButtonGroup();
+        buttonGroup.add(spawnAllRadioButton);
+        buttonGroup.add(spawnOneRadioButton);
+        buttonGroup.add(randomAllOrOneRadioButton);
     }
 
     /**

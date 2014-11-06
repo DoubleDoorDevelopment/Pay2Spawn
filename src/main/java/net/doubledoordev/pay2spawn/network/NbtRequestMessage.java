@@ -68,10 +68,7 @@ public class NbtRequestMessage implements IMessage
      * false = response
      */
     private        boolean       request;
-    /**
-     * entityId only used for ITEM
-     */
-    private        int           entityId;
+    private        int           entityIdOrSlot;
     /**
      * Only used when response = false
      */
@@ -84,11 +81,11 @@ public class NbtRequestMessage implements IMessage
 
     }
 
-    public NbtRequestMessage(int entityId)
+    public NbtRequestMessage(Type type, int entityIdOrSlot)
     {
-        this.type = Type.ENTITY;
+        this.type = type;
         this.request = true;
-        this.entityId = entityId;
+        this.entityIdOrSlot = entityIdOrSlot;
     }
 
     public NbtRequestMessage(Type type)
@@ -114,6 +111,14 @@ public class NbtRequestMessage implements IMessage
         this.dim = dim;
     }
 
+    public NbtRequestMessage(Type type, int entityIdOrSlot, String response)
+    {
+        this.type = type;
+        this.request = false;
+        this.entityIdOrSlot = entityIdOrSlot;
+        this.response = response;
+    }
+
     public static void requestEntity(IIHasCallback instance)
     {
         callbackCustomEntityType = instance;
@@ -122,7 +127,7 @@ public class NbtRequestMessage implements IMessage
 
     public static void requestByEntityID(int entityId)
     {
-        Pay2Spawn.getSnw().sendToServer(new NbtRequestMessage(entityId));
+        Pay2Spawn.getSnw().sendToServer(new NbtRequestMessage(Type.ENTITY, entityId));
     }
 
     public static void requestBlock(int x, int y, int z, int dim)
@@ -136,10 +141,10 @@ public class NbtRequestMessage implements IMessage
         Pay2Spawn.getSnw().sendToServer(new NbtRequestMessage(Type.FIREWORK));
     }
 
-    public static void requestItem(IIHasCallback instance)
+    public static void requestItem(IIHasCallback instance, int slot)
     {
         callbackItemType = instance;
-        Pay2Spawn.getSnw().sendToServer(new NbtRequestMessage(Type.ITEM));
+        Pay2Spawn.getSnw().sendToServer(new NbtRequestMessage(Type.ITEM, slot));
     }
 
     public static void requestBlock(IIHasCallback instance)
@@ -155,8 +160,8 @@ public class NbtRequestMessage implements IMessage
         request = buf.readBoolean();
         if (request)
         {
-            if (type == Type.ENTITY) entityId = buf.readInt();
-            if (type == Type.BLOCK)
+            if (type == Type.ENTITY || type == Type.ITEM) entityIdOrSlot = buf.readInt();
+            else if (type == Type.BLOCK)
             {
                 x = buf.readInt();
                 y = buf.readInt();
@@ -177,7 +182,7 @@ public class NbtRequestMessage implements IMessage
         buf.writeBoolean(request);
         if (request)
         {
-            if (type == Type.ENTITY) buf.writeInt(entityId);
+            if (type == Type.ENTITY || type == Type.ITEM) buf.writeInt(entityIdOrSlot);
             if (type == Type.BLOCK)
             {
                 buf.writeInt(x);
@@ -229,7 +234,7 @@ public class NbtRequestMessage implements IMessage
                 {
                     case ENTITY:
                         NBTTagCompound nbt = new NBTTagCompound();
-                        Entity entity = ctx.getServerHandler().playerEntity.worldObj.getEntityByID(message.entityId);
+                        Entity entity = ctx.getServerHandler().playerEntity.worldObj.getEntityByID(message.entityIdOrSlot);
                         entity.writeToNBT(nbt);
                         entity.writeToNBTOptional(nbt);
                         nbt.setString("id", EntityList.getEntityString(entity));
@@ -246,13 +251,22 @@ public class NbtRequestMessage implements IMessage
                         }
                         break;
                     case ITEM:
-                        if (ctx.getServerHandler().playerEntity.getHeldItem() != null)
+                        if (message.entityIdOrSlot == -1)
                         {
-                            return new NbtRequestMessage(message.type, JsonNBTHelper.parseNBT(ctx.getServerHandler().playerEntity.getHeldItem().writeToNBT(new NBTTagCompound())).toString());
+                            if (ctx.getServerHandler().playerEntity.getHeldItem() != null)
+                            {
+                                return new NbtRequestMessage(message.type, message.entityIdOrSlot, JsonNBTHelper.parseNBT(ctx.getServerHandler().playerEntity.getHeldItem().writeToNBT(new NBTTagCompound())).toString());
+                            }
+                            else
+                            {
+                                Helper.sendChatToPlayer(ctx.getServerHandler().playerEntity, "You are not holding an item...", EnumChatFormatting.RED);
+                            }
                         }
                         else
                         {
-                            Helper.sendChatToPlayer(ctx.getServerHandler().playerEntity, "You are not holding an item...", EnumChatFormatting.RED);
+                            ItemStack stack = ctx.getServerHandler().playerEntity.inventory.getStackInSlot(message.entityIdOrSlot);
+                            if (stack != null) return new NbtRequestMessage(message.type, message.entityIdOrSlot, JsonNBTHelper.parseNBT(stack.writeToNBT(new NBTTagCompound())).toString());
+                            else return new NbtRequestMessage(message.type, message.entityIdOrSlot, "{}");
                         }
                         break;
                     case BLOCK:

@@ -89,7 +89,7 @@ public class NBTGrabber implements IIHasCallback
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                NbtRequestMessage.requestItem(instance);
+                NbtRequestMessage.requestItem(instance, -1);
             }
         });
     }

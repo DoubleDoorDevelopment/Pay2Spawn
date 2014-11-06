@@ -280,6 +280,9 @@ public class Pay2Spawn implements ID3Mod
                 pane.setMessageType(JOptionPane.INFORMATION_MESSAGE);
                 pane.setMessage("You can now (and should) use string id's (minecraft:stone) instead of actual id's.\n" +
                         "Go and convert all of your json entries NOW.\n\n" +
+                        "There is a new item spawning type, called 'Items' instead of 'Item'.\n" +
+                        "It supports multiple items at once, or picking one (weighted) random item.\n\n" +
+                        "You can also now set a name and/or lore tag in your config file, and it will be applied to all items spawned.\n\n" +
                         "Also, the metrics has been re-enabled as it does not crash the game anymore.\n" +
                         "Leave it on if you want us to continue p2s development.");
                 JDialog dialog = pane.createDialog("Some major Pay2Spawn changes");
