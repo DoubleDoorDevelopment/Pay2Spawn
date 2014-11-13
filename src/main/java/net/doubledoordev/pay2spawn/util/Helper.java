@@ -61,6 +61,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -264,14 +265,16 @@ public class Helper
         return false;
     }
 
-    public static String readUrl(URL url) throws IOException
+    public static String readUrl(URL url, String[]... headers) throws IOException
     {
         BufferedReader reader = null;
         StringBuilder buffer = new StringBuilder();
 
         try
         {
-            reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            URLConnection connection = url.openConnection();
+            for (String[] header : headers) connection.addRequestProperty(header[0], header[1]);
+            reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
             int read;
             char[] chars = new char[1024];

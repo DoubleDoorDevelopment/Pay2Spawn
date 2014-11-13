@@ -73,6 +73,7 @@ public class CheckerHandler
         register(TwitchChecker.INSTANCE);
         register(DonationTrackerChecker.INSTANCE);
         register(BarrysTrackerChecker.INSTANCE);
+        register(ImrasingChecker.INSTANCE);
     }
 
     public static Collection<AbstractChecker> getAbstractCheckers()
