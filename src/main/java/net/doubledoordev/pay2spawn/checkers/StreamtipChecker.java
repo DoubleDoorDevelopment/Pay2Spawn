@@ -56,7 +56,7 @@ import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
  */
 public class StreamtipChecker extends AbstractChecker implements Runnable
 {
-    public static final StreamtipChecker INSTANCE = new StreamtipChecker();
+    public final static StreamtipChecker INSTANCE = new StreamtipChecker();
     public final static String           NAME     = "streamtip";
     public final static String           CAT      = BASECAT_TRACKERS + '.' + NAME;
     public final static String           URL      = "https://streamtip.com/api/tips?";

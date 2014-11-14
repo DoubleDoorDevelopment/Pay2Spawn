@@ -56,8 +56,8 @@ import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
  */
 public class ImrasingChecker extends AbstractChecker implements Runnable
 {
-    public static final ImrasingChecker INSTANCE = new ImrasingChecker();
-    SimpleDateFormat ISO8601DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    public final static ImrasingChecker INSTANCE = new ImrasingChecker();
+    public final static SimpleDateFormat ISO8601DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     public final static String NAME   = "imraising";
     public final static String CAT    = BASECAT_TRACKERS + '.' + NAME;
     public final static String URL    = "https://imraising.tv/api/v1/donations";
@@ -148,12 +148,7 @@ public class ImrasingChecker extends AbstractChecker implements Runnable
     {
         try
         {
-            String text = Helper.readUrl(new URL(firstRun ? URL + "?sort=amount" : URL), new String[]{"authorization", String.format(HEADER, APIKey)});
-
-            Pay2Spawn.getLogger().info(text);
-            Pay2Spawn.getLogger().info(ISO8601DATEFORMAT.format(new Date()));
-
-            JsonArray donations = JSON_PARSER.parse(text).getAsJsonArray();
+            JsonArray donations = JSON_PARSER.parse(Helper.readUrl(new URL(firstRun ? URL + "?sort=amount" : URL), new String[]{"authorization", String.format(HEADER, APIKey)})).getAsJsonArray();
             for (JsonElement jsonElement : donations)
             {
                 Donation donation = getDonation(jsonElement.getAsJsonObject());

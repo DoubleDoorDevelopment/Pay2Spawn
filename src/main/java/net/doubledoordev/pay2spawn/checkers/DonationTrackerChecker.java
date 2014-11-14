@@ -30,9 +30,11 @@
 
 package net.doubledoordev.pay2spawn.checkers;
 
+import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.hud.DonationsBasedHudEntry;
 import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.util.Donation;
@@ -44,6 +46,7 @@ import java.net.URL;
 
 import static net.doubledoordev.pay2spawn.util.Constants.BASECAT_TRACKERS;
 import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
+import static net.doubledoordev.pay2spawn.util.Constants.MODID;
 
 /**
  * For donation-tracker.com
@@ -52,12 +55,12 @@ import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
  */
 public class DonationTrackerChecker extends AbstractChecker implements Runnable
 {
-    public static final DonationTrackerChecker INSTANCE = new DonationTrackerChecker();
+    public final static DonationTrackerChecker INSTANCE = new DonationTrackerChecker();
     public final static String                 NAME     = "donation-tracker";
     public final static String                 CAT      = BASECAT_TRACKERS + '.' + NAME;
     public              String                 URL      = "https://www.donation-tracker.com/api/?channel=%s&api_key=%s";
     DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
-    String Channel = "", APIKey = "";
+    String APIKey = "";
     boolean enabled  = false;
     int     interval = 20;
 
@@ -84,7 +87,7 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
     @Override
     public boolean enabled()
     {
-        return enabled && !Channel.isEmpty() && !APIKey.isEmpty();
+        return enabled && !APIKey.isEmpty();
     }
 
     @Override
@@ -93,7 +96,7 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
         configuration.addCustomCategoryComment(CAT, "This is the checker for donation-tracker.com");
 
         enabled = configuration.get(CAT, "enabled", enabled).getBoolean(enabled);
-        Channel = configuration.get(CAT, "Channel", Channel).getString();
+
         APIKey = configuration.get(CAT, "APIKey", APIKey).getString();
         interval = configuration.get(CAT, "interval", interval, "The time in between polls minimum 5 (in seconds).").getInt();
         min_donation = configuration.get(CAT, "min_donation", min_donation, "Donations below this amount will only be added to statistics and will not spawn rewards").getDouble();
@@ -144,7 +147,7 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
     {
         try
         {
-            JsonObject root = JSON_PARSER.parse(Helper.readUrl(new URL(String.format(URL, Channel, APIKey)))).getAsJsonObject();
+            JsonObject root = JSON_PARSER.parse(Helper.readUrl(new URL(String.format(URL, Pay2Spawn.getConfig().channel, APIKey)))).getAsJsonObject();
             if (root.getAsJsonPrimitive("api_check").getAsInt() == 1)
             {
                 JsonArray donations = root.getAsJsonArray("donations");

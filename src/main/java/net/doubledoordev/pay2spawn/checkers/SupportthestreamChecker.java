@@ -33,6 +33,7 @@ package net.doubledoordev.pay2spawn.checkers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.hud.DonationsBasedHudEntry;
 import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.util.Donation;
@@ -41,28 +42,34 @@ import net.minecraftforge.common.config.Configuration;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 
 import static net.doubledoordev.pay2spawn.util.Constants.BASECAT_TRACKERS;
 import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
 
 /**
- * For Barrys Donation Trakcer
+ * http://www.supportthestream.com/
  *
- * @author BarryCarlyon
+ * @author Dries007
  */
-public class BarrysTrackerChecker extends AbstractChecker implements Runnable
+public class SupportthestreamChecker extends AbstractChecker implements Runnable
 {
-    public final static BarrysTrackerChecker INSTANCE = new BarrysTrackerChecker();
-    public final static String               NAME     = "barrys-tracker";
-    public final static String               CAT      = BASECAT_TRACKERS + '.' + NAME;
-    public              String               URL      = "http://localhost:8082/donations/";
+    /**
+     * 1: API key
+     */
+    public final static String           URL      = "http://www.supportthestream.com/api/%s/custom/null/null/latest/10/";
+    //2014-10-29 00:29:57
+    public final static SimpleDateFormat        DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public final static SupportthestreamChecker INSTANCE          = new SupportthestreamChecker();
+    public final static String                  NAME              = "supportthestream";
+    public final static String                  CAT               = BASECAT_TRACKERS + '.' + NAME;
     DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
     boolean enabled  = false;
     int     interval = 5;
+    String  APIKey   = "";
 
-    private BarrysTrackerChecker()
+    private SupportthestreamChecker()
     {
-        super();
     }
 
     @Override
@@ -83,30 +90,21 @@ public class BarrysTrackerChecker extends AbstractChecker implements Runnable
     @Override
     public boolean enabled()
     {
-        return enabled;
+        return enabled && !APIKey.isEmpty();
     }
 
     @Override
     public void doConfig(Configuration configuration)
     {
-        configuration.addCustomCategoryComment(CAT, "This is the checker for Barrys Donation Tracker. http://don.barrycarlyon.co.uk/");
+        configuration.addCustomCategoryComment(CAT, "This is the checker for donation-tracker.com");
 
         enabled = configuration.get(CAT, "enabled", enabled).getBoolean(enabled);
+        APIKey = configuration.get(CAT, "APIKey", APIKey).getString();
         interval = configuration.get(CAT, "interval", interval, "The time in between polls minimum 5 (in seconds).").getInt();
         min_donation = configuration.get(CAT, "min_donation", min_donation, "Donations below this amount will only be added to statistics and will not spawn rewards").getDouble();
-        URL = configuration.get(CAT, "url", URL, "Donation Tracker Ping Point. Match to the Settings in the Tracker").getString();
 
         recentDonationsBasedHudEntry = new DonationsBasedHudEntry("recent" + NAME + ".txt", CAT + ".recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
         topDonationsBasedHudEntry = new DonationsBasedHudEntry("top" + NAME + ".txt", CAT + ".topDonations", -1, 1, 5, "$name: $$amount", "-- Top donations --", CheckerHandler.AMOUNT_DONATION_COMPARATOR);
-
-        // Donation tracker doesn't allow a poll interval faster than 5 seconds
-        // They will IP ban anyone using a time below 5 so force the value to be safe
-        if (interval < 5)
-        {
-            interval = 5;
-            // Now force the config setting to 5
-            configuration.get(CAT, "interval", "The time in between polls minimum 5 (in seconds).").set(interval);
-        }
     }
 
     @Override
@@ -141,26 +139,22 @@ public class BarrysTrackerChecker extends AbstractChecker implements Runnable
     {
         try
         {
-            JsonObject root = JSON_PARSER.parse(Helper.readUrl(new URL(String.format(URL)))).getAsJsonObject();
-            if (root.getAsJsonPrimitive("status").getAsInt() == 200)
+            JsonArray donations = JSON_PARSER.parse(Helper.readUrl(new URL(firstRun ? URL + "?sort=amount" : URL))).getAsJsonArray();
+            for (JsonElement jsonElement : donations)
             {
-                JsonArray donations = root.getAsJsonArray("donations");
-                for (JsonElement jsonElement : donations)
-                {
-                    Donation donation = getDonation(jsonElement.getAsJsonObject());
+                Donation donation = getDonation(jsonElement.getAsJsonObject());
 
-                    // Make sure we have a donation to work with and see if this is a first run
-                    if (donation != null && firstRun == true)
-                    {
-                        // This is a first run so add to current list/done ids
-                        topDonationsBasedHudEntry.add(donation);
-                        doneIDs.add(donation.id);
-                    }
-                    else if (donation != null)
-                    {
-                        // We have a donation and this is a loop check so process the donation
-                        process(donation, true);
-                    }
+                // Make sure we have a donation to work with and see if this is a first run
+                if (donation != null && firstRun)
+                {
+                    // This is a first run so add to current list/done ids
+                    topDonationsBasedHudEntry.add(donation);
+                    doneIDs.add(donation.id);
+                }
+                else if (donation != null)
+                {
+                    // We have a donation and this is a loop check so process the donation
+                    process(donation, true);
                 }
             }
         }
@@ -176,10 +170,10 @@ public class BarrysTrackerChecker extends AbstractChecker implements Runnable
         {
             // Attempt to parse the data we need for the donation
             String username = jsonObject.get("username").getAsString();
-            String note = jsonObject.get("note").getAsString();
-            long timestamp = jsonObject.get("timestamp").getAsLong();
+            String note = jsonObject.get("message").getAsString();
+            long timestamp = DATEFORMAT.parse(jsonObject.get("date").getAsString()).getTime();
             double amount = jsonObject.get("amount").getAsDouble();
-            String id = jsonObject.get("ref").getAsString();
+            String id = jsonObject.get("donation_id").getAsString();
 
             // We have all the data we need to return the Donation object
             return new Donation(id, amount, timestamp, username, note);

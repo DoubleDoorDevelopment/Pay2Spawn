@@ -63,7 +63,7 @@ import static net.doubledoordev.pay2spawn.util.Constants.*;
  */
 public class ChildsplayChecker extends AbstractChecker implements Runnable
 {
-    public static final ChildsplayChecker INSTANCE           = new ChildsplayChecker();
+    public final static ChildsplayChecker INSTANCE           = new ChildsplayChecker();
     public final static String            NAME               = "childsplay";
     public final static String            CAT                = BASECAT_TRACKERS + '.' + NAME;
     public final static String            ENDPOINT           = "donate.childsplaycharity.org";
