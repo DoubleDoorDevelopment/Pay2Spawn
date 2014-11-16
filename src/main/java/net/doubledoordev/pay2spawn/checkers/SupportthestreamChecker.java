@@ -139,7 +139,7 @@ public class SupportthestreamChecker extends AbstractChecker implements Runnable
     {
         try
         {
-            JsonArray donations = JSON_PARSER.parse(Helper.readUrl(new URL(firstRun ? URL + "?sort=amount" : URL))).getAsJsonArray();
+            JsonArray donations = JSON_PARSER.parse(Helper.readUrl(new URL(String.format(firstRun ? URL + "?sort=amount" : URL, APIKey)))).getAsJsonArray();
             for (JsonElement jsonElement : donations)
             {
                 Donation donation = getDonation(jsonElement.getAsJsonObject());
