@@ -96,7 +96,7 @@ public class SupportthestreamChecker extends AbstractChecker implements Runnable
     @Override
     public void doConfig(Configuration configuration)
     {
-        configuration.addCustomCategoryComment(CAT, "This is the checker for donation-tracker.com");
+        configuration.addCustomCategoryComment(CAT, "This is the checker for supportthestream.com");
 
         enabled = configuration.get(CAT, "enabled", enabled).getBoolean(enabled);
         APIKey = configuration.get(CAT, "APIKey", APIKey).getString();

@@ -60,7 +60,7 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
     public final static String                 CAT      = BASECAT_TRACKERS + '.' + NAME;
     public              String                 URL      = "https://www.donation-tracker.com/api/?channel=%s&api_key=%s";
     DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
-    String APIKey = "";
+    String APIKey = "", channel = "";
     boolean enabled  = false;
     int     interval = 20;
 
@@ -101,6 +101,7 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
         interval = configuration.get(CAT, "interval", interval, "The time in between polls minimum 5 (in seconds).").getInt();
         min_donation = configuration.get(CAT, "min_donation", min_donation, "Donations below this amount will only be added to statistics and will not spawn rewards").getDouble();
         URL = configuration.get(CAT, "url", URL, "Donation Tracker API end point string").getString();
+        channel = configuration.get(CAT, "Channel", channel).getString();
 
         recentDonationsBasedHudEntry = new DonationsBasedHudEntry("recent" + NAME + ".txt", CAT + ".recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
         topDonationsBasedHudEntry = new DonationsBasedHudEntry("top" + NAME + ".txt", CAT + ".topDonations", -1, 1, 5, "$name: $$amount", "-- Top donations --", CheckerHandler.AMOUNT_DONATION_COMPARATOR);

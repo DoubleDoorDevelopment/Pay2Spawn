@@ -214,7 +214,7 @@
             </constraints>
             <properties>
               <enabled value="true"/>
-              <text value="Trow towards you"/>
+              <text value="Throw towards you"/>
             </properties>
           </component>
           <component id="3a66b" class="javax.swing.JRadioButton" binding="dontThrown">
