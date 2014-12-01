@@ -56,6 +56,7 @@ public class SupportthestreamChecker extends AbstractChecker implements Runnable
 {
     /**
      * 1: API key
+     * 2: the sort method
      */
     public final static String           URL      = "http://www.supportthestream.com/api/%s/custom/null/null/latest/10/";
     //2014-10-29 00:29:57
@@ -139,19 +140,19 @@ public class SupportthestreamChecker extends AbstractChecker implements Runnable
     {
         try
         {
-            JsonArray donations = JSON_PARSER.parse(Helper.readUrl(new URL(String.format(firstRun ? URL + "?sort=amount" : URL, APIKey)))).getAsJsonArray();
+            JsonArray donations = JSON_PARSER.parse(Helper.readUrl(new URL(String.format(URL, APIKey)))).getAsJsonArray();
             for (JsonElement jsonElement : donations)
             {
                 Donation donation = getDonation(jsonElement.getAsJsonObject());
-
+                if (donation == null) continue;
                 // Make sure we have a donation to work with and see if this is a first run
-                if (donation != null && firstRun)
+                if (firstRun)
                 {
                     // This is a first run so add to current list/done ids
                     topDonationsBasedHudEntry.add(donation);
                     doneIDs.add(donation.id);
                 }
-                else if (donation != null)
+                else
                 {
                     // We have a donation and this is a loop check so process the donation
                     process(donation, true);
