@@ -33,6 +33,8 @@ package net.doubledoordev.pay2spawn.types;
 import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.configurator.HTMLGenerator;
 import net.doubledoordev.pay2spawn.permissions.Node;
+import net.doubledoordev.pay2spawn.util.Donation;
+import net.doubledoordev.pay2spawn.util.Reward;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -143,4 +145,9 @@ public abstract class TypeBase
     }
 
     public abstract String replaceInTemplate(String id, JsonObject jsonObject);
+
+    public void addConfigTags(NBTTagCompound rewardNtb, Donation donation, Reward reward)
+    {
+
+    }
 }

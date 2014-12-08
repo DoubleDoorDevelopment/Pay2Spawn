@@ -34,11 +34,13 @@ import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
-import net.doubledoordev.pay2spawn.configurator.Configurator;
 import net.doubledoordev.pay2spawn.permissions.Node;
 import net.doubledoordev.pay2spawn.random.RandomRegistry;
 import net.doubledoordev.pay2spawn.types.guis.ItemsTypeGui;
+import net.doubledoordev.pay2spawn.util.Donation;
+import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
+import net.doubledoordev.pay2spawn.util.Reward;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -144,25 +146,38 @@ public class ItemsType extends TypeBase
         }
     }
 
+    @Override
+    public void addConfigTags(NBTTagCompound rewardNtb, Donation donation, Reward reward)
+    {
+        NBTTagList tagList = rewardNtb.getTagList(ITEMS_KEY, COMPOUND);
+        for (int i = 0; i < tagList.tagCount(); i ++) setConfigTags(tagList.getCompoundTagAt(i), donation, reward);
+    }
+
+    public static void setConfigTags(NBTTagCompound tagCompound, Donation donation, Reward reward)
+    {
+        ItemStack itemStack = ItemStack.loadItemStackFromNBT(tagCompound);
+        if (!itemStack.hasDisplayName() && !Strings.isNullOrEmpty(Pay2Spawn.getConfig().allItemName)) itemStack.setStackDisplayName(Helper.formatText(Pay2Spawn.getConfig().allItemName, donation, reward));
+        if (Pay2Spawn.getConfig().allItemLore.length != 0)
+        {
+            NBTTagCompound root = itemStack.hasTagCompound() ? itemStack.getTagCompound() : new NBTTagCompound();
+            itemStack.setTagCompound(root);
+            NBTTagCompound display = root.getCompoundTag("display");
+            root.setTag("display", display);
+            if (!display.hasKey("Lore"))
+            {
+                NBTTagList lore = new NBTTagList();
+                for (String line : Pay2Spawn.getConfig().allItemLore) lore.appendTag(new NBTTagString(Helper.formatText(line, donation, reward)));
+                display.setTag("Lore", lore);
+            }
+        }
+        itemStack.writeToNBT(tagCompound);
+    }
+
     public static void spawnItemStackOnPlayer(EntityPlayerMP player, NBTTagCompound dataFromClient)
     {
         try
         {
             ItemStack itemStack = ItemStack.loadItemStackFromNBT(dataFromClient);
-            if (!itemStack.hasDisplayName() && !Strings.isNullOrEmpty(Pay2Spawn.getConfig().allItemName)) itemStack.setStackDisplayName(Pay2Spawn.getConfig().allItemName);
-            if (Pay2Spawn.getConfig().allItemLore.length != 0)
-            {
-                NBTTagCompound root = itemStack.hasTagCompound() ? itemStack.getTagCompound() : new NBTTagCompound();
-                itemStack.setTagCompound(root);
-                NBTTagCompound display = root.getCompoundTag("display");
-                root.setTag("display", display);
-                if (!display.hasKey("Lore"))
-                {
-                    NBTTagList lore = new NBTTagList();
-                    for (String line : Pay2Spawn.getConfig().allItemLore) lore.appendTag(new NBTTagString(line));
-                    display.setTag("Lore", lore);
-                }
-            }
             itemStack.stackSize = ((NBTBase.NBTPrimitive) dataFromClient.getTag("Count")).func_150287_d();
             while (itemStack.stackSize != 0)
             {

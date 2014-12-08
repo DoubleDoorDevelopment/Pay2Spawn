@@ -42,6 +42,9 @@ import net.doubledoordev.pay2spawn.hud.DonationTrainEntry;
 import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.hud.SaleEntry;
 import net.doubledoordev.pay2spawn.network.RewardMessage;
+import net.doubledoordev.pay2spawn.types.ItemsType;
+import net.doubledoordev.pay2spawn.types.TypeBase;
+import net.doubledoordev.pay2spawn.types.TypeRegistry;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.HashSet;
@@ -143,7 +146,10 @@ public class ClientTickHandler
             JsonArray rewards = JSON_PARSER.parse(Helper.formatText(reward.getRewards(), donation, actualReward == null ? reward : actualReward).toString()).getAsJsonArray();
             for (JsonElement reward : rewards)
             {
-                Pay2Spawn.getSnw().sendToServer(new RewardMessage(JsonNBTHelper.parseJSON(reward.getAsJsonObject()), rewardData));
+                NBTTagCompound rewardNtb = JsonNBTHelper.parseJSON(reward.getAsJsonObject());
+                TypeBase type = TypeRegistry.getByName(rewardNtb.getString("type").toLowerCase());
+                type.addConfigTags(rewardNtb, donation, actualReward == null ? this.reward : actualReward);
+                Pay2Spawn.getSnw().sendToServer(new RewardMessage(rewardNtb, rewardData));
             }
         }
     }

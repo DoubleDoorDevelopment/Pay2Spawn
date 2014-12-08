@@ -53,7 +53,7 @@ public class P2SConfig
     public static final String CONFIGVERSION = "4";
     public final boolean       majorConfigVersionChange;
     public       Configuration configuration;
-    public boolean forceServerconfig = true;
+    public boolean forceServerconfig = false;
     public boolean forceP2S          = false;
     public String  channel           = "";
     public Pattern[] blacklist_Name_p;

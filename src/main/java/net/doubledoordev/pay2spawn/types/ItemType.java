@@ -31,20 +31,19 @@
 package net.doubledoordev.pay2spawn.types;
 
 import com.google.gson.JsonObject;
-import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.permissions.Node;
 import net.doubledoordev.pay2spawn.types.guis.ItemTypeGui;
+import net.doubledoordev.pay2spawn.util.Donation;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
+import net.doubledoordev.pay2spawn.util.Reward;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.io.File;
@@ -130,6 +129,12 @@ public class ItemType extends TypeBase
         {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void addConfigTags(NBTTagCompound rewardNtb, Donation donation, Reward reward)
+    {
+        ItemsType.setConfigTags(rewardNtb, donation, reward);
     }
 
     @Override
