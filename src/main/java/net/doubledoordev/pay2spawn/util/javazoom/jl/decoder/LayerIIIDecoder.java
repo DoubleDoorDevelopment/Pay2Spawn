@@ -446,7 +446,7 @@ final class LayerIIIDecoder implements FrameDecoder
      * Loads the data for the reorder
      */
     /*private static int[][] loadReorderTable()	// SZD: table will be generated
-	{
+    {
 		try
 		{
 			Class elemType = int[][].class.getComponentType();

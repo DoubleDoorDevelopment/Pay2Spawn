@@ -52,25 +52,21 @@ public final class Bitstream implements BitstreamErrors
      */
     private static final int   BUFFER_INT_SIZE = 433;
     /**
-     * The frame buffer that holds the data for the current frame.
-     */
-    private final        int[] framebuffer     = new int[BUFFER_INT_SIZE];
-
-    // max. 1730 bytes per frame: 144 * 384kbit/s / 32000 Hz + 2 Bytes CRC
-    /**
-     * The bytes read from the stream.
-     */
-    private       byte[] frame_bytes  = new byte[BUFFER_INT_SIZE * 4];
-    /**
      * Synchronization control constant for the initial
      * synchronization to the start of a frame.
      */
     static        byte   INITIAL_SYNC = 0;
+
+    // max. 1730 bytes per frame: 144 * 384kbit/s / 32000 Hz + 2 Bytes CRC
     /**
      * Synchronization control constant for non-initial frame
      * synchronizations.
      */
     static        byte   STRICT_SYNC  = 1;
+    /**
+     * The frame buffer that holds the data for the current frame.
+     */
+    private final        int[] framebuffer     = new int[BUFFER_INT_SIZE];
     private final int    bitmask[]    = {0,    // dummy
             0x00000001, 0x00000003, 0x00000007, 0x0000000F,
             0x0000001F, 0x0000003F, 0x0000007F, 0x000000FF,
@@ -80,6 +76,10 @@ public final class Bitstream implements BitstreamErrors
     private final PushbackInputStream source;
     private final Header header    = new Header();
     private final byte   syncbuf[] = new byte[4];
+    /**
+     * The bytes read from the stream.
+     */
+    private       byte[] frame_bytes  = new byte[BUFFER_INT_SIZE * 4];
     /**
      * Number of valid bytes in the frame buffer.
      */

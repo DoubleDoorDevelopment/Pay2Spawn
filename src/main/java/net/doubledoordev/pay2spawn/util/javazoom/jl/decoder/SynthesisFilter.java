@@ -1615,7 +1615,7 @@ final class SynthesisFilter
         }
 
 /*
-	 // MDM: I was considering putting in quality control for
+     // MDM: I was considering putting in quality control for
 	 // low-spec CPUs, but the performance gain (about 10-15%)
 	 // did not justify the considerable drop in audio quality.
 		switch (inc)

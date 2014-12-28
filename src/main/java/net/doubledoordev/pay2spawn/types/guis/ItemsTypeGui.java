@@ -46,8 +46,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
-import static net.doubledoordev.pay2spawn.types.EntityType.RIDETHISMOB_KEY;
-import static net.doubledoordev.pay2spawn.types.ItemsType.*;
+import static net.doubledoordev.pay2spawn.types.ItemsType.ITEMS_KEY;
+import static net.doubledoordev.pay2spawn.types.ItemsType.MODE_KEY;
 import static net.doubledoordev.pay2spawn.util.Constants.*;
 
 /**

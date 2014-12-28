@@ -33,7 +33,6 @@ package net.doubledoordev.pay2spawn.checkers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.hud.DonationsBasedHudEntry;
 import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.util.Donation;
@@ -58,12 +57,12 @@ public class SupportthestreamChecker extends AbstractChecker implements Runnable
      * 1: API key
      * 2: the sort method
      */
-    public final static String           URL      = "http://www.supportthestream.com/api/%s/custom/null/null/latest/10/";
+    public final static String                  URL        = "http://www.supportthestream.com/api/%s/custom/null/null/latest/10/";
     //2014-10-29 00:29:57
     public final static SimpleDateFormat        DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    public final static SupportthestreamChecker INSTANCE          = new SupportthestreamChecker();
-    public final static String                  NAME              = "supportthestream";
-    public final static String                  CAT               = BASECAT_TRACKERS + '.' + NAME;
+    public final static SupportthestreamChecker INSTANCE   = new SupportthestreamChecker();
+    public final static String                  NAME       = "supportthestream";
+    public final static String                  CAT        = BASECAT_TRACKERS + '.' + NAME;
     DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
     boolean enabled  = false;
     int     interval = 5;

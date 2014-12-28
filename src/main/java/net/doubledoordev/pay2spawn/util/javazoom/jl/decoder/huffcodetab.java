@@ -487,7 +487,7 @@ final class huffcodetab
 		if (unread>0)
 			br.rewindNbits(unread);
 	 */
-  	  /* Process sign encodings for quadruples tables. */
+        /* Process sign encodings for quadruples tables. */
         // System.out.println(h.tablename);
         if (h.tablename0 == '3' && (h.tablename1 == '2' || h.tablename1 == '3'))
         {

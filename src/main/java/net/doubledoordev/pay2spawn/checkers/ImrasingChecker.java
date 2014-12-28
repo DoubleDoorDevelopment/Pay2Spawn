@@ -33,8 +33,6 @@ package net.doubledoordev.pay2spawn.checkers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.sun.corba.se.pept.transport.Connection;
-import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.hud.DonationsBasedHudEntry;
 import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.util.Donation;
@@ -42,11 +40,8 @@ import net.doubledoordev.pay2spawn.util.Helper;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import static net.doubledoordev.pay2spawn.util.Constants.BASECAT_TRACKERS;
 import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
@@ -56,12 +51,12 @@ import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
  */
 public class ImrasingChecker extends AbstractChecker implements Runnable
 {
-    public final static ImrasingChecker INSTANCE = new ImrasingChecker();
+    public final static ImrasingChecker  INSTANCE          = new ImrasingChecker();
     public final static SimpleDateFormat ISO8601DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-    public final static String NAME   = "imraising";
-    public final static String CAT    = BASECAT_TRACKERS + '.' + NAME;
-    public final static String URL    = "https://imraising.tv/api/v1/donations";
-    public final static String HEADER = "APIKey apikey=\"%s\"";
+    public final static String           NAME              = "imraising";
+    public final static String           CAT               = BASECAT_TRACKERS + '.' + NAME;
+    public final static String           URL               = "https://imraising.tv/api/v1/donations";
+    public final static String           HEADER            = "APIKey apikey=\"%s\"";
 
     DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
     String  APIKey   = "";

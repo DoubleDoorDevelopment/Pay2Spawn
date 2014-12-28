@@ -87,8 +87,8 @@ public class P2SConfig
         }
 
         channel = configuration.getString("channel", MODID.toLowerCase(), channel, "Your channel name on twitch or any other streaming service.\nYou need this for stats and for the twitch sub tracker.\nTHIS CHANGED PLACE");
-        allItemLore = configuration.getStringList("allItemLore",  MODID.toLowerCase(), allItemLore, "A lore applied to all items spawned via p2s.");
-        allItemName = configuration.getString("allItemName",  MODID.toLowerCase(), allItemName, "A name applied to all items spawned via p2s.");
+        allItemLore = configuration.getStringList("allItemLore", MODID.toLowerCase(), allItemLore, "A lore applied to all items spawned via p2s.");
+        allItemName = configuration.getString("allItemName", MODID.toLowerCase(), allItemName, "A name applied to all items spawned via p2s.");
 
         configuration.setCategoryLanguageKey(MODID, "d3.pay2spawn.config.general");
         configuration.setCategoryLanguageKey(SERVER_CAT, "d3.pay2spawn.config.server");

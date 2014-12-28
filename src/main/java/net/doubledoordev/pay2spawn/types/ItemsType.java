@@ -69,13 +69,13 @@ public class ItemsType extends TypeBase
 {
     public static final String NAME = "items";
 
-    public static final String                  SLOT_KEY = "SLOT";
-    public static final String                  WEIGHT_KEY = "WEIGHT";
-    public static final String                  ITEMS_KEY = "ITEMS";
-    public static final String                  MODE_KEY = "MODE";
+    public static final String SLOT_KEY   = "SLOT";
+    public static final String WEIGHT_KEY = "WEIGHT";
+    public static final String ITEMS_KEY  = "ITEMS";
+    public static final String MODE_KEY   = "MODE";
 
-    public static final byte                    MODE_ALL = 0; // default mode
-    public static final byte                    MODE_PICK_ONE = 1;
+    public static final byte MODE_ALL      = 0; // default mode
+    public static final byte MODE_PICK_ONE = 1;
 
     public static final HashMap<String, String> typeMap = new HashMap<>();
 
@@ -84,73 +84,6 @@ public class ItemsType extends TypeBase
         typeMap.put(SLOT_KEY, NBTTypes[INT]);
         typeMap.put(WEIGHT_KEY, NBTTypes[INT]);
         typeMap.put(MODE_KEY, NBTTypes[BYTE]);
-    }
-
-    @Override
-    public String getName()
-    {
-        return NAME;
-    }
-
-    @Override
-    public NBTTagCompound getExample()
-    {
-        NBTTagCompound root = new NBTTagCompound();
-        NBTTagList items = new NBTTagList();
-        {
-            ItemStack itemStack = new ItemStack(Items.golden_apple);
-            itemStack.setStackDisplayName("$name");
-            NBTTagCompound itemNbt = itemStack.writeToNBT(new NBTTagCompound());
-            itemNbt.setInteger(WEIGHT_KEY, 3);
-            items.appendTag(itemNbt);
-        }
-        {
-            ItemStack itemStack = new ItemStack(Items.record_13);
-            itemStack.setStackDisplayName("$name");
-            NBTTagCompound itemNbt = itemStack.writeToNBT(new NBTTagCompound());
-            items.appendTag(itemNbt);
-        }
-        {
-            ItemStack itemStack = new ItemStack(Items.golden_carrot);
-            itemStack.setStackDisplayName("$name");
-            NBTTagCompound itemNbt = itemStack.writeToNBT(new NBTTagCompound());
-            items.appendTag(itemNbt);
-        }
-        root.setTag(ITEMS_KEY, items);
-        root.setByte(MODE_KEY, MODE_PICK_ONE);
-        return root;
-    }
-
-    @Override
-    public void spawnServerSide(EntityPlayerMP player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
-    {
-        if (dataFromClient.getByte(MODE_KEY) == MODE_ALL)
-        {
-            NBTTagList tagList = dataFromClient.getTagList(ITEMS_KEY, COMPOUND);
-            for (int i = 0; i < tagList.tagCount(); i ++)
-            {
-                spawnItemStackOnPlayer(player, tagList.getCompoundTagAt(i));
-            }
-        }
-        else if (dataFromClient.getByte(MODE_KEY) == MODE_PICK_ONE)
-        {
-            ArrayList<NBTTagCompound> stacks = new ArrayList<>();
-            NBTTagList tagList = dataFromClient.getTagList(ITEMS_KEY, COMPOUND);
-            for (int i = 0; i < tagList.tagCount(); i ++)
-            {
-                NBTTagCompound tag = tagList.getCompoundTagAt(i);
-                if (!tag.hasKey(WEIGHT_KEY)) stacks.add(tag);
-                else for (int j = 0; j < tag.getInteger(WEIGHT_KEY); j++) stacks.add(tag);
-            }
-            spawnItemStackOnPlayer(player, RandomRegistry.getRandomFromSet(stacks));
-        }
-    }
-
-    @Override
-    public void addConfigTags(NBTTagCompound rewardNtb, Donation donation, Reward reward)
-    {
-        NBTTagList tagList = rewardNtb.getTagList(ITEMS_KEY, COMPOUND);
-        for (int i = 0; i < tagList.tagCount(); i ++) setConfigTags(tagList.getCompoundTagAt(i), donation, reward);
     }
 
     public static void setConfigTags(NBTTagCompound tagCompound, Donation donation, Reward reward)
@@ -203,6 +136,66 @@ public class ItemsType extends TypeBase
     }
 
     @Override
+    public String getName()
+    {
+        return NAME;
+    }
+
+    @Override
+    public NBTTagCompound getExample()
+    {
+        NBTTagCompound root = new NBTTagCompound();
+        NBTTagList items = new NBTTagList();
+        {
+            ItemStack itemStack = new ItemStack(Items.golden_apple);
+            itemStack.setStackDisplayName("$name");
+            NBTTagCompound itemNbt = itemStack.writeToNBT(new NBTTagCompound());
+            itemNbt.setInteger(WEIGHT_KEY, 3);
+            items.appendTag(itemNbt);
+        }
+        {
+            ItemStack itemStack = new ItemStack(Items.record_13);
+            itemStack.setStackDisplayName("$name");
+            NBTTagCompound itemNbt = itemStack.writeToNBT(new NBTTagCompound());
+            items.appendTag(itemNbt);
+        }
+        {
+            ItemStack itemStack = new ItemStack(Items.golden_carrot);
+            itemStack.setStackDisplayName("$name");
+            NBTTagCompound itemNbt = itemStack.writeToNBT(new NBTTagCompound());
+            items.appendTag(itemNbt);
+        }
+        root.setTag(ITEMS_KEY, items);
+        root.setByte(MODE_KEY, MODE_PICK_ONE);
+        return root;
+    }
+
+    @Override
+    public void spawnServerSide(EntityPlayerMP player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
+    {
+        if (dataFromClient.getByte(MODE_KEY) == MODE_ALL)
+        {
+            NBTTagList tagList = dataFromClient.getTagList(ITEMS_KEY, COMPOUND);
+            for (int i = 0; i < tagList.tagCount(); i++)
+            {
+                spawnItemStackOnPlayer(player, tagList.getCompoundTagAt(i));
+            }
+        }
+        else if (dataFromClient.getByte(MODE_KEY) == MODE_PICK_ONE)
+        {
+            ArrayList<NBTTagCompound> stacks = new ArrayList<>();
+            NBTTagList tagList = dataFromClient.getTagList(ITEMS_KEY, COMPOUND);
+            for (int i = 0; i < tagList.tagCount(); i++)
+            {
+                NBTTagCompound tag = tagList.getCompoundTagAt(i);
+                if (!tag.hasKey(WEIGHT_KEY)) stacks.add(tag);
+                else for (int j = 0; j < tag.getInteger(WEIGHT_KEY); j++) stacks.add(tag);
+            }
+            spawnItemStackOnPlayer(player, RandomRegistry.getRandomFromSet(stacks));
+        }
+    }
+
+    @Override
     public void openNewGui(int rewardID, JsonObject data)
     {
         new ItemsTypeGui(rewardID, NAME, data, typeMap);
@@ -246,5 +239,12 @@ public class ItemsType extends TypeBase
                 return sb.toString();
         }
         return id;
+    }
+
+    @Override
+    public void addConfigTags(NBTTagCompound rewardNtb, Donation donation, Reward reward)
+    {
+        NBTTagList tagList = rewardNtb.getTagList(ITEMS_KEY, COMPOUND);
+        for (int i = 0; i < tagList.tagCount(); i++) setConfigTags(tagList.getCompoundTagAt(i), donation, reward);
     }
 }

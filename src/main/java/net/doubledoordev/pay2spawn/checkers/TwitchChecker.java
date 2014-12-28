@@ -144,7 +144,7 @@ public class TwitchChecker extends AbstractChecker implements Runnable
                 {
                     if (!subs.containsKey(sub) && !firstrun)
                     {
-                        process(new Donation(sub, amount, new Date().getTime(), newSubs.get(sub)), true);
+                        process(new Donation(sub, amount, new Date().getTime(), newSubs.get(sub), note), true);
                     }
                 }
                 subs = newSubs;

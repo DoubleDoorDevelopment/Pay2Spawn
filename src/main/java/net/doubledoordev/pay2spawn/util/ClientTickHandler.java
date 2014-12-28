@@ -42,7 +42,6 @@ import net.doubledoordev.pay2spawn.hud.DonationTrainEntry;
 import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.hud.SaleEntry;
 import net.doubledoordev.pay2spawn.network.RewardMessage;
-import net.doubledoordev.pay2spawn.types.ItemsType;
 import net.doubledoordev.pay2spawn.types.TypeBase;
 import net.doubledoordev.pay2spawn.types.TypeRegistry;
 import net.minecraft.nbt.NBTTagCompound;

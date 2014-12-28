@@ -587,6 +587,12 @@ public class StructureTypeGui extends HelperGuiBase
         gbc.anchor = GridBagConstraints.WEST;
         panel7.add(rotateBasedOnPlayerCheckBox, gbc);
         baseRotation = new JComboBox();
+        final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
+        defaultComboBoxModel1.addElement("0: South");
+        defaultComboBoxModel1.addElement("1: West");
+        defaultComboBoxModel1.addElement("2: North");
+        defaultComboBoxModel1.addElement("3: East");
+        baseRotation.setModel(defaultComboBoxModel1);
         gbc = new GridBagConstraints();
         gbc.gridx = 2;
         gbc.gridy = 0;

@@ -132,12 +132,6 @@ public class ItemType extends TypeBase
     }
 
     @Override
-    public void addConfigTags(NBTTagCompound rewardNtb, Donation donation, Reward reward)
-    {
-        ItemsType.setConfigTags(rewardNtb, donation, reward);
-    }
-
-    @Override
     public void openNewGui(int rewardID, JsonObject data)
     {
         new ItemTypeGui(rewardID, getName(), data, typeMap);
@@ -176,5 +170,11 @@ public class ItemType extends TypeBase
                 return is.getItem().getItemStackDisplayName(is);
         }
         return id;
+    }
+
+    @Override
+    public void addConfigTags(NBTTagCompound rewardNtb, Donation donation, Reward reward)
+    {
+        ItemsType.setConfigTags(rewardNtb, donation, reward);
     }
 }

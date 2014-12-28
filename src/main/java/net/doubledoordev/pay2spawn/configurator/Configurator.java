@@ -698,6 +698,8 @@ public class Configurator implements IIHasCallback
         gbc.fill = GridBagConstraints.BOTH;
         panel6.add(scrollPane2, gbc);
         typeList = new JList();
+        final DefaultListModel defaultListModel1 = new DefaultListModel();
+        typeList.setModel(defaultListModel1);
         scrollPane2.setViewportView(typeList);
         final JPanel panel7 = new JPanel();
         panel7.setLayout(new GridBagLayout());
@@ -719,6 +721,8 @@ public class Configurator implements IIHasCallback
         panel7.add(scrollPane3, gbc);
         rewards = new JList();
         rewards.setLayoutOrientation(0);
+        final DefaultListModel defaultListModel2 = new DefaultListModel();
+        rewards.setModel(defaultListModel2);
         rewards.setSelectionMode(0);
         scrollPane3.setViewportView(rewards);
         label6.setLabelFor(countdownTextField);

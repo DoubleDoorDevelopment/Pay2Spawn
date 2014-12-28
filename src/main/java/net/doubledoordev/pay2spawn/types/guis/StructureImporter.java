@@ -377,6 +377,8 @@ public class StructureImporter
         gbc.fill = GridBagConstraints.BOTH;
         panel1.add(panel2, gbc);
         modeComboBox = new JComboBox();
+        final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
+        modeComboBox.setModel(defaultComboBoxModel1);
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;

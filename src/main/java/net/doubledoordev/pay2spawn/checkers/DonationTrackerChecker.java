@@ -30,7 +30,6 @@
 
 package net.doubledoordev.pay2spawn.checkers;
 
-import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -46,7 +45,6 @@ import java.net.URL;
 
 import static net.doubledoordev.pay2spawn.util.Constants.BASECAT_TRACKERS;
 import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
-import static net.doubledoordev.pay2spawn.util.Constants.MODID;
 
 /**
  * For donation-tracker.com
