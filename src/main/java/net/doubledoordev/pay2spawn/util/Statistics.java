@@ -34,6 +34,7 @@ import com.google.common.base.Strings;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.hud.StatisticsHudEntry;
+import net.doubledoordev.pay2spawn.hud.StatusHudEntry;
 import net.doubledoordev.pay2spawn.hud.TotalDonationHudEntry;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
@@ -65,6 +66,7 @@ public class Statistics
 
     private static StatisticsHudEntry    spawnsStatisticsHudEntry;
     private static TotalDonationHudEntry totalDonationHudEntry;
+    private static StatusHudEntry statusHudEntry;
 
     private Statistics()
     {
@@ -145,6 +147,9 @@ public class Statistics
 
         totalDonationHudEntry = new TotalDonationHudEntry("totalDonation", 1, "Total amount donated: $$amount", root.hasKey("donated") ? root.getDouble("donated") : 0);
         Hud.INSTANCE.set.add(totalDonationHudEntry);
+
+        statusHudEntry = new StatusHudEntry("status", 2);
+        Hud.INSTANCE.set.add(statusHudEntry);
     }
 
     private static void update(TreeMap<String, Integer> map, StatisticsHudEntry hudEntry)
