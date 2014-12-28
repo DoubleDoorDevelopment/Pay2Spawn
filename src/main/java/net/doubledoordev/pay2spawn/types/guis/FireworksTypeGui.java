@@ -36,7 +36,14 @@ import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.configurator.Configurator;
 import net.doubledoordev.pay2spawn.network.NbtRequestMessage;
 import net.doubledoordev.pay2spawn.network.TestMessage;
+import net.doubledoordev.pay2spawn.types.FireworksType;
+import net.doubledoordev.pay2spawn.types.TypeRegistry;
 import net.doubledoordev.pay2spawn.util.IIHasCallback;
+import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 
 import javax.swing.*;
 import java.awt.*;
@@ -79,11 +86,25 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
     public FireworksTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
     {
         super(rewardID, name, inputData, typeMap);
+        if (data.entrySet().isEmpty())
+        {
+            ItemStack out = new ItemStack((Item) Item.itemRegistry.getObject("fireworks"));
+            NBTTagCompound tag = new NBTTagCompound();
+            NBTTagCompound fireworks = new NBTTagCompound();
+            fireworks.setByte(FLIGHT_KEY, (byte) 0);
 
-        data.addProperty("id", "SHORT:401");
-        data.addProperty("Damage", "SHORT:0");
-        data.addProperty("Count", "BYTE:1");
+            NBTTagList explosions = new NBTTagList();
+            fireworks.setTag(EXPLOSIONS_KEY, explosions);
+            tag.setTag(FIREWORKS_KEY, fireworks);
+            out.setTagCompound(tag);
 
+            tag = out.writeToNBT(new NBTTagCompound());
+
+            tag.setInteger(RADIUS_KEY, 10);
+            tag.setInteger(AMOUNT_KEY, 10);
+
+            data = JsonNBTHelper.parseNBT(tag);
+        }
         setupModels();
         makeAndOpen();
     }
