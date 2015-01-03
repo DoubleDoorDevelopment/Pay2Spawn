@@ -138,7 +138,7 @@ public class JsonNBTHelper
 
     public static JsonObject parseNBT(NBTTagCompound compound)
     {
-        boolean isItemStack = ItemStack.loadItemStackFromNBT(compound) != null;
+        boolean isItemStack = isItemStack(compound);
         JsonObject jsonObject = new JsonObject();
         for (Object object : compound.func_150296_c())
         {
@@ -158,6 +158,19 @@ public class JsonNBTHelper
                 jsonObject.add(object.toString(), parseNBT(compound.getTag(object.toString())));
         }
         return jsonObject;
+    }
+
+    public static boolean isItemStack(NBTTagCompound compound)
+    {
+        try
+        {
+            return ItemStack.loadItemStackFromNBT(compound) != null;
+        }
+        catch (Exception ignored)
+        {
+
+        }
+        return false;
     }
 
     public static NBTBase parseJSON(JsonElement element)
