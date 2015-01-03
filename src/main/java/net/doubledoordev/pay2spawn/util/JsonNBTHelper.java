@@ -142,20 +142,22 @@ public class JsonNBTHelper
         JsonObject jsonObject = new JsonObject();
         for (Object object : compound.func_150296_c())
         {
-            if (object.equals("id") && compound.getTag(object.toString()).getId() == SHORT && isItemStack) // Itemstack?
+            if (object.equals("id") && isItemStack) // Itemstack?
             {
                 int id = compound.getShort("id");
                 Item item = GameData.getItemRegistry().getObjectById(id);
-                jsonObject.addProperty(object.toString(), NBTTypes[SHORT] + ":" + (item == GameData.getItemRegistry().getDefaultValue() ? id : GameData.getItemRegistry().getNameForObject(item)));
+                jsonObject.addProperty("id", NBTTypes[compound.getTag("id").getId()] + ":" + (item == GameData.getItemRegistry().getDefaultValue() ? id : GameData.getItemRegistry().getNameForObject(item)));
             }
-            else if (object.equals(BLOCKID_KEY) && compound.getTag(object.toString()).getId() == INT && isItemStack) // Itemstack?
+            else if (object.equals(BLOCKID_KEY)) // Block?
             {
                 int id = compound.getInteger(BLOCKID_KEY);
                 Block block = GameData.getBlockRegistry().getObjectById(id);
-                jsonObject.addProperty(object.toString(), NBTTypes[INT] + ":" + (block == GameData.getBlockRegistry().getDefaultValue() ? id : GameData.getBlockRegistry().getNameForObject(block)));
+                jsonObject.addProperty(BLOCKID_KEY, NBTTypes[compound.getTag(BLOCKID_KEY).getId()] + ":" + (block == GameData.getBlockRegistry().getDefaultValue() ? id : GameData.getBlockRegistry().getNameForObject(block)));
             }
             else
+            {
                 jsonObject.add(object.toString(), parseNBT(compound.getTag(object.toString())));
+            }
         }
         return jsonObject;
     }
