@@ -38,6 +38,7 @@ import cpw.mods.fml.common.registry.GameData;
 import net.doubledoordev.pay2spawn.random.RandomRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 
 import java.util.Map;
@@ -137,16 +138,17 @@ public class JsonNBTHelper
 
     public static JsonObject parseNBT(NBTTagCompound compound)
     {
+        boolean isItemStack = ItemStack.loadItemStackFromNBT(compound) != null;
         JsonObject jsonObject = new JsonObject();
         for (Object object : compound.func_150296_c())
         {
-            if (object.equals("id") && compound.getTag(object.toString()).getId() == SHORT) // Itemstack!
+            if (object.equals("id") && compound.getTag(object.toString()).getId() == SHORT && isItemStack) // Itemstack?
             {
                 int id = compound.getShort("id");
                 Item item = GameData.getItemRegistry().getObjectById(id);
                 jsonObject.addProperty(object.toString(), NBTTypes[SHORT] + ":" + (item == GameData.getItemRegistry().getDefaultValue() ? id : GameData.getItemRegistry().getNameForObject(item)));
             }
-            else if (object.equals(BLOCKID_KEY) && compound.getTag(object.toString()).getId() == INT) // Itemstack!
+            else if (object.equals(BLOCKID_KEY) && compound.getTag(object.toString()).getId() == INT && isItemStack) // Itemstack?
             {
                 int id = compound.getInteger(BLOCKID_KEY);
                 Block block = GameData.getBlockRegistry().getObjectById(id);
