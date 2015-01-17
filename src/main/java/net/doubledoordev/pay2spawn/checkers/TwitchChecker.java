@@ -66,8 +66,9 @@ public class TwitchChecker extends AbstractChecker implements Runnable
     int     interval = 20;
     double  amount   = 5;
     URL url;
-    boolean firstrun = true;
-    String  note     = "I subscribed on Twitch.tv!";
+    boolean firstrun   = true;
+    boolean addToTotal = true;
+    String  note       = "I subscribed on Twitch.tv!";
 
     private TwitchChecker()
     {
@@ -104,6 +105,7 @@ public class TwitchChecker extends AbstractChecker implements Runnable
         interval = configuration.get(CAT, "interval", interval, "The time in between polls (in seconds).").getInt();
         amount = configuration.get(CAT, "amount", amount, "The amount of currency a sub counts for.").getDouble(amount);
         note = configuration.get(CAT, "note", note, "The note attached to the 'fake' donation.").getString();
+        addToTotal = configuration.get(CAT, "addToTotal", addToTotal, "If false, subs don't count towards the total amount donated.").getBoolean();
 
         recentDonationsBasedHudEntry = new DonationsBasedHudEntry("recent" + NAME + ".txt", CAT + ".recentSubs", -1, 2, 5, "$name", "-- Recent subs --", CheckerHandler.RECENT_DONATION_COMPARATOR);
 
@@ -121,6 +123,12 @@ public class TwitchChecker extends AbstractChecker implements Runnable
     public DonationsBasedHudEntry[] getDonationsBasedHudEntries()
     {
         return new DonationsBasedHudEntry[]{recentDonationsBasedHudEntry};
+    }
+
+    @Override
+    public boolean addToTotal()
+    {
+        return addToTotal;
     }
 
     @Override
@@ -144,7 +152,7 @@ public class TwitchChecker extends AbstractChecker implements Runnable
                 {
                     if (!subs.containsKey(sub) && !firstrun)
                     {
-                        process(new Donation(sub, amount, new Date().getTime(), newSubs.get(sub), note), true);
+                        process(new Donation(sub, amount, new Date().getTime(), newSubs.get(sub), note), true, this);
                     }
                 }
                 subs = newSubs;

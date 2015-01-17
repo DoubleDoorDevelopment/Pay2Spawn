@@ -497,7 +497,7 @@ final class huffcodetab
             y[0] = y[0] & 1;
 
 	    /* v, w, x and y are reversed in the bitstream.
-		  switch them around to make test bistream work. */
+          switch them around to make test bistream work. */
 
             if (v[0] != 0)
                 if (br.hget1bit() != 0) v[0] = -v[0];

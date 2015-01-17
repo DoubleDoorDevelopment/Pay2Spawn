@@ -199,7 +199,7 @@ public class jlc
             System.out.println("  -v[x]         verbose mode. ");
             System.out.println("                default = 2");
          /* System.out.println("  -s         write u-law samples at 8 kHz rate to stdout");
-	     System.out.println("  -l         decode only the left channel");
+         System.out.println("  -l         decode only the left channel");
 	     System.out.println("  -r         decode only the right channel");
 	     System.out.println("  -d         downmix mode (layer III only)");
 	     System.out.println("  -s         write pcm samples to stdout");

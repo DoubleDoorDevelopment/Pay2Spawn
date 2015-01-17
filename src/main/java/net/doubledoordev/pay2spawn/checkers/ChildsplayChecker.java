@@ -168,7 +168,7 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
                     JsonArray donations = root.getAsJsonArray("donations");
                     for (JsonElement jsonElement : donations)
                     {
-                        process(getDonation(JsonNBTHelper.fixNulls(jsonElement.getAsJsonObject())), true);
+                        process(getDonation(JsonNBTHelper.fixNulls(jsonElement.getAsJsonObject())), true, this);
                     }
                 }
             }

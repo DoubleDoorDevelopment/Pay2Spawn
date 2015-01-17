@@ -66,7 +66,7 @@ public class Statistics
 
     private static StatisticsHudEntry    spawnsStatisticsHudEntry;
     private static TotalDonationHudEntry totalDonationHudEntry;
-    private static StatusHudEntry statusHudEntry;
+    private static StatusHudEntry        statusHudEntry;
 
     private Statistics()
     {

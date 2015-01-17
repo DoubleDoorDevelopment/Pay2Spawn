@@ -491,7 +491,7 @@ final class LayerIIIDecoder implements FrameDecoder
     /**
      * ********************************************************
      */
-	/*                            L3TABLE                       */
+    /*                            L3TABLE                       */
     public void decodeFrame()
     {
         decode();

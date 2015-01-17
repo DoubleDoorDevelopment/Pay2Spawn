@@ -166,7 +166,7 @@ public class StreamtipChecker extends AbstractChecker implements Runnable
                     JsonArray donations = root.getAsJsonArray("tips");
                     for (JsonElement jsonElement : donations)
                     {
-                        process(getDonation(JsonNBTHelper.fixNulls(jsonElement.getAsJsonObject())), true);
+                        process(getDonation(JsonNBTHelper.fixNulls(jsonElement.getAsJsonObject())), true, this);
                     }
                 }
             }

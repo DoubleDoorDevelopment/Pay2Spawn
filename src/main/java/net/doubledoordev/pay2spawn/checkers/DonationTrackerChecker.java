@@ -164,7 +164,7 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
                     else if (donation != null)
                     {
                         // We have a donation and this is a loop check so process the donation
-                        process(donation, true);
+                        process(donation, true, this);
                     }
                 }
             }

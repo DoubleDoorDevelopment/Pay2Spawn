@@ -64,6 +64,11 @@ public abstract class AbstractChecker
 
     public abstract DonationsBasedHudEntry[] getDonationsBasedHudEntries();
 
+    public boolean addToTotal()
+    {
+        return true;
+    }
+
     protected void doWait(int time)
     {
         try
@@ -79,7 +84,7 @@ public abstract class AbstractChecker
         }
     }
 
-    protected void process(Donation donation, boolean msg)
+    protected void process(Donation donation, boolean msg, AbstractChecker tracker)
     {
         if (Minecraft.getMinecraft().thePlayer == null || !Pay2Spawn.enable)
         {
@@ -90,7 +95,7 @@ public abstract class AbstractChecker
         if (!doneIDs.contains(donation.id))
         {
             doneIDs.add(donation.id);
-            if (donation.amount > 0) // Only do these things for real donation amounts.
+            if (donation.amount > 0 && tracker.addToTotal()) // Only do these things for real donation amounts.
             {
                 Statistics.addToDonationAmount(donation.amount);
                 if (donation.amount < min_donation) return;
