@@ -30,32 +30,30 @@
 
 package net.doubledoordev.pay2spawn.random;
 
+import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
 import cpw.mods.fml.common.registry.GameData;
+import net.minecraft.item.Item;
+import org.lwjgl.Sys;
 
 import static net.doubledoordev.pay2spawn.util.Constants.INT;
 import static net.doubledoordev.pay2spawn.util.Constants.SHORT;
 
 /**
- * Converts a
- * Expected syntax: $random
- * Outcome: 0 or 1
- * Works with: BYTE, STRING
- *
  * @author Dries007
  */
-public class ItemId implements IRandomResolver
+public abstract class ItemId<T> implements IRandomResolver
 {
     @Override
     public String solverRandom(int type, String value)
     {
-        int id = GameData.getItemRegistry().getId(value);
-        if (id == -1) GameData.getBlockRegistry().getId(value);
-        return id == -1 ? value : String.valueOf(id);
+        return String.valueOf(getRegistry().getId(getRegistry().getObject(value)));
     }
 
     @Override
     public boolean matches(int type, String value)
     {
-        return (type == SHORT || type == INT) && value.indexOf(':') != -1;
+        return (type == SHORT || type == INT) && getRegistry().containsKey(value);
     }
+
+    public abstract FMLControlledNamespacedRegistry<T> getRegistry();
 }

@@ -102,7 +102,6 @@ public class StructureType extends TypeBase
                 if (!shape.getReplaceableOnly() || player.worldObj.getBlock(p.getX(), p.getY(), p.getZ()).isReplaceable(player.worldObj, p.getX(), p.getY(), p.getZ()))
                 {
                     BlockData block = blockDataList.size() == 1 ? blockDataList.get(0) : RandomRegistry.getRandomFromSet(blockDataList);
-
                     Block block1 = Block.getBlockById(block.id);
                     player.worldObj.setBlock(p.getX(), p.getY(), p.getZ(), block1, block.meta, 2);
                     if (block.te != null)

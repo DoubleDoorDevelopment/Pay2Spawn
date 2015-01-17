@@ -30,6 +30,11 @@
 
 package net.doubledoordev.pay2spawn.random;
 
+import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
+import cpw.mods.fml.common.registry.GameData;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -53,7 +58,20 @@ public class RandomRegistry
         addRandomResolver(new RndEntity());
         addRandomResolver(new RndListValue());
         addRandomResolver(new RndNumberRange());
-        addRandomResolver(new ItemId());
+        addRandomResolver(new ItemId<Item>() {
+            @Override
+            public FMLControlledNamespacedRegistry<Item> getRegistry()
+            {
+                return GameData.getItemRegistry();
+            }
+        });
+        addRandomResolver(new ItemId<Block>() {
+            @Override
+            public FMLControlledNamespacedRegistry<Block> getRegistry()
+            {
+                return GameData.getBlockRegistry();
+            }
+        });
     }
 
     /**
