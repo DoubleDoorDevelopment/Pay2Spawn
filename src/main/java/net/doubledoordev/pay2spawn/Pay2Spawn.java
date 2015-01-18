@@ -233,11 +233,6 @@ public class Pay2Spawn implements ID3Mod
         ConnectionHandler.INSTANCE.init();
 
         config.syncConfig();
-
-        if (event.getSide().isClient())
-        {
-            Rendering.init();
-        }
     }
 
     @Mod.EventHandler
@@ -298,6 +293,11 @@ public class Pay2Spawn implements ID3Mod
         }
 
         config.syncConfig();
+
+        if (event.getSide().isClient())
+        {
+            Rendering.init();
+        }
     }
 
     @Mod.EventHandler

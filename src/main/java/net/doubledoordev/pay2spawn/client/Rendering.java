@@ -30,8 +30,10 @@
 
 package net.doubledoordev.pay2spawn.client;
 
+import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderZombie;
@@ -46,17 +48,23 @@ public class Rendering
 {
     public static void init()
     {
-        if (RenderManager.instance.getEntityClassRenderObject(EntityZombie.class) instanceof RenderZombie) RenderManager.instance.entityRenderMap.put(EntityZombie.class, new CustomRender());
+        Render render = RenderManager.instance.getEntityClassRenderObject(EntityZombie.class);
+        if (render instanceof RenderZombie) RenderManager.instance.entityRenderMap.put(EntityZombie.class, new CustomRender((RenderZombie) render));
+        else
+        {
+            Pay2Spawn.getLogger().warn("Zombie reskining won't work because the zombie renderer has been overridden by another mod. Class: " + render.getClass());
+        }
     }
 
     public static class CustomRender extends RenderBiped
     {
-        private final RenderZombie renderZombie = (RenderZombie) RenderManager.instance.getEntityClassRenderObject(EntityZombie.class);
+        private final RenderZombie renderZombie;
 
-        public CustomRender()
+        public CustomRender(RenderZombie render)
         {
             super(new ModelBiped(0.0F), 1.0F);
             setRenderManager(RenderManager.instance);
+            renderZombie = render;
         }
 
         @Override
