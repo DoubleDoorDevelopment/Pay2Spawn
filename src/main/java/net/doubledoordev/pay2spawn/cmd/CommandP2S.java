@@ -46,6 +46,8 @@ import net.minecraft.util.EnumChatFormatting;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Useful command when dealing with setting up the JSON file
@@ -57,6 +59,7 @@ import java.util.List;
 public class CommandP2S extends CommandBase
 {
     static final String HELP = "Use command to control P2S Client side.";
+    static Timer timer;
 
     @Override
     public String getCommandName()
@@ -144,6 +147,34 @@ public class CommandP2S extends CommandBase
                 TwitchChecker.INSTANCE.reset();
                 Helper.msg(EnumChatFormatting.GOLD + "[P2S] Subs have been resetted!");
                 break;
+            case "test":
+                if (args.length == 1) Helper.msg(EnumChatFormatting.RED + "Use '/p2s test <amount> <repeat delay in sec> [name]' use '/p2s test end' to stop the testing.");
+                else
+                {
+                    if (args[1].equalsIgnoreCase("end") && timer != null)
+                    {
+                        timer.cancel();
+                    }
+                    else if (args.length > 2)
+                    {
+                        final String name;
+                        final Double amount = CommandBase.parseDouble(sender, args[1]);
+                        final Integer delay = CommandBase.parseInt(sender, args[2]) * 1000;
+                        if (args.length > 3) name = args[3];
+                        else name = "Anonymous";
+                        timer = new Timer();
+                        timer.scheduleAtFixedRate(new TimerTask()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                CheckerHandler.fakeDonation(amount, name);
+                            }
+                        }, 0, delay);
+                    }
+                    else Helper.msg(EnumChatFormatting.RED + "Use '/p2s test <amount> <repeat delay in sec> [name]' use '/p2s test end' to stop the testing.");
+                }
+                break;
             default:
                 Helper.msg(EnumChatFormatting.RED + "Unknown command. Protip: Use tab completion!");
                 break;
@@ -165,7 +196,7 @@ public class CommandP2S extends CommandBase
     @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] args)
     {
-        if (args.length == 1) return getListOfStringsMatchingLastWord(args, "reload", "configure", "getnbt", "makehtml", "off", "on", "donate", "permissions", "adjusttotal");
+        if (args.length == 1) return getListOfStringsMatchingLastWord(args, "reload", "configure", "getnbt", "makehtml", "off", "on", "donate", "permissions", "adjusttotal", "test");
         return null;
     }
 }

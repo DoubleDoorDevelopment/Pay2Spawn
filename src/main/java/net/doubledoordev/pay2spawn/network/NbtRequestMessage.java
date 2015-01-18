@@ -41,6 +41,7 @@ import net.doubledoordev.pay2spawn.util.EventHandler;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.IIHasCallback;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.item.ItemFirework;
@@ -50,6 +51,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+
+import static net.doubledoordev.pay2spawn.types.StructureType.BLOCKID_KEY;
 
 /**
  * Request NBT from the server
@@ -272,8 +275,8 @@ public class NbtRequestMessage implements IMessage
                     case BLOCK:
                         NBTTagCompound compound = new NBTTagCompound();
                         World world = DimensionManager.getWorld(message.dim);
-                        compound.setString(StructureType.BLOCKNAME_KEY, GameData.getBlockRegistry().getNameForObject(world.getBlock(message.x, message.y, message.z)));
-                        //compound.setInteger(StructureType.BLOCKID_KEY, Block.getIdFromBlock(world.getBlock(message.x, message.y, message.z)));
+                        compound.setInteger(BLOCKID_KEY, Block.getIdFromBlock(world.getBlock(message.x, message.y, message.z)));
+                        //compound.setString(StructureType.BLOCKID_KEY, GameData.getBlockRegistry().getNameForObject(world.getBlock(message.x, message.y, message.z)));
                         compound.setInteger(StructureType.META_KEY, world.getBlockMetadata(message.x, message.y, message.z));
                         TileEntity tileEntity = world.getTileEntity(message.x, message.y, message.z);
                         if (tileEntity != null)

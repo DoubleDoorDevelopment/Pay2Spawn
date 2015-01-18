@@ -63,7 +63,6 @@ public class StructureType extends TypeBase
     public static final String                  BLOCKDATA_KEY    = "blockData";
     public static final String                  TEDATA_KEY       = "tileEntityData";
     public static final String                  BLOCKID_KEY      = "blockID";
-    public static final String                  BLOCKNAME_KEY    = "blockName";
     public static final String                  META_KEY         = "meta";
     public static final String                  WEIGHT_KEY       = "weight";
     public static final String                  ROTATE_KEY       = "rotate";
@@ -73,7 +72,6 @@ public class StructureType extends TypeBase
     static
     {
         typeMap.put(BLOCKID_KEY, NBTTypes[INT]);
-        typeMap.put(BLOCKNAME_KEY, NBTTypes[STRING]);
         typeMap.put(META_KEY, NBTTypes[INT]);
         typeMap.put(WEIGHT_KEY, NBTTypes[INT]);
         typeMap.put(ROTATE_KEY, NBTTypes[BYTE]);

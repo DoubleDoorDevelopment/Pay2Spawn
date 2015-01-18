@@ -35,6 +35,8 @@ import net.doubledoordev.pay2spawn.util.Constants;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
@@ -70,6 +72,11 @@ public class CommandP2SServer extends CommandBase
     @Override
     public void processCommand(ICommandSender sender, String[] args)
     {
+        EntityZombie zombie = new EntityZombie(sender.getEntityWorld());
+        zombie.setPosition(((EntityPlayerMP) sender).posX, ((EntityPlayerMP) sender).posY, ((EntityPlayerMP) sender).posZ);
+        zombie.setCustomNameTag("dries007");
+        sender.getEntityWorld().spawnEntityInWorld(zombie);
+
         if (args.length == 0)
         {
             sendChatToPlayer(sender, HELP, EnumChatFormatting.AQUA);

@@ -62,7 +62,7 @@ public class ClientTickHandler
     public static final ClientTickHandler INSTANCE = new ClientTickHandler();
     public DonationTrainEntry donationTrainEntry;
     public SaleEntry          saleEntry;
-    HashSet<QueEntry> entries = new HashSet<>();
+    final HashSet<QueEntry> entries = new HashSet<>();
     private CountDownHudEntry countDownHudEntry;
     private int i = 0;
 
@@ -81,19 +81,22 @@ public class ClientTickHandler
         donationTrainEntry.tick();
         countDownHudEntry.lines.clear();
 
-        Iterator<QueEntry> rewardIterator = entries.iterator();
-        while (rewardIterator.hasNext())
+        synchronized (entries)
         {
-            QueEntry queEntry = rewardIterator.next();
-            if (queEntry.remaining == 0)
+            Iterator<QueEntry> rewardIterator = entries.iterator();
+            while (rewardIterator.hasNext())
             {
-                queEntry.send();
-                rewardIterator.remove();
-            }
-            else
-            {
-                if (countDownHudEntry.getPosition() != 0 && queEntry.addToHUD) countDownHudEntry.lines.add(countDownHudEntry.getFormat().replace("$name", queEntry.reward.getName()).replace("$time", queEntry.remaining + ""));
-                queEntry.remaining--;
+                QueEntry queEntry = rewardIterator.next();
+                if (queEntry.remaining == 0)
+                {
+                    queEntry.send();
+                    rewardIterator.remove();
+                }
+                else
+                {
+                    if (countDownHudEntry.getPosition() != 0 && queEntry.addToHUD) countDownHudEntry.lines.add(countDownHudEntry.getFormat().replace("$name", queEntry.reward.getName()).replace("$time", queEntry.remaining + ""));
+                    queEntry.remaining--;
+                }
             }
         }
         if (countDownHudEntry.getPosition() != 0 && !countDownHudEntry.lines.isEmpty())
