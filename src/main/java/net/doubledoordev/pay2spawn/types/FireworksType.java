@@ -61,6 +61,7 @@ public class FireworksType extends TypeBase
     public static final String FLICKER_KEY = "Flicker";
     public static final String TRAIL_KEY   = "Trail";
     public static final String COLORS_KEY  = "Colors";
+    public static final String FADECOLORS_KEY  = "FadeColors";
 
     public static final String EXPLOSIONS_KEY = "Explosions";
     public static final String FIREWORKS_KEY  = "Fireworks";
@@ -79,6 +80,7 @@ public class FireworksType extends TypeBase
         typeMap.put(FLICKER_KEY, NBTTypes[BYTE]);
         typeMap.put(TRAIL_KEY, NBTTypes[BYTE]);
         typeMap.put(COLORS_KEY, NBTTypes[INT_ARRAY]);
+        typeMap.put(FADECOLORS_KEY, NBTTypes[INT_ARRAY]);
 
         typeMap.put(RIDETHISMOB_KEY, NBTTypes[BYTE]);
         typeMap.put(RADIUS_KEY, NBTTypes[INT]);
@@ -126,13 +128,15 @@ public class FireworksType extends TypeBase
         explosion.setByte(TYPE_KEY, (byte) 0);
         explosion.setByte(FLICKER_KEY, (byte) 0);
         explosion.setByte(TRAIL_KEY, (byte) 0);
-        explosion.setIntArray(COLORS_KEY, new int[]{14188952, 8073150});
+        explosion.setIntArray(COLORS_KEY, new int[]{0x12DE5D, 0x7B2FBE});
+        explosion.setIntArray(FADECOLORS_KEY, new int[]{0xA9CF42, 0xF50CBF});
         explosions.appendTag(explosion);
         explosion = new NBTTagCompound();
         explosion.setByte(TYPE_KEY, (byte) 1);
         explosion.setByte(FLICKER_KEY, (byte) 1);
         explosion.setByte(TRAIL_KEY, (byte) 0);
-        explosion.setIntArray(COLORS_KEY, new int[]{14188952, 8073150});
+        explosion.setIntArray(COLORS_KEY, new int[]{0x12DE5D, 0x7B2FBE});
+        explosion.setIntArray(FADECOLORS_KEY, new int[]{0xA9CF42, 0xF50CBF});
         explosions.appendTag(explosion);
         fireworks.setTag(EXPLOSIONS_KEY, explosions);
         tag.setTag(FIREWORKS_KEY, fireworks);

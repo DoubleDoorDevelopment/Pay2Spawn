@@ -46,16 +46,17 @@ import static net.doubledoordev.pay2spawn.types.FireworksType.*;
  */
 public class ExplosionGui extends HelperGuiBase
 {
-    public JButton           saveButton;
-    public JComboBox<String> typeComboBox;
-    public JRadioButton      flickerRadioButton;
-    public JRadioButton      noFlickerRadioButton;
-    public JRadioButton      randomFlickerRadioButton;
-    public JRadioButton      trailRadioButton;
-    public JRadioButton      noTrailRadioButton;
-    public JRadioButton      randomTrailRadioButton;
-    public JTextField        colorsTextField;
-    public JPanel            panel1;
+    public  JButton           saveButton;
+    public  JComboBox<String> typeComboBox;
+    public  JRadioButton      flickerRadioButton;
+    public  JRadioButton      noFlickerRadioButton;
+    public  JRadioButton      randomFlickerRadioButton;
+    public  JRadioButton      trailRadioButton;
+    public  JRadioButton      noTrailRadioButton;
+    public  JRadioButton      randomTrailRadioButton;
+    public  JTextField        colorsTextField;
+    public  JPanel            panel1;
+    private JTextField        fadecolorsTextField;
     FireworksTypeGui callback;
 
     public ExplosionGui(final int index, final JsonObject jsonObject, final FireworksTypeGui callback, final HashMap<String, String> typemap)
@@ -83,6 +84,7 @@ public class ExplosionGui extends HelperGuiBase
         typeComboBox.setSelectedItem(readValue(TYPE_KEY, data));
 
         colorsTextField.setText(readValue(COLORS_KEY, data));
+        fadecolorsTextField.setText(readValue(FADECOLORS_KEY, data));
 
         String flicker = readValue(FLICKER_KEY, data);
         noFlickerRadioButton.setSelected(flicker.equals(FALSE_BYTE) || flicker.equals(""));
@@ -104,6 +106,7 @@ public class ExplosionGui extends HelperGuiBase
         else storeValue(TYPE_KEY, data, "$random(0,5)");
 
         storeValue(COLORS_KEY, data, colorsTextField.getText());
+        storeValue(FADECOLORS_KEY, data, fadecolorsTextField.getText());
 
         if (flickerRadioButton.isSelected()) storeValue(FLICKER_KEY, data, TRUE_BYTE);
         if (noFlickerRadioButton.isSelected()) storeValue(FLICKER_KEY, data, FALSE_BYTE);
@@ -257,11 +260,33 @@ public class ExplosionGui extends HelperGuiBase
         label5.setText("Use comma seperated values, use java color codes. See help file.");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.gridwidth = 5;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel2.add(label5, gbc);
+        final JLabel label6 = new JLabel();
+        label6.setText("FadeColors");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(label6, gbc);
+        fadecolorsTextField = new JTextField();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        gbc.gridwidth = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel2.add(fadecolorsTextField, gbc);
+        final JLabel label7 = new JLabel();
+        label7.setText("INT ARRAY");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 4;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(label7, gbc);
         saveButton = new JButton();
         saveButton.setText("Save");
         gbc = new GridBagConstraints();
@@ -271,6 +296,7 @@ public class ExplosionGui extends HelperGuiBase
         panel1.add(saveButton, gbc);
         label1.setLabelFor(typeComboBox);
         label3.setLabelFor(colorsTextField);
+        label6.setLabelFor(colorsTextField);
         ButtonGroup buttonGroup;
         buttonGroup = new ButtonGroup();
         buttonGroup.add(flickerRadioButton);
