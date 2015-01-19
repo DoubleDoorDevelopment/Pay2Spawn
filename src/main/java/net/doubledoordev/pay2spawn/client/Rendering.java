@@ -33,10 +33,7 @@ package net.doubledoordev.pay2spawn.client;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderBiped;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.RenderZombie;
+import net.minecraft.client.renderer.entity.*;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.util.ResourceLocation;
@@ -49,7 +46,10 @@ public class Rendering
     public static void init()
     {
         Render render = RenderManager.instance.getEntityClassRenderObject(EntityZombie.class);
-        if (render instanceof RenderZombie) RenderManager.instance.entityRenderMap.put(EntityZombie.class, new CustomRender((RenderZombie) render));
+        if (render instanceof RenderBiped)
+        {
+            RenderManager.instance.entityRenderMap.put(EntityZombie.class, new CustomRender((RenderBiped) render));
+        }
         else
         {
             Pay2Spawn.getLogger().warn("Zombie reskining won't work because the zombie renderer has been overridden by another mod. Class: " + render.getClass());
@@ -58,9 +58,9 @@ public class Rendering
 
     public static class CustomRender extends RenderBiped
     {
-        private final RenderZombie renderZombie;
+        private final RenderBiped renderZombie;
 
-        public CustomRender(RenderZombie render)
+        public CustomRender(RenderBiped render)
         {
             super(new ModelBiped(0.0F), 1.0F);
             setRenderManager(RenderManager.instance);
@@ -68,7 +68,7 @@ public class Rendering
         }
 
         @Override
-        protected ResourceLocation getEntityTexture(EntityLiving p_110775_1_)
+        public ResourceLocation getEntityTexture(EntityLiving p_110775_1_)
         {
             if (p_110775_1_.hasCustomNameTag())
             {
@@ -81,7 +81,7 @@ public class Rendering
         }
 
         @Override
-        protected int shouldRenderPass(EntityLiving p_77032_1_, int p_77032_2_, float p_77032_3_)
+        public int shouldRenderPass(EntityLiving p_77032_1_, int p_77032_2_, float p_77032_3_)
         {
             if (p_77032_1_.hasCustomNameTag()) return super.shouldRenderPass(p_77032_1_, p_77032_2_, p_77032_3_);
             else return renderZombie.shouldRenderPass(p_77032_1_, p_77032_2_, p_77032_3_);
@@ -95,7 +95,7 @@ public class Rendering
         }
 
         @Override
-        protected void renderEquippedItems(EntityLiving p_77029_1_, float p_77029_2_)
+        public void renderEquippedItems(EntityLiving p_77029_1_, float p_77029_2_)
         {
             if (p_77029_1_.hasCustomNameTag()) super.renderEquippedItems(p_77029_1_, p_77029_2_);
             else renderZombie.renderEquippedItems(p_77029_1_, p_77029_2_);

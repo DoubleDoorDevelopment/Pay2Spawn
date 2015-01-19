@@ -33,7 +33,7 @@ sourceCompatibility = 1.7
 
 archivesBaseName = 'Pay2Spawn'
 minecraft {
-    version = "1.7.10-10.13.1.1224"
+    version = "1.7.10-10.13.2.1286"
     runDir = "jars"
 }
 
