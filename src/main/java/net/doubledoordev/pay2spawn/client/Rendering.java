@@ -30,75 +30,71 @@
 
 package net.doubledoordev.pay2spawn.client;
 
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.common.MinecraftForge;
+import org.lwjgl.Sys;
 
 /**
  * @author Dries007
  */
 public class Rendering
 {
+    private CustomRender customRender = new CustomRender();
+
+    private Rendering()
+    {
+    }
+
     public static void init()
     {
-        Render render = RenderManager.instance.getEntityClassRenderObject(EntityZombie.class);
-        if (render instanceof RenderBiped)
+        MinecraftForge.EVENT_BUS.register(new Rendering());
+//        Render render = RenderManager.instance.getEntityClassRenderObject(EntityZombie.class);
+//        if (render instanceof RenderBiped)
+//        {
+//            RenderManager.instance.entityRenderMap.put(EntityZombie.class, new CustomRender((RenderBiped) render));
+//        }
+//        else
+//        {
+//            Pay2Spawn.getLogger().warn("Zombie reskining won't work because the zombie renderer has been overridden by another mod. Class: " + render.getClass());
+//        }
+    }
+
+    @SubscribeEvent
+    public void renderLivingEvent(RenderLivingEvent.Pre event)
+    {
+        if (event.entity instanceof EntityZombie && ((EntityLiving) event.entity).hasCustomNameTag() && !(event.renderer instanceof CustomRender))
         {
-            RenderManager.instance.entityRenderMap.put(EntityZombie.class, new CustomRender((RenderBiped) render));
-        }
-        else
-        {
-            Pay2Spawn.getLogger().warn("Zombie reskining won't work because the zombie renderer has been overridden by another mod. Class: " + render.getClass());
+            event.setCanceled(true);
+            customRender.doRender(event.entity, event.x, event.y, event.z, 0, 0);
         }
     }
 
-    public static class CustomRender extends RenderBiped
+    private class CustomRender extends RenderBiped
     {
-        private final RenderBiped renderZombie;
-
-        public CustomRender(RenderBiped render)
+        public CustomRender()
         {
             super(new ModelBiped(0.0F), 1.0F);
             setRenderManager(RenderManager.instance);
-            renderZombie = render;
         }
 
         @Override
         public ResourceLocation getEntityTexture(EntityLiving p_110775_1_)
         {
-            if (p_110775_1_.hasCustomNameTag())
-            {
-                String name = p_110775_1_.getCustomNameTag();
-                ResourceLocation location = AbstractClientPlayer.getLocationSkin(name);
-                AbstractClientPlayer.getDownloadImageSkin(location, name);
-                return location;
-            }
-            else return renderZombie.getEntityTexture(p_110775_1_);
-        }
-
-        @Override
-        public int shouldRenderPass(EntityLiving p_77032_1_, int p_77032_2_, float p_77032_3_)
-        {
-            if (p_77032_1_.hasCustomNameTag()) return super.shouldRenderPass(p_77032_1_, p_77032_2_, p_77032_3_);
-            else return renderZombie.shouldRenderPass(p_77032_1_, p_77032_2_, p_77032_3_);
-        }
-
-        @Override
-        public void doRender(EntityLiving p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
-        {
-            if (p_76986_1_.hasCustomNameTag()) super.doRender(p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
-            else renderZombie.doRender(p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
-        }
-
-        @Override
-        public void renderEquippedItems(EntityLiving p_77029_1_, float p_77029_2_)
-        {
-            if (p_77029_1_.hasCustomNameTag()) super.renderEquippedItems(p_77029_1_, p_77029_2_);
-            else renderZombie.renderEquippedItems(p_77029_1_, p_77029_2_);
+            String name = p_110775_1_.getCustomNameTag();
+            ResourceLocation location = AbstractClientPlayer.getLocationSkin(name);
+            AbstractClientPlayer.getDownloadImageSkin(location, name);
+            return location;
         }
     }
 }
