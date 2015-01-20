@@ -75,6 +75,7 @@ public class CheckerHandler
         register(BarrysTrackerChecker.INSTANCE);
         register(ImrasingChecker.INSTANCE);
         register(SupportthestreamChecker.INSTANCE);
+        register(FundrazrChecker.INSTANCE);
     }
 
     public static Collection<AbstractChecker> getAbstractCheckers()
