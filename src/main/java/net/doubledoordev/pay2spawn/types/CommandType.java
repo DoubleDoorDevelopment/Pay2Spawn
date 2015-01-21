@@ -81,7 +81,7 @@ public class CommandType extends TypeBase
     @Override
     public void spawnServerSide(EntityPlayerMP player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
     {
-        MinecraftServer.getServer().getCommandManager().executeCommand(new cmdSender((EntityPlayerMP) player), dataFromClient.getString(COMMAND_KEY));
+        MinecraftServer.getServer().getCommandManager().executeCommand(new cmdSender(player), dataFromClient.getString(COMMAND_KEY));
     }
 
     @Override

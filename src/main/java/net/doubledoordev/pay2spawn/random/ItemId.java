@@ -31,9 +31,6 @@
 package net.doubledoordev.pay2spawn.random;
 
 import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
-import cpw.mods.fml.common.registry.GameData;
-import net.minecraft.item.Item;
-import org.lwjgl.Sys;
 
 import static net.doubledoordev.pay2spawn.util.Constants.INT;
 import static net.doubledoordev.pay2spawn.util.Constants.SHORT;

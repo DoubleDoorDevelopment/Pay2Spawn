@@ -39,7 +39,6 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
@@ -63,16 +62,13 @@ import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
-import static net.doubledoordev.pay2spawn.util.Constants.*;
+import static net.doubledoordev.pay2spawn.util.Constants.MODID;
+import static net.doubledoordev.pay2spawn.util.Constants.NAME;
 
 /**
  * The main mod class
@@ -82,12 +78,8 @@ import static net.doubledoordev.pay2spawn.util.Constants.*;
 @Mod(modid = MODID, name = NAME)
 public class Pay2Spawn implements ID3Mod
 {
-    public static final HashSet<String> playersWithValidConfig = new HashSet<>();
     @Mod.Instance(MODID)
     public static Pay2Spawn instance;
-    public static  boolean enable       = true;
-    public static  boolean forceOn      = false;
-    private static boolean serverHasMod = false;
 
     @Mod.Metadata(MODID)
     private ModMetadata          metadata;
@@ -136,7 +128,7 @@ public class Pay2Spawn implements ID3Mod
     public static void reloadDB()
     {
         instance.rewardsDB = new RewardsDB(new File(instance.configFolder, NAME + ".json"));
-        ConfiguratorManager.reload();
+        if (FMLCommonHandler.instance().getSide().isClient()) ConfiguratorManager.reload();
         try
         {
             PermissionsHandler.init();
@@ -145,41 +137,6 @@ public class Pay2Spawn implements ID3Mod
         {
             e.printStackTrace();
         }
-    }
-
-    public static void reloadDB_Server() throws Exception
-    {
-        StatusMessage.serverConfig = GSON_NOPP.toJson(JSON_PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))));
-        StatusMessage.sendConfigToAllPlayers();
-    }
-
-    public static void reloadDBFromServer(String input)
-    {
-        instance.rewardsDB = new RewardsDB(input);
-        ConfiguratorManager.reload();
-    }
-
-    public static boolean doesServerHaveMod()
-    {
-        return serverHasMod;
-    }
-
-    public static boolean doesPlayerHaveValidConfig(String username)
-    {
-        return playersWithValidConfig.contains(username);
-    }
-
-    public static void resetServerStatus()
-    {
-        enable = true;
-        forceOn = false;
-    }
-
-    @NetworkCheckHandler
-    public boolean networkCheckHandler(Map<String, String> data, Side side)
-    {
-        if (side.isClient()) serverHasMod = data.containsKey(MODID);
-        return !data.containsKey(MODID) || data.get(MODID).equals(metadata.version);
     }
 
     @Mod.EventHandler
@@ -198,17 +155,16 @@ public class Pay2Spawn implements ID3Mod
 
         int id = 0;
         snw = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
-        snw.registerMessage(MessageMessage.Handler.class, MessageMessage.class, id++, Side.SERVER);
         snw.registerMessage(MusicMessage.Handler.class, MusicMessage.class, id++, Side.CLIENT);
         snw.registerMessage(NbtRequestMessage.Handler.class, NbtRequestMessage.class, id++, Side.CLIENT);
         snw.registerMessage(NbtRequestMessage.Handler.class, NbtRequestMessage.class, id++, Side.SERVER);
-        snw.registerMessage(RewardMessage.Handler.class, RewardMessage.class, id++, Side.SERVER);
-        snw.registerMessage(StatusMessage.Handler.class, StatusMessage.class, id++, Side.SERVER);
-        snw.registerMessage(StatusMessage.Handler.class, StatusMessage.class, id++, Side.CLIENT);
         snw.registerMessage(TestMessage.Handler.class, TestMessage.class, id++, Side.SERVER);
         snw.registerMessage(StructureImportMessage.Handler.class, StructureImportMessage.class, id++, Side.SERVER);
         snw.registerMessage(StructureImportMessage.Handler.class, StructureImportMessage.class, id++, Side.CLIENT);
         snw.registerMessage(HTMLuploadMessage.Handler.class, HTMLuploadMessage.class, id++, Side.SERVER);
+        snw.registerMessage(CountdownMessage.Handler.class, CountdownMessage.class, id++, Side.CLIENT);
+        snw.registerMessage(DonationMessage.Handler.class, DonationMessage.class, id++, Side.CLIENT);
+        snw.registerMessage(SaleMessage.Handler.class, SaleMessage.class, id++, Side.CLIENT);
 
         TypeRegistry.preInit();
         Statistics.preInit();
@@ -225,15 +181,13 @@ public class Pay2Spawn implements ID3Mod
 
         if (event.getSide().isClient())
         {
-            CheckerHandler.init();
             new EventHandler();
             ClientCommandHandler.instance.registerCommand(new CommandP2S());
         }
 
         CustomAI.INSTANCE.init();
 
-        ClientTickHandler.INSTANCE.init();
-        ConnectionHandler.INSTANCE.init();
+        CountdownTickHandler.INSTANCE.init();
 
         config.syncConfig();
     }
@@ -254,47 +208,6 @@ public class Pay2Spawn implements ID3Mod
             e.printStackTrace();
         }
 
-        if (newConfig && event.getSide().isClient())
-        {
-            JOptionPane pane = new JOptionPane();
-            pane.setMessageType(JOptionPane.WARNING_MESSAGE);
-            pane.setMessage("Please configure Pay2Spawn properly BEFORE you try launching this instance again.\n" +
-                    "You should provide AT LEAST your channel in the config.\n\n" +
-                    "If you need help with the configuring of your rewards, contact us!");
-            JDialog dialog = pane.createDialog("Please configure Pay2Spawn!");
-            dialog.setAlwaysOnTop(true);
-            dialog.setVisible(true);
-            FMLCommonHandler.instance().handleExit(1);
-        }
-
-        if (Pay2Spawn.getConfig().majorConfigVersionChange)
-        {
-            try
-            {
-                MetricsHelper.metrics.enable();
-            }
-            catch (IOException ignored)
-            {
-
-            }
-
-            if (event.getSide().isClient())
-            {
-                JOptionPane pane = new JOptionPane();
-                pane.setMessageType(JOptionPane.INFORMATION_MESSAGE);
-                pane.setMessage("You can now (and should) use string id's (minecraft:stone) instead of actual id's.\n" +
-                        "Go and convert all of your json entries NOW.\n\n" +
-                        "There is a new item spawning type, called 'Items' instead of 'Item'.\n" +
-                        "It supports multiple items at once, or picking one (weighted) random item.\n\n" +
-                        "You can also now set a name and/or lore tag in your config file, and it will be applied to all items spawned.\n\n" +
-                        "Also, the metrics has been re-enabled as it does not crash the game anymore.\n" +
-                        "Leave it on if you want us to continue p2s development.");
-                JDialog dialog = pane.createDialog("Some major Pay2Spawn changes");
-                dialog.setAlwaysOnTop(true);
-                dialog.setVisible(true);
-            }
-        }
-
         config.syncConfig();
 
         if (event.getSide().isClient())
@@ -307,16 +220,18 @@ public class Pay2Spawn implements ID3Mod
     public void serverStarting(FMLServerStartingEvent event) throws IOException
     {
         PermissionsHandler.init();
-        try
-        {
-            StatusMessage.serverConfig = GSON_NOPP.toJson(JSON_PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))));
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
+//        try
+//        {
+//            StatusMessage.serverConfig = GSON_NOPP.toJson(JSON_PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))));
+//        }
+//        catch (FileNotFoundException e)
+//        {
+//            e.printStackTrace();
+//        }
         event.registerServerCommand(new CommandP2SPermissions());
         event.registerServerCommand(new CommandP2SServer());
+
+        CheckerHandler.init();
     }
 
     @Override

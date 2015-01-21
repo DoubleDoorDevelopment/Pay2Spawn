@@ -31,8 +31,11 @@
 package net.doubledoordev.pay2spawn.cmd;
 
 import net.doubledoordev.pay2spawn.Pay2Spawn;
-import net.doubledoordev.pay2spawn.ai.CustomAI;
+import net.doubledoordev.pay2spawn.checkers.CheckerHandler;
+import net.doubledoordev.pay2spawn.checkers.TwitchChecker;
 import net.doubledoordev.pay2spawn.util.Constants;
+import net.doubledoordev.pay2spawn.util.Donation;
+import net.doubledoordev.pay2spawn.util.Statistics;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -44,8 +47,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * The server side only command
@@ -55,6 +57,7 @@ import java.util.List;
 public class CommandP2SServer extends CommandBase
 {
     static final String HELP = "OP only command, Server side.";
+    private Timer timer;
 
     @Override
     public String getCommandName()
@@ -71,9 +74,6 @@ public class CommandP2SServer extends CommandBase
     @Override
     public void processCommand(final ICommandSender sender, String[] args)
     {
-        // todo: DEBUG
-        // CustomAI.INSTANCE.test(getCommandSenderAsPlayer(sender));
-
         if (args.length == 0)
         {
             sendChatToPlayer(sender, HELP, EnumChatFormatting.AQUA);
@@ -101,22 +101,89 @@ public class CommandP2SServer extends CommandBase
                 break;
             }
             case "reload":
-                if (MinecraftServer.getServer().isDedicatedServer())
+                try
                 {
-                    try
-                    {
-                        Pay2Spawn.reloadDB_Server();
-                    }
-                    catch (Exception e)
-                    {
-                        sendChatToPlayer(sender, "RELOAD FAILED.", EnumChatFormatting.RED);
-                        e.printStackTrace();
-                    }
+                    Pay2Spawn.reloadDB();
+                    MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("Pay2Spawn reloaded.").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_GREEN)));
+                }
+                catch (Exception e)
+                {
+                    sendChatToPlayer(sender, "RELOAD FAILED.", EnumChatFormatting.RED);
+                    e.printStackTrace();
                 }
                 break;
-            case "hasmod":
-                if (args.length == 1) sendChatToPlayer(sender, "Use '/p2sserver hasmod <player>'.", EnumChatFormatting.RED);
-                else sendChatToPlayer(sender, args[1] + (Pay2Spawn.doesPlayerHaveValidConfig(args[1]) ? " does " : " doesn't ") + "have P2S.", EnumChatFormatting.AQUA);
+            case "donate":
+                if (args.length == 1) sendChatToPlayer(sender, "Use '/p2s donate <amount> [name]'.", EnumChatFormatting.RED);
+                else
+                {
+                    String name = "Anonymous";
+                    if (args.length > 2) name = args[2];
+                    double amount = CommandBase.parseDouble(sender, args[1]);
+                    Donation donation = new Donation(UUID.randomUUID().toString(), amount, new Date().getTime(), name);
+                    if (args.length > 3)
+                    {
+                        StringBuilder note = new StringBuilder();
+                        for (int i = 3; i < args.length; i++)
+                        {
+                            note.append(args[i]).append(' ');
+                        }
+                        donation.note = note.toString().trim();
+                    }
+                    sendChatToPlayer(sender, "[P2S] Faking donation of " + amount + " from " + name + ".", EnumChatFormatting.GOLD);
+                    Pay2Spawn.getRewardsDB().process(donation, false);
+                }
+                break;
+            case "adjusttotal":
+                if (args.length == 1) sendChatToPlayer(sender, "Use '/p2s adjusttotal <amount>'. You can use + and -", EnumChatFormatting.RED);
+                else
+                {
+                    double amount = CommandBase.parseDouble(sender, args[1]);
+                    Statistics.addToDonationAmount(amount);
+                }
+                break;
+            case "resetsubs":
+                TwitchChecker.INSTANCE.reset();
+                sendChatToPlayer(sender, "[P2S] Subs have been resetted!", EnumChatFormatting.GOLD);
+                break;
+            case "test":
+                if (args.length == 1) sendChatToPlayer(sender, "Use '/p2s test <amount> <repeat delay in sec> [name]' use '/p2s test end' to stop the testing.", EnumChatFormatting.RED);
+                else
+                {
+                    if (args[1].equalsIgnoreCase("end") && timer != null)
+                    {
+                        timer.cancel();
+                    }
+                    else if (args.length > 2)
+                    {
+                        final String name;
+                        final Double amount = CommandBase.parseDouble(sender, args[1]);
+                        final Integer delay = CommandBase.parseInt(sender, args[2]) * 1000;
+                        final String finalnote;
+                        if (args.length > 3) name = args[3];
+                        else name = "Anonymous";
+                        if (args.length > 4)
+                        {
+                            StringBuilder note = new StringBuilder();
+                            for (int i = 4; i < args.length; i++)
+                            {
+                                note.append(args[i]).append(' ');
+                            }
+                            finalnote = note.toString().trim();
+                        }
+                        else finalnote = "";
+                        timer = new Timer();
+                        timer.scheduleAtFixedRate(new TimerTask()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                Donation donation = new Donation(UUID.randomUUID().toString(), amount, new Date().getTime(), name, finalnote);
+                                Pay2Spawn.getRewardsDB().process(donation, false);
+                            }
+                        }, 0, delay);
+                    }
+                    else sendChatToPlayer(sender, "Use '/p2s test <amount> <repeat delay in sec> [name]' use '/p2s test end' to stop the testing.", EnumChatFormatting.RED);
+                }
                 break;
             default:
                 sendChatToPlayer(sender, "Unknown command. Protip: Use tab completion!", EnumChatFormatting.RED);
@@ -142,13 +209,7 @@ public class CommandP2SServer extends CommandBase
         switch (args.length)
         {
             case 1:
-                return getListOfStringsMatchingLastWord(args, "reload", "hasmod", "butcher");
-            case 2:
-                switch (args[1])
-                {
-                    case "hasmod":
-                        return getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames());
-                }
+                return getListOfStringsMatchingLastWord(args, "reload", "butcher", "donate", "adjusttotal", "resetsubs", "test");
         }
         return null;
     }

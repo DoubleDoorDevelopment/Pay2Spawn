@@ -58,11 +58,11 @@ import static net.doubledoordev.pay2spawn.util.Constants.INT;
 import static net.doubledoordev.pay2spawn.util.Constants.NBTTypes;
 
 /**
- * Spawn an itemstack
- * Can handle all custom NBT data
+ * Use items instead
  *
  * @author Dries007
  */
+@Deprecated
 public class ItemType extends TypeBase
 {
     public static final String NAME = "item";
@@ -176,5 +176,11 @@ public class ItemType extends TypeBase
     public void addConfigTags(NBTTagCompound rewardNtb, Donation donation, Reward reward)
     {
         ItemsType.setConfigTags(rewardNtb, donation, reward);
+    }
+
+    @Override
+    public boolean isInDefaultConfig()
+    {
+        return false;
     }
 }

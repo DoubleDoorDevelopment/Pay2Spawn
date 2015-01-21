@@ -30,20 +30,29 @@
 
 package net.doubledoordev.pay2spawn.util;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
-import net.doubledoordev.pay2spawn.network.MessageMessage;
+import net.doubledoordev.pay2spawn.network.DonationMessage;
+import net.doubledoordev.pay2spawn.network.SaleMessage;
 import net.doubledoordev.pay2spawn.random.RandomRegistry;
 import net.doubledoordev.pay2spawn.types.TypeBase;
 import net.doubledoordev.pay2spawn.types.TypeRegistry;
+import net.minecraft.client.Minecraft;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.regex.Matcher;
 
 import static net.doubledoordev.pay2spawn.util.Constants.GSON;
 import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
@@ -134,6 +143,30 @@ public class RewardsDB
 
     public synchronized void process(Donation donation, boolean msg)
     {
+        if (FMLCommonHandler.instance().getSide().isClient())
+        {
+            donation.target = FMLClientHandler.instance().getClientPlayerEntity().getCommandSenderName();
+        }
+        else
+        {
+            Matcher matcher = Constants.USERNAME_FROM_NOTE.matcher(donation.note);
+            if (matcher.find())
+            {
+                String target = matcher.group(1);
+                for (String username : MinecraftServer.getServer().getAllUsernames())
+                {
+                    if (target.equalsIgnoreCase(username))
+                    {
+                        donation.target = username;
+                    }
+                }
+            }
+            if (donation.target == null)
+            {
+                donation.target = RandomRegistry.getRandomFromSet(Arrays.asList(MinecraftServer.getServer().getAllUsernames()));
+            }
+        }
+
         double amount = donation.amount; // Keep original value for stats and display purposes.
 
         Sale sale = getLastSale();
@@ -151,11 +184,14 @@ public class RewardsDB
             if (map.containsKey(highestmatch)) reward = RandomRegistry.getRandomFromSet(map.get(highestmatch));
         }
 
+        boolean messageHasBeenSend = false;
+
         if (reward != null)
         {
             Statistics.handleSpawn(reward.getName());
-            ClientTickHandler.INSTANCE.donationTrainEntry.resetTimeout();
+            Pay2Spawn.getSnw().sendToAll(new DonationMessage(donation, reward));
             reward.addToCountdown(donation, true, null);
+            messageHasBeenSend = reward.sendMessage(donation);
         }
 
         /**
@@ -166,7 +202,29 @@ public class RewardsDB
             RandomRegistry.getRandomFromSet(map.get(-1D)).addToCountdown(donation, false, reward);
         }
 
-        if (reward != null) Pay2Spawn.getSnw().sendToServer(new MessageMessage(reward, donation));
+        String format = Helper.formatColors(Pay2Spawn.getConfig().serverMessage);
+        if (!messageHasBeenSend && Strings.isNullOrEmpty(format))
+        {
+            format = format.replace("$name", donation.username);
+            format = format.replace("$amount", String.format("%.2f", donation.amount));
+            format = format.replace("$note", donation.note);
+            format = format.replace("$streamer", donation.target);
+            if (reward != null)
+            {
+                format = format.replace("$reward_message", reward.getMessage());
+                format = format.replace("$reward_name", reward.getName());
+                format = format.replace("$reward_amount", String.format("%.2f", reward.getAmount()));
+                format = format.replace("$reward_countdown", String.valueOf(reward.getCountdown()));
+            }
+            else
+            {
+                format = format.replace("$reward_message", "??");
+                format = format.replace("$reward_name", "??");
+                format = format.replace("$reward_amount", "??");
+                format = format.replace("$reward_countdown", "??");
+            }
+            MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(format));
+        }
     }
 
     public Set<Double> getAmounts()
@@ -181,6 +239,7 @@ public class RewardsDB
 
     public void addSale(int time, int amount)
     {
+        if (FMLCommonHandler.instance().getSide().isServer()) Pay2Spawn.getSnw().sendToAll(new SaleMessage(time, amount));
         saleList.add(new Sale(time, amount));
     }
 

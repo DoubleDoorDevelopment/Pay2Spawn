@@ -30,20 +30,16 @@
 
 package net.doubledoordev.pay2spawn.client;
 
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.doubledoordev.pay2spawn.Pay2Spawn;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.renderer.ThreadDownloadImageData;
-import net.minecraft.client.renderer.entity.*;
+import net.minecraft.client.renderer.entity.RenderBiped;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
-import org.lwjgl.Sys;
 
 /**
  * @author Dries007

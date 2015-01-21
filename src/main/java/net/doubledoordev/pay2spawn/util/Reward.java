@@ -38,6 +38,9 @@ import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.random.RandomRegistry;
 import net.doubledoordev.pay2spawn.types.TypeBase;
 import net.doubledoordev.pay2spawn.types.TypeRegistry;
+import net.minecraft.client.Minecraft;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -105,8 +108,7 @@ public class Reward
 
     public void addToCountdown(Donation donation, boolean addToHUD, Reward reward)
     {
-        if (!Strings.isNullOrEmpty(message) && addToHUD) Helper.msg(RandomRegistry.solveRandom(STRING, Helper.formatText(message, donation, reward == null ? this : reward)));
-        ClientTickHandler.INSTANCE.add(this, donation, addToHUD, reward);
+        CountdownTickHandler.INSTANCE.add(new CountdownTickHandler.ServerQueEntry(this, donation, addToHUD, reward));
     }
 
     public Integer getCountdown()
@@ -152,5 +154,15 @@ public class Reward
     public String toString()
     {
         return "Reward[" + name + ", " + hashCode() + "]";
+    }
+
+    public boolean sendMessage(Donation donation)
+    {
+        if (!Strings.isNullOrEmpty(message))
+        {
+            MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(RandomRegistry.solveRandom(STRING, Helper.formatText(message, donation, this))));
+            return true;
+        }
+        return false;
     }
 }

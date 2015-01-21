@@ -31,6 +31,9 @@
 package net.doubledoordev.pay2spawn.util;
 
 import net.doubledoordev.pay2spawn.Pay2Spawn;
+import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.util.regex.Pattern;
 
@@ -48,6 +51,7 @@ public class Donation
     public String username;
     public String note;
     public long   time;
+    public String target;
 
     public Donation(String id, double amount, long time)
     {

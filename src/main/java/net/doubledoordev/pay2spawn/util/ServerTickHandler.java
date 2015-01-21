@@ -35,11 +35,8 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
 import static net.doubledoordev.pay2spawn.types.PlayerModificationType.Type;
-import static net.doubledoordev.pay2spawn.types.PlayerModificationType.typeMap;
 
 /**
  * Server side tick things, does timeable player effects

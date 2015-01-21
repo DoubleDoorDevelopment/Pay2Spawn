@@ -33,19 +33,15 @@ package net.doubledoordev.pay2spawn.ai;
 import com.google.common.collect.ImmutableList;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.doubledoordev.pay2spawn.util.Constants;
-import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import org.lwjgl.Sys;
 
 import static net.doubledoordev.pay2spawn.util.Constants.MODID;
 
@@ -64,7 +60,7 @@ public class CustomAI
     }
 
     @SubscribeEvent
-    public void respawnHandler(EntityJoinWorldEvent event)
+    public void spawnHandler(EntityJoinWorldEvent event)
     {
         if (event.entity instanceof EntityCreature && event.entity.getEntityData().hasKey(CUSTOM_AI_TAG, Constants.COMPOUND))
         {

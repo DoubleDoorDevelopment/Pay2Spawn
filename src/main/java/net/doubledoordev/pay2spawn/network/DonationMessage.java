@@ -28,80 +28,56 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.doubledoordev.pay2spawn.hud;
+package net.doubledoordev.pay2spawn.network;
 
-import net.doubledoordev.pay2spawn.P2SConfig;
-import net.doubledoordev.pay2spawn.Pay2Spawn;
-import net.minecraftforge.common.config.Configuration;
-
-import java.util.ArrayList;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import io.netty.buffer.ByteBuf;
+import net.doubledoordev.pay2spawn.util.CountdownTickHandler;
+import net.doubledoordev.pay2spawn.util.Donation;
+import net.doubledoordev.pay2spawn.util.Reward;
 
 /**
+ * This is a copy paste class :p
+ * <p/>
+ * Converted from old system on CPW's recommendation. The old thing had memory leaks -_-
+ *
  * @author Dries007
  */
-public class StatusHudEntry implements IHudEntry
+public class DonationMessage implements IMessage
 {
-    int position, defaultPosition;
-    String configCat = "";
-    private boolean writeToFile = true;
-
-    public StatusHudEntry(String configCat, int defaultPosition)
+    public DonationMessage()
     {
-        this.configCat = configCat;
-        this.defaultPosition = defaultPosition;
-        updateConfig();
+    }
+
+    public DonationMessage(Donation donation, Reward reward)
+    {
+
     }
 
     @Override
-    public int getPosition()
+    public void fromBytes(ByteBuf buf)
     {
-        return position;
+
     }
 
     @Override
-    public int getAmount()
+    public void toBytes(ByteBuf buf)
     {
-        return 1;
+
     }
 
-    @Override
-    public String getHeader()
+    public static class Handler implements IMessageHandler<DonationMessage, IMessage>
     {
-        return "";
-    }
-
-    @Override
-    public String getFormat()
-    {
-        return "";
-    }
-
-    @Override
-    public void addToList(ArrayList<String> list)
-    {
-        if (position != 0)
+        @Override
+        public IMessage onMessage(DonationMessage message, MessageContext ctx)
         {
-            list.add("Pay2Spawn is " + (Pay2Spawn.enable ? "enabled" : "disabled"));
+            if (ctx.side.isClient())
+            {
+                CountdownTickHandler.INSTANCE.donationTrainEntry.resetTimeout();
+            }
+            return null;
         }
-    }
-
-    @Override
-    public void updateConfig()
-    {
-        Configuration config = Pay2Spawn.getConfig().configuration;
-        position = config.get(P2SConfig.HUD + "." + configCat, "position", defaultPosition, "0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt(defaultPosition);
-        writeToFile = config.getBoolean("writeToFile", configCat, writeToFile, "Write to a file for external use.");
-    }
-
-    @Override
-    public String getFilename()
-    {
-        return "status.txt";
-    }
-
-    @Override
-    public boolean writeToFile()
-    {
-        return writeToFile;
     }
 }

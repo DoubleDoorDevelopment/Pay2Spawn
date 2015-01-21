@@ -125,11 +125,9 @@ public class Helper
         if (format.contains("$uuid")) format = format.replace("$uuid", getGameProfileFromName(donation.username).getId().toString());
         if (format.contains("$amount")) format = format.replace("$amount", donation.amount + "");
         if (format.contains("$note")) format = format.replace("$note", donation.note);
-        if (Minecraft.getMinecraft().thePlayer != null)
-        {
-            if (format.contains("$streamer")) format = format.replace("$streamer", Minecraft.getMinecraft().thePlayer.getCommandSenderName());
-            if (format.contains("$streameruuid")) format = format.replace("$streameruuid", Minecraft.getMinecraft().thePlayer.getGameProfile().getId().toString());
-        }
+
+        if (format.contains("$streamer")) format = format.replace("$streamer", donation.target);
+        if (format.contains("$streameruuid")) format = format.replace("$streameruuid", MinecraftServer.getServer().getConfigurationManager().func_152612_a(donation.target).getUniqueID().toString());
 
         if (reward != null)
         {

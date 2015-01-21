@@ -144,7 +144,7 @@ public class JsonNBTHelper
         {
             if (object.equals("id") && isItemStack) // Itemstack?
             {
-                int id = compound.getShort("id");
+                int id = compound.getInteger("id");
                 Item item = GameData.getItemRegistry().getObjectById(id);
                 jsonObject.addProperty("id", NBTTypes[compound.getTag("id").getId()] + ":" + (item == GameData.getItemRegistry().getDefaultValue() ? id : GameData.getItemRegistry().getNameForObject(item)));
             }

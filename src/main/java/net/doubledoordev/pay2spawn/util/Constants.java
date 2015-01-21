@@ -38,6 +38,7 @@ import com.google.gson.JsonParser;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 /**
  * ModID and P2S and so much more...
@@ -46,8 +47,8 @@ import java.util.Random;
  */
 public class Constants
 {
-    public static final String NAME  = "Pay2Spawn";
-    public static final String MODID = "P2S";
+    public static final String NAME  = "Pay2Spawn-EXPERIMENTAL";
+    public static final String MODID = "P2S-EXPERIMENTAL";
 
     public static final String SERVER_CAT       = MODID + "_server";
     public static final String FILTER_CAT       = MODID + "_filter";
@@ -57,6 +58,9 @@ public class Constants
 
     public static final String ANONYMOUS  = "Anonymous";
     public static final String CUSTOMHTML = "customHTML";
+
+    public static final Pattern USERNAME_FROM_NOTE = Pattern.compile("@(\\w+)");
+
 
     /**
      * Global helpers

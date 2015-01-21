@@ -89,6 +89,12 @@ public class ItemsType extends TypeBase
     public static void setConfigTags(NBTTagCompound tagCompound, Donation donation, Reward reward)
     {
         ItemStack itemStack = ItemStack.loadItemStackFromNBT(tagCompound);
+        if (itemStack == null)
+        {
+            Pay2Spawn.getLogger().error("INVALID ITEM TRIED TO SPAWN!: ");
+            Pay2Spawn.getLogger().error(JsonNBTHelper.parseNBT(tagCompound).toString());
+            return;
+        }
         if (!itemStack.hasDisplayName() && !Strings.isNullOrEmpty(Pay2Spawn.getConfig().allItemName)) itemStack.setStackDisplayName(Helper.formatText(Pay2Spawn.getConfig().allItemName, donation, reward));
         if (Pay2Spawn.getConfig().allItemLore.length != 0)
         {
