@@ -37,12 +37,15 @@ import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import org.lwjgl.Sys;
 
 import static net.doubledoordev.pay2spawn.util.Constants.MODID;
 
@@ -75,6 +78,10 @@ public class CustomAI
             entity.tasks.addTask(3, new EntityAIWander(entity, 1.0D));
             entity.tasks.addTask(4, new EntityAIWatchClosest(entity, EntityPlayer.class, 8.0F));
             entity.tasks.addTask(5, new EntityAILookIdle(entity));
+
+            entity.targetTasks.addTask(1, new CustomAIOwnerHurtByTarget(entity));
+            entity.targetTasks.addTask(2, new CustomAIOwnerHurtTarget(entity));
+            entity.targetTasks.addTask(3, new CustomAIHurtByTarget(entity, true));
         }
     }
 
@@ -86,51 +93,6 @@ public class CustomAI
 
         setOwner(zombie, player.getCommandSenderName());
         zombie.setCustomNameTag("dries007");
-/*
-        zombie.targetTasks.addTask(1, new EntityAITarget (zombie, false)
-        {
-            EntityPlayer theDefendingTameable = player;
-            EntityLivingBase theOwnerAttacker;
-            private int field_142051_e;
-            private static final String __OBFID = "CL_00001624";
-
-            {
-                this.setMutexBits(1);
-            }
-
-            public boolean shouldExecute()
-            {
-                EntityLivingBase entitylivingbase = this.theDefendingTameable;
-
-                if (entitylivingbase == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    this.theOwnerAttacker = entitylivingbase.getLastAttacker();
-                    int i = entitylivingbase.func_142015_aE();
-                    return i != this.field_142051_e && this.isSuitableTarget(this.theOwnerAttacker, false);
-                }
-            }
-
-            public void startExecuting()
-            {
-                this.taskOwner.setAttackTarget(this.theOwnerAttacker);
-                EntityLivingBase entitylivingbase = this.theDefendingTameable;
-
-                if (entitylivingbase != null)
-                {
-                    this.field_142051_e = entitylivingbase.func_142015_aE();
-                }
-
-                super.startExecuting();
-            }
-        });
-        //zombie.targetTasks.addTask(2, new EntityAIOwnerHurtTarget(zombie));
-        zombie.targetTasks.addTask(3, new EntityAIHurtByTarget(zombie, true));
-        */
-
         player.getEntityWorld().spawnEntityInWorld(zombie);
     }
 
@@ -139,8 +101,9 @@ public class CustomAI
 
     }
 
-    public static Entity getOwner(EntityLiving mob)
+    public static EntityPlayer getOwner(EntityLivingBase mob)
     {
+        if (mob == null || mob.worldObj == null) return null;
         return mob.worldObj.getPlayerEntityByName(mob.getEntityData().getCompoundTag(CUSTOM_AI_TAG).getString(OWNER_TAG));
     }
 
@@ -149,5 +112,18 @@ public class CustomAI
         NBTTagCompound compound = mob.getEntityData().getCompoundTag(CUSTOM_AI_TAG);
         compound.setString(OWNER_TAG, owner);
         mob.getEntityData().setTag(CUSTOM_AI_TAG, compound);
+    }
+
+    public static boolean isOnSameTeam(EntityLivingBase m1, EntityLivingBase m2)
+    {
+        if (m1 == null || m2 == null) return false;
+        EntityPlayer o1 = getOwner(m1);
+        EntityPlayer o2 = getOwner(m2);
+
+        if (m1 == o2 || m2 == o1) return false;
+
+        boolean b = o1 != null && o2 != null && o1 != o2 && o1.isOnSameTeam(o2);
+        //System.out.println(m1 + "\t" + m2 + "\t" + o1 + "\t" + o2 + "\t" + b);
+        return b;
     }
 }

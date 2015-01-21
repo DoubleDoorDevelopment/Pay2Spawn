@@ -31,29 +31,61 @@
 package net.doubledoordev.pay2spawn.ai;
 
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.EntityAITarget;
+import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * @author Dries007
  */
-public class CustomAIAttackOnCollide extends EntityAIAttackOnCollide
+public class CustomAIOwnerHurtByTarget extends EntityAITarget
 {
-    EntityCreature mob;
-    public CustomAIAttackOnCollide(EntityCreature mob, Class target, double speed, boolean longMemory)
+    private EntityLivingBase theOwnerAttacker;
+    private int revengeTimer;
+
+    public CustomAIOwnerHurtByTarget(EntityCreature owner)
     {
-        super(mob, target, speed, longMemory);
-        this.mob = mob;
+        super(owner, false);
+        this.setMutexBits(1);
     }
 
-    public CustomAIAttackOnCollide(EntityCreature mob, double speed, boolean longMemory)
+    /**
+     * Returns whether the EntityAIBase should begin execution.
+     */
+    public boolean shouldExecute()
     {
-        super(mob, speed, longMemory);
-        this.mob = mob;
+        EntityPlayer owner = CustomAI.getOwner(taskOwner);
+        if (owner == null)
+        {
+            return false;
+        }
+        else
+        {
+            this.theOwnerAttacker = owner.getAITarget();
+            int i = owner.func_142015_aE();
+            return i != this.revengeTimer && this.isSuitableTarget(this.theOwnerAttacker, false);
+        }
     }
 
     @Override
-    public boolean shouldExecute()
+    protected boolean isSuitableTarget(EntityLivingBase p_75296_1_, boolean p_75296_2_)
     {
-        return mob.getAttackTarget() != CustomAI.getOwner(mob) && !CustomAI.isOnSameTeam(mob.getAttackTarget(), mob) && super.shouldExecute();
+        return !CustomAI.isOnSameTeam(taskOwner, p_75296_1_) && super.isSuitableTarget(p_75296_1_, p_75296_2_);
+    }
+
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
+    {
+        this.taskOwner.setAttackTarget(this.theOwnerAttacker);
+        EntityPlayer owner = CustomAI.getOwner(taskOwner);
+
+        if (owner != null)
+        {
+            this.revengeTimer = owner.func_142015_aE();
+        }
+
+        super.startExecuting();
     }
 }

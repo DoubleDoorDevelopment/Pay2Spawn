@@ -31,29 +31,55 @@
 package net.doubledoordev.pay2spawn.ai;
 
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.EntityAITarget;
+import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * @author Dries007
  */
-public class CustomAIAttackOnCollide extends EntityAIAttackOnCollide
+public class CustomAIOwnerHurtTarget extends EntityAITarget
 {
-    EntityCreature mob;
-    public CustomAIAttackOnCollide(EntityCreature mob, Class target, double speed, boolean longMemory)
+    private EntityLivingBase theTarget;
+    private int revengeTimer;
+
+    public CustomAIOwnerHurtTarget(EntityCreature owner)
     {
-        super(mob, target, speed, longMemory);
-        this.mob = mob;
+        super(owner, false);
+        this.setMutexBits(1);
     }
 
-    public CustomAIAttackOnCollide(EntityCreature mob, double speed, boolean longMemory)
+    public boolean shouldExecute()
     {
-        super(mob, speed, longMemory);
-        this.mob = mob;
+        EntityPlayer owner = CustomAI.getOwner(taskOwner);
+        if (owner == null)
+        {
+            return false;
+        }
+        else
+        {
+            this.theTarget = owner.getLastAttacker();
+            int i = owner.getLastAttackerTime();
+            return i != this.revengeTimer && this.isSuitableTarget(this.theTarget, false);
+        }
     }
 
     @Override
-    public boolean shouldExecute()
+    protected boolean isSuitableTarget(EntityLivingBase p_75296_1_, boolean p_75296_2_)
     {
-        return mob.getAttackTarget() != CustomAI.getOwner(mob) && !CustomAI.isOnSameTeam(mob.getAttackTarget(), mob) && super.shouldExecute();
+        return !CustomAI.isOnSameTeam(taskOwner, p_75296_1_) && super.isSuitableTarget(p_75296_1_, p_75296_2_);
+    }
+
+    public void startExecuting()
+    {
+        this.taskOwner.setAttackTarget(this.theTarget);
+        EntityPlayer owner = CustomAI.getOwner(taskOwner);
+
+        if (owner != null)
+        {
+            this.revengeTimer = owner.getLastAttackerTime();
+        }
+
+        super.startExecuting();
     }
 }

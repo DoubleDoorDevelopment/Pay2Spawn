@@ -31,29 +31,22 @@
 package net.doubledoordev.pay2spawn.ai;
 
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.EntityAIHurtByTarget;
 
 /**
  * @author Dries007
  */
-public class CustomAIAttackOnCollide extends EntityAIAttackOnCollide
+public class CustomAIHurtByTarget extends EntityAIHurtByTarget
 {
-    EntityCreature mob;
-    public CustomAIAttackOnCollide(EntityCreature mob, Class target, double speed, boolean longMemory)
+    public CustomAIHurtByTarget(EntityCreature mob, boolean entityCallsForHelp)
     {
-        super(mob, target, speed, longMemory);
-        this.mob = mob;
-    }
-
-    public CustomAIAttackOnCollide(EntityCreature mob, double speed, boolean longMemory)
-    {
-        super(mob, speed, longMemory);
-        this.mob = mob;
+        super(mob, entityCallsForHelp);
     }
 
     @Override
-    public boolean shouldExecute()
+    protected boolean isSuitableTarget(EntityLivingBase p_75296_1_, boolean p_75296_2_)
     {
-        return mob.getAttackTarget() != CustomAI.getOwner(mob) && !CustomAI.isOnSameTeam(mob.getAttackTarget(), mob) && super.shouldExecute();
+        return !CustomAI.isOnSameTeam(taskOwner, p_75296_1_) && super.isSuitableTarget(p_75296_1_, p_75296_2_);
     }
 }
