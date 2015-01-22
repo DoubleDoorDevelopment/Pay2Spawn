@@ -169,7 +169,7 @@ public class Helper
         };
         if (profileRepo == null)
         {
-            profileRepo = ((new YggdrasilAuthenticationService(Minecraft.getMinecraft().getProxy(), String.format("%s_%s", NAME, UUID.randomUUID())))).createProfileRepository();
+            profileRepo = MinecraftServer.getServer().func_152359_aw();
         }
         profileRepo.findProfilesByNames(new String[]{name}, Agent.MINECRAFT, profilelookupcallback);
 
