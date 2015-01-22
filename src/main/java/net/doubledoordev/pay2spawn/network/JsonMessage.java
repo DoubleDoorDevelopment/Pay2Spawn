@@ -74,8 +74,9 @@ public class JsonMessage implements IMessage
     @Override
     public void toBytes(ByteBuf buf)
     {
-        buf.writeInt(data.length());
-        buf.writeBytes(data.getBytes(Charset.forName("utf-8")));
+        byte[] bytes = data.getBytes(Charset.forName("utf-8"));
+        buf.writeInt(bytes.length);
+        buf.writeBytes(bytes);
     }
 
     public static class Handler implements IMessageHandler<JsonMessage, IMessage>
