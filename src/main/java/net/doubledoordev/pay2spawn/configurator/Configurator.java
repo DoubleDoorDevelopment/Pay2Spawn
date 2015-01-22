@@ -32,7 +32,9 @@ package net.doubledoordev.pay2spawn.configurator;
 
 import com.google.gson.*;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
+import net.doubledoordev.pay2spawn.network.JsonMessage;
 import net.doubledoordev.pay2spawn.types.TypeRegistry;
+import net.doubledoordev.pay2spawn.util.Constants;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.IIHasCallback;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
@@ -88,11 +90,11 @@ public class Configurator implements IIHasCallback
     private       int           currentlyEditingID;
     private       JsonArray     rewardData;
 
-    private Configurator() throws FileNotFoundException
+    private Configurator(JsonArray data) throws FileNotFoundException
     {
         $$$setupUI$$$();
 
-        rootArray = JSON_PARSER.parse(new FileReader(Pay2Spawn.getRewardDBFile())).getAsJsonArray();
+        this.rootArray = data;
 
         frame = new JFrame("Configurator");
         frame.setContentPane(panel1);
@@ -108,10 +110,10 @@ public class Configurator implements IIHasCallback
         ColumnsAutoSizer.sizeColumnsToFit(mainTable, 20);
     }
 
-    public static void show() throws FileNotFoundException
+    public static void show(JsonArray data) throws FileNotFoundException
     {
         close();
-        instance = new Configurator();
+        instance = new Configurator(data);
     }
 
     public static void close()
@@ -386,20 +388,21 @@ public class Configurator implements IIHasCallback
 
     public void saveMainJsonToFile()
     {
-        try
-        {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(Pay2Spawn.getRewardDBFile()));
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            bw.write(gson.toJson(rootArray));
-            bw.close();
-        }
-        catch (IOException e)
-        {
-            Pay2Spawn.getLogger().warn("Could not save JSON file from configurator!");
-            e.printStackTrace();
-        }
-
-        Pay2Spawn.reloadDB();
+        Pay2Spawn.getSnw().sendToServer(new JsonMessage(Constants.GSON_NOPP.toJson(rootArray)));
+//        try
+//        {
+//            BufferedWriter bw = new BufferedWriter(new FileWriter(Pay2Spawn.getRewardDBFile()));
+//            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//            bw.write(gson.toJson(rootArray));
+//            bw.close();
+//        }
+//        catch (IOException e)
+//        {
+//            Pay2Spawn.getLogger().warn("Could not save JSON file from configurator!");
+//            e.printStackTrace();
+//        }
+//
+//        Pay2Spawn.reloadDB();
     }
 
     public boolean saveEdits()

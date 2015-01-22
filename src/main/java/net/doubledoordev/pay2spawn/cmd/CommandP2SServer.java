@@ -33,6 +33,7 @@ package net.doubledoordev.pay2spawn.cmd;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.checkers.CheckerHandler;
 import net.doubledoordev.pay2spawn.checkers.TwitchChecker;
+import net.doubledoordev.pay2spawn.network.JsonMessage;
 import net.doubledoordev.pay2spawn.network.UpdateMessage;
 import net.doubledoordev.pay2spawn.util.Constants;
 import net.doubledoordev.pay2spawn.util.Donation;
@@ -47,7 +48,9 @@ import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
+import org.apache.commons.io.FileUtils;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -101,6 +104,17 @@ public class CommandP2SServer extends CommandBase
                 sendChatToPlayer(sender, "Removed " + count + " entities.", EnumChatFormatting.GREEN);
                 break;
             }
+            case "configure":
+                try
+                {
+                    Pay2Spawn.getSnw().sendTo(new JsonMessage(FileUtils.readFileToString(Pay2Spawn.getRewardDBFile())), getCommandSenderAsPlayer(sender));
+                }
+                catch (IOException e)
+                {
+                    sendChatToPlayer(sender, "Error: " + e.getMessage(), EnumChatFormatting.RED);
+                    e.printStackTrace();
+                }
+                break;
             case "reload":
                 try
                 {
@@ -212,7 +226,7 @@ public class CommandP2SServer extends CommandBase
         switch (args.length)
         {
             case 1:
-                return getListOfStringsMatchingLastWord(args, "reload", "butcher", "donate", "adjusttotal", "resetsubs", "test");
+                return getListOfStringsMatchingLastWord(args, "configure", "reload", "butcher", "donate", "adjusttotal", "resetsubs", "test");
         }
         return null;
     }

@@ -80,10 +80,10 @@ public class CommandP2S extends CommandBase
         }
         switch (args[0])
         {
-            case "configure":
-                if (Pay2Spawn.getRewardsDB().editable) ConfiguratorManager.openCfg();
-                else Helper.msg(EnumChatFormatting.RED + "[P2S] You can't do that with a server side config.");
-                break;
+//            case "configure":
+//                if (Pay2Spawn.getRewardsDB().editable) ConfiguratorManager.openCfg();
+//                else Helper.msg(EnumChatFormatting.RED + "[P2S] You can't do that with a server side config.");
+//                break;
             case "getnbt":
                 ConfiguratorManager.openNbt();
                 break;

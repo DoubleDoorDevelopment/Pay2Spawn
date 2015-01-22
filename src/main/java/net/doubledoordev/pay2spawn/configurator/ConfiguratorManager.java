@@ -32,6 +32,7 @@ package net.doubledoordev.pay2spawn.configurator;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
+import net.doubledoordev.pay2spawn.util.Constants;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -61,26 +62,15 @@ public class ConfiguratorManager
         }
     }
 
-    public static void openCfg()
+    public static void openCfg(String data)
     {
-        if (!Pay2Spawn.getRewardsDB().editable) Helper.msg(EnumChatFormatting.GOLD + "[P2S] You can't edit a server side config.");
-        else
+        try
         {
-            if (FMLCommonHandler.instance().getEffectiveSide().isClient())
-            {
-                try
-                {
-                    Configurator.show();
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-            else
-            {
-                Pay2Spawn.getLogger().warn("WTF? Can't open the Configurator on the server. How did this happen?");
-            }
+            Configurator.show(Constants.JSON_PARSER.parse(data).getAsJsonArray());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 
