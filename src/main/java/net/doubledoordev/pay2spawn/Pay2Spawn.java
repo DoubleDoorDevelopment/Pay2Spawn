@@ -165,6 +165,7 @@ public class Pay2Spawn implements ID3Mod
         snw.registerMessage(CountdownMessage.Handler.class, CountdownMessage.class, id++, Side.CLIENT);
         snw.registerMessage(DonationMessage.Handler.class, DonationMessage.class, id++, Side.CLIENT);
         snw.registerMessage(SaleMessage.Handler.class, SaleMessage.class, id++, Side.CLIENT);
+        snw.registerMessage(UpdateMessage.Handler.class, UpdateMessage.class, id++, Side.CLIENT);
 
         TypeRegistry.preInit();
         Statistics.preInit();
@@ -179,9 +180,10 @@ public class Pay2Spawn implements ID3Mod
 
         rewardsDB = new RewardsDB(getRewardDBFile());
 
+        new EventHandler();
+
         if (event.getSide().isClient())
         {
-            new EventHandler();
             ClientCommandHandler.instance.registerCommand(new CommandP2S());
         }
 

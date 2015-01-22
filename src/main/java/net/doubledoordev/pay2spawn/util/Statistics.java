@@ -74,6 +74,8 @@ public class Statistics
     {
         MetricsHelper.totalMoney += amount;
         totalDonationHudEntry.addToDonationamount(amount);
+
+        save();
     }
 
     public static void handleKill(NBTTagCompound data)
@@ -190,6 +192,19 @@ public class Statistics
         {
             e.printStackTrace();
         }
+    }
+
+    public static void setDonationAmount(double donationAmount)
+    {
+        MetricsHelper.totalMoney = donationAmount;
+        totalDonationHudEntry.setDonationamount(donationAmount);
+
+        save();
+    }
+
+    public static double getDonationAmount()
+    {
+        return MetricsHelper.totalMoney;
     }
 
     static class ValueComparator implements Comparator<String>

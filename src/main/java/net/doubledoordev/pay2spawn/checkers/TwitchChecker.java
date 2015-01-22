@@ -59,8 +59,6 @@ public class TwitchChecker extends AbstractChecker implements Runnable
     public final static String        CAT      = BASECAT_TRACKERS + '.' + NAME;
     HashMap<String, String> subs = new HashMap<>();
 
-    DonationsBasedHudEntry recentDonationsBasedHudEntry;
-
     String  APIKey   = "";
     boolean enabled  = false;
     int     interval = 20;
@@ -84,8 +82,6 @@ public class TwitchChecker extends AbstractChecker implements Runnable
     @Override
     public void init()
     {
-        Hud.INSTANCE.set.add(recentDonationsBasedHudEntry);
-
         new Thread(this, getName()).start();
     }
 
@@ -107,8 +103,6 @@ public class TwitchChecker extends AbstractChecker implements Runnable
         note = configuration.get(CAT, "note", note, "The note attached to the 'fake' donation.").getString();
         addToTotal = configuration.get(CAT, "addToTotal", addToTotal, "If false, subs don't count towards the total amount donated.").getBoolean();
 
-        recentDonationsBasedHudEntry = new DonationsBasedHudEntry("recent" + NAME + ".txt", CAT + ".recentSubs", -1, 2, 5, "$name", "-- Recent subs --", CheckerHandler.RECENT_DONATION_COMPARATOR);
-
         try
         {
             url = new URL("https://api.twitch.tv/kraken/channels/" + Pay2Spawn.getConfig().channel + "/subscriptions?limit=100&oauth_token=" + APIKey);
@@ -117,12 +111,6 @@ public class TwitchChecker extends AbstractChecker implements Runnable
         {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public DonationsBasedHudEntry[] getDonationsBasedHudEntries()
-    {
-        return new DonationsBasedHudEntry[]{recentDonationsBasedHudEntry};
     }
 
     @Override

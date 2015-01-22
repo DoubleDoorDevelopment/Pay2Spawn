@@ -32,6 +32,7 @@ package net.doubledoordev.pay2spawn.checkers;
 
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.hud.DonationsBasedHudEntry;
+import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.util.Donation;
 import net.doubledoordev.pay2spawn.util.Statistics;
 import net.minecraft.client.Minecraft;
@@ -61,8 +62,6 @@ public abstract class AbstractChecker
     public abstract boolean enabled();
 
     public abstract void doConfig(Configuration configuration);
-
-    public abstract DonationsBasedHudEntry[] getDonationsBasedHudEntries();
 
     public boolean addToTotal()
     {
@@ -102,15 +101,8 @@ public abstract class AbstractChecker
             }
             try
             {
-                if (this.getDonationsBasedHudEntries() != null)
-                {
-                    for (DonationsBasedHudEntry donationsBasedHudEntry : this.getDonationsBasedHudEntries())
-                    {
-                        if (donationsBasedHudEntry != null) donationsBasedHudEntry.add(donation);
-                        else Pay2Spawn.getLogger().warn("DonationsBasedHudEntry was null" + this.getName());
-                    }
-                }
-
+                Hud.INSTANCE.topDonationsBasedHudEntry.add(donation);
+                Hud.INSTANCE.recentDonationsBasedHudEntry.add(donation);
                 Pay2Spawn.getRewardsDB().process(donation, msg);
             }
             catch (Exception e)

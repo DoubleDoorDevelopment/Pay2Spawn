@@ -74,8 +74,6 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
         SIMPLE_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
-    DonationsBasedHudEntry recentDonationsBasedHudEntry;
-
     String APIKey = "", APIsecret = "";
     boolean          enabled  = false;
     int              interval = 20;
@@ -104,8 +102,6 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
     @Override
     public void init()
     {
-        Hud.INSTANCE.set.add(recentDonationsBasedHudEntry);
-
         new Thread(this, getName()).start();
     }
 
@@ -125,14 +121,6 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
         APIsecret = configuration.get(CAT, "APIsecret", APIsecret).getString();
         interval = configuration.get(CAT, "interval", interval, "The time in between polls (in seconds).").getInt();
         min_donation = configuration.get(CAT, "min_donation", min_donation, "Donations below this amount will only be added to statistics and will not spawn rewards").getDouble();
-
-        recentDonationsBasedHudEntry = new DonationsBasedHudEntry("recent" + NAME + ".txt", CAT + ".recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
-    }
-
-    @Override
-    public DonationsBasedHudEntry[] getDonationsBasedHudEntries()
-    {
-        return new DonationsBasedHudEntry[]{recentDonationsBasedHudEntry};
     }
 
     @Override
@@ -140,14 +128,15 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
     {
         try
         {
-            JsonObject root = get(recentDonationsBasedHudEntry.getAmount());
+            JsonObject root = get(5);
             if (root.get("ack").getAsString().equalsIgnoreCase("Success"))
             {
                 JsonArray donations = root.getAsJsonArray("donations");
                 for (JsonElement jsonElement : donations)
                 {
                     Donation donation = getDonation(JsonNBTHelper.fixNulls(jsonElement.getAsJsonObject()));
-                    recentDonationsBasedHudEntry.add(donation);
+                    Hud.INSTANCE.topDonationsBasedHudEntry.add(donation);
+                    Hud.INSTANCE.recentDonationsBasedHudEntry.add(donation);
                     doneIDs.add(donation.id);
                 }
             }
@@ -197,7 +186,7 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
 
     private JsonObject get(int amount) throws Exception
     {
-        String uri = "/api/donations/" + recentDonationsBasedHudEntry.getAmount() + "/json";
+        String uri = "/api/donations/" + 5 + "/json";
         String date = SIMPLE_DATE_FORMAT.format(new Date());
         String sig = getSignature("GET\n\n\n" + date + "\n" + uri);
 

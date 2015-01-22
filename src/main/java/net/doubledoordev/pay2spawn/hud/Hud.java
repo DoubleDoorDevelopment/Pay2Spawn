@@ -36,6 +36,8 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.doubledoordev.pay2spawn.P2SConfig;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
+import net.doubledoordev.pay2spawn.checkers.CheckerHandler;
+import net.doubledoordev.pay2spawn.util.Constants;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.commons.io.FileUtils;
 
@@ -44,6 +46,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import static net.doubledoordev.pay2spawn.util.Constants.MODID;
+
 /**
  * Handler for the event, keeps track of all active IHudEntry s
  *
@@ -51,6 +55,8 @@ import java.util.HashSet;
  */
 public class Hud
 {
+    public DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
+
     public static final Hud                INSTANCE = new Hud();
     public final        HashSet<IHudEntry> set      = new HashSet<>();
     private final File folder;
@@ -59,6 +65,12 @@ public class Hud
 
     private Hud()
     {
+        topDonationsBasedHudEntry = new DonationsBasedHudEntry("top.txt", MODID + ".hud.topDonations", -1, 1, 5, "$name: $$amount", "-- Top donations --", CheckerHandler.AMOUNT_DONATION_COMPARATOR);
+        recentDonationsBasedHudEntry = new DonationsBasedHudEntry("recent.txt", MODID + "hud.recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
+
+        set.add(topDonationsBasedHudEntry);
+        set.add(recentDonationsBasedHudEntry);
+
         FMLCommonHandler.instance().bus().register(this);
         folder = new File(Pay2Spawn.getFolder(), "textFiles");
         //noinspection ResultOfMethodCallIgnored

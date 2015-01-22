@@ -63,7 +63,6 @@ public class SupportthestreamChecker extends AbstractChecker implements Runnable
     public final static SupportthestreamChecker INSTANCE   = new SupportthestreamChecker();
     public final static String                  NAME       = "supportthestream";
     public final static String                  CAT        = BASECAT_TRACKERS + '.' + NAME;
-    DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
     boolean enabled  = false;
     int     interval = 5;
     String  APIKey   = "";
@@ -81,9 +80,6 @@ public class SupportthestreamChecker extends AbstractChecker implements Runnable
     @Override
     public void init()
     {
-        Hud.INSTANCE.set.add(topDonationsBasedHudEntry);
-        Hud.INSTANCE.set.add(recentDonationsBasedHudEntry);
-
         new Thread(this, getName()).start();
     }
 
@@ -102,15 +98,6 @@ public class SupportthestreamChecker extends AbstractChecker implements Runnable
         APIKey = configuration.get(CAT, "APIKey", APIKey).getString();
         interval = configuration.get(CAT, "interval", interval, "The time in between polls minimum 5 (in seconds).").getInt();
         min_donation = configuration.get(CAT, "min_donation", min_donation, "Donations below this amount will only be added to statistics and will not spawn rewards").getDouble();
-
-        recentDonationsBasedHudEntry = new DonationsBasedHudEntry("recent" + NAME + ".txt", CAT + ".recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
-        topDonationsBasedHudEntry = new DonationsBasedHudEntry("top" + NAME + ".txt", CAT + ".topDonations", -1, 1, 5, "$name: $$amount", "-- Top donations --", CheckerHandler.AMOUNT_DONATION_COMPARATOR);
-    }
-
-    @Override
-    public DonationsBasedHudEntry[] getDonationsBasedHudEntries()
-    {
-        return new DonationsBasedHudEntry[]{topDonationsBasedHudEntry, recentDonationsBasedHudEntry};
     }
 
     @Override
@@ -148,7 +135,8 @@ public class SupportthestreamChecker extends AbstractChecker implements Runnable
                 if (firstRun)
                 {
                     // This is a first run so add to current list/done ids
-                    topDonationsBasedHudEntry.add(donation);
+                    Hud.INSTANCE.topDonationsBasedHudEntry.add(donation);
+                    Hud.INSTANCE.recentDonationsBasedHudEntry.add(donation);
                     doneIDs.add(donation.id);
                 }
                 else

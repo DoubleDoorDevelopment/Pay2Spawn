@@ -133,6 +133,7 @@ public class DonationsBasedHudEntry implements IHudEntry
 
     public void add(Donation donation)
     {
+        if (donations.contains(donation)) return;
         donations.add(donation);
         Collections.sort(donations, comparator);
         update();
@@ -151,6 +152,11 @@ public class DonationsBasedHudEntry implements IHudEntry
         {
             strings.add(Helper.formatText(this.getFormat(), donation, null));
         }
+    }
+
+    public List<Donation> getDonations()
+    {
+        return donations;
     }
 }
 

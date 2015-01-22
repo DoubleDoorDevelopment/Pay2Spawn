@@ -56,7 +56,6 @@ public class BarrysTrackerChecker extends AbstractChecker implements Runnable
     public final static String               NAME     = "barrys-tracker";
     public final static String               CAT      = BASECAT_TRACKERS + '.' + NAME;
     public              String               URL      = "http://localhost:8082/donations/";
-    DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
     boolean enabled  = false;
     int     interval = 5;
 
@@ -74,9 +73,6 @@ public class BarrysTrackerChecker extends AbstractChecker implements Runnable
     @Override
     public void init()
     {
-        Hud.INSTANCE.set.add(topDonationsBasedHudEntry);
-        Hud.INSTANCE.set.add(recentDonationsBasedHudEntry);
-
         new Thread(this, getName()).start();
     }
 
@@ -96,9 +92,6 @@ public class BarrysTrackerChecker extends AbstractChecker implements Runnable
         min_donation = configuration.get(CAT, "min_donation", min_donation, "Donations below this amount will only be added to statistics and will not spawn rewards").getDouble();
         URL = configuration.get(CAT, "url", URL, "Donation Tracker Ping Point. Match to the Settings in the Tracker").getString();
 
-        recentDonationsBasedHudEntry = new DonationsBasedHudEntry("recent" + NAME + ".txt", CAT + ".recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
-        topDonationsBasedHudEntry = new DonationsBasedHudEntry("top" + NAME + ".txt", CAT + ".topDonations", -1, 1, 5, "$name: $$amount", "-- Top donations --", CheckerHandler.AMOUNT_DONATION_COMPARATOR);
-
         // Donation tracker doesn't allow a poll interval faster than 5 seconds
         // They will IP ban anyone using a time below 5 so force the value to be safe
         if (interval < 5)
@@ -107,12 +100,6 @@ public class BarrysTrackerChecker extends AbstractChecker implements Runnable
             // Now force the config setting to 5
             configuration.get(CAT, "interval", "The time in between polls minimum 5 (in seconds).").set(interval);
         }
-    }
-
-    @Override
-    public DonationsBasedHudEntry[] getDonationsBasedHudEntries()
-    {
-        return new DonationsBasedHudEntry[]{topDonationsBasedHudEntry, recentDonationsBasedHudEntry};
     }
 
     @Override
@@ -150,10 +137,10 @@ public class BarrysTrackerChecker extends AbstractChecker implements Runnable
                     Donation donation = getDonation(jsonElement.getAsJsonObject());
 
                     // Make sure we have a donation to work with and see if this is a first run
-                    if (donation != null && firstRun == true)
+                    if (donation != null && firstRun)
                     {
-                        // This is a first run so add to current list/done ids
-                        topDonationsBasedHudEntry.add(donation);
+                        Hud.INSTANCE.topDonationsBasedHudEntry.add(donation);
+                        Hud.INSTANCE.recentDonationsBasedHudEntry.add(donation);
                         doneIDs.add(donation.id);
                     }
                     else if (donation != null)

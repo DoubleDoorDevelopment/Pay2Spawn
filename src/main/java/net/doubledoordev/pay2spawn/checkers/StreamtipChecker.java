@@ -61,8 +61,6 @@ public class StreamtipChecker extends AbstractChecker implements Runnable
     public final static String           CAT      = BASECAT_TRACKERS + '.' + NAME;
     public final static String           URL      = "https://streamtip.com/api/tips?";
 
-    DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
-
     String ClientID = "", ClientAccessToken = "";
     boolean          enabled  = false;
     int              interval = 20;
@@ -82,9 +80,6 @@ public class StreamtipChecker extends AbstractChecker implements Runnable
     @Override
     public void init()
     {
-        Hud.INSTANCE.set.add(topDonationsBasedHudEntry);
-        Hud.INSTANCE.set.add(recentDonationsBasedHudEntry);
-
         new Thread(this, getName()).start();
     }
 
@@ -104,15 +99,6 @@ public class StreamtipChecker extends AbstractChecker implements Runnable
         ClientAccessToken = configuration.get(CAT, "ClientAccessToken", ClientAccessToken).getString();
         interval = configuration.get(CAT, "interval", interval, "The time in between polls (in seconds).").getInt();
         min_donation = configuration.get(CAT, "min_donation", min_donation, "Donations below this amount will only be added to statistics and will not spawn rewards").getDouble();
-
-        recentDonationsBasedHudEntry = new DonationsBasedHudEntry("recent" + NAME + ".txt", CAT + ".recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
-        topDonationsBasedHudEntry = new DonationsBasedHudEntry("top" + NAME + ".txt", CAT + ".topDonations", -1, 1, 5, "$name: $$amount", "-- Top donations --", CheckerHandler.AMOUNT_DONATION_COMPARATOR);
-    }
-
-    @Override
-    public DonationsBasedHudEntry[] getDonationsBasedHudEntries()
-    {
-        return new DonationsBasedHudEntry[]{topDonationsBasedHudEntry, recentDonationsBasedHudEntry};
     }
 
     @Override
@@ -120,14 +106,15 @@ public class StreamtipChecker extends AbstractChecker implements Runnable
     {
         try
         {
-            JsonObject root = JSON_PARSER.parse(Helper.readUrl(new URL(URL + "client_id=" + ClientID + "&access_token=" + ClientAccessToken + "&sort_by=amount&limit=" + topDonationsBasedHudEntry.getAmount()))).getAsJsonObject();
+            JsonObject root = JSON_PARSER.parse(Helper.readUrl(new URL(URL + "client_id=" + ClientID + "&access_token=" + ClientAccessToken + "&sort_by=amount&limit=" + 5))).getAsJsonObject();
             if (root.getAsJsonPrimitive("status").getAsInt() == 200)
             {
                 JsonArray donations = root.getAsJsonArray("tips");
                 for (JsonElement jsonElement : donations)
                 {
                     Donation donation = getDonation(JsonNBTHelper.fixNulls(jsonElement.getAsJsonObject()));
-                    topDonationsBasedHudEntry.add(donation);
+                    Hud.INSTANCE.topDonationsBasedHudEntry.add(donation);
+                    Hud.INSTANCE.recentDonationsBasedHudEntry.add(donation);
                     doneIDs.add(donation.id);
                 }
             }
@@ -138,14 +125,15 @@ public class StreamtipChecker extends AbstractChecker implements Runnable
         }
         try
         {
-            JsonObject root = JSON_PARSER.parse(Helper.readUrl(new URL(URL + "client_id=" + ClientID + "&access_token=" + ClientAccessToken + "&sort_by=date&limit=" + recentDonationsBasedHudEntry.getAmount()))).getAsJsonObject();
+            JsonObject root = JSON_PARSER.parse(Helper.readUrl(new URL(URL + "client_id=" + ClientID + "&access_token=" + ClientAccessToken + "&sort_by=date&limit=" + 5))).getAsJsonObject();
             if (root.getAsJsonPrimitive("status").getAsInt() == 200)
             {
                 JsonArray donations = root.getAsJsonArray("tips");
                 for (JsonElement jsonElement : donations)
                 {
                     Donation donation = getDonation(JsonNBTHelper.fixNulls(jsonElement.getAsJsonObject()));
-                    recentDonationsBasedHudEntry.add(donation);
+                    Hud.INSTANCE.topDonationsBasedHudEntry.add(donation);
+                    Hud.INSTANCE.recentDonationsBasedHudEntry.add(donation);
                     doneIDs.add(donation.id);
                 }
             }

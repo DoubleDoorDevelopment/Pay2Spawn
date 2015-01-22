@@ -30,57 +30,95 @@
 
 package net.doubledoordev.pay2spawn.network;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.hud.Hud;
-import net.doubledoordev.pay2spawn.util.CountdownTickHandler;
 import net.doubledoordev.pay2spawn.util.Donation;
-import net.doubledoordev.pay2spawn.util.Reward;
 import net.doubledoordev.pay2spawn.util.Statistics;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
+ *
  * @author Dries007
  */
-public class DonationMessage implements IMessage
+public class UpdateMessage implements IMessage
 {
-    private Donation donation;
+    double amount;
+    Collection<Donation> recent, top;
 
-    public DonationMessage()
+    public UpdateMessage(double amount, Collection<Donation> recent, Collection<Donation> top)
+    {
+        this.amount = amount;
+        this.recent = recent;
+        this.top = top;
+    }
+
+    public UpdateMessage()
     {
     }
 
-    public DonationMessage(Donation donation, Reward reward)
+    public UpdateMessage(double amount)
     {
-        this.donation = donation;
+        this.amount = amount;
     }
 
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        this.donation = Donation.readFrom(buf);
+        amount = buf.readDouble();
+        int size = buf.readInt();
+        recent = new ArrayList<>(size);
+        for (int i = 0; i < size; i++)
+        {
+            recent.add(Donation.readFrom(buf));
+        }
+        size = buf.readInt();
+        top = new ArrayList<>(size);
+        for (int i = 0; i < size; i++)
+        {
+            top.add(Donation.readFrom(buf));
+        }
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-        Donation.writeTo(donation, buf);
+        buf.writeDouble(amount);
+        if (recent == null) buf.writeInt(0);
+        else
+        {
+            buf.writeInt(recent.size());
+            for (Donation donation : recent)
+            {
+                Donation.writeTo(donation, buf);
+            }
+        }
+        if (top == null) buf.writeInt(0);
+        else
+        {
+            buf.writeInt(top.size());
+            for (Donation donation : top)
+            {
+                Donation.writeTo(donation, buf);
+            }
+        }
     }
 
-    public static class Handler implements IMessageHandler<DonationMessage, IMessage>
+    public static class Handler implements IMessageHandler<UpdateMessage, IMessage>
     {
         @Override
-        public IMessage onMessage(DonationMessage message, MessageContext ctx)
+        public IMessage onMessage(UpdateMessage message, MessageContext ctx)
         {
             if (ctx.side.isClient())
             {
-                CountdownTickHandler.INSTANCE.donationTrainEntry.resetTimeout();
-                Statistics.addToDonationAmount(message.donation.amount);
-
-                Hud.INSTANCE.topDonationsBasedHudEntry.add(message.donation);
-                Hud.INSTANCE.recentDonationsBasedHudEntry.add(message.donation);
+                Statistics.setDonationAmount(message.amount);
+                for (Donation donation : message.recent) Hud.INSTANCE.recentDonationsBasedHudEntry.add(donation);
+                for (Donation donation : message.top) Hud.INSTANCE.topDonationsBasedHudEntry.add(donation);
             }
             return null;
         }

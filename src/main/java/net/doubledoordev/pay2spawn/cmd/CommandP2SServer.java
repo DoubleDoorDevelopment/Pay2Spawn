@@ -33,6 +33,7 @@ package net.doubledoordev.pay2spawn.cmd;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.checkers.CheckerHandler;
 import net.doubledoordev.pay2spawn.checkers.TwitchChecker;
+import net.doubledoordev.pay2spawn.network.UpdateMessage;
 import net.doubledoordev.pay2spawn.util.Constants;
 import net.doubledoordev.pay2spawn.util.Donation;
 import net.doubledoordev.pay2spawn.util.Statistics;
@@ -139,6 +140,8 @@ public class CommandP2SServer extends CommandBase
                 {
                     double amount = CommandBase.parseDouble(sender, args[1]);
                     Statistics.addToDonationAmount(amount);
+                    System.out.println(amount + " - " + Statistics.getDonationAmount());
+                    Pay2Spawn.getSnw().sendToAll(new UpdateMessage(Statistics.getDonationAmount()));
                 }
                 break;
             case "resetsubs":

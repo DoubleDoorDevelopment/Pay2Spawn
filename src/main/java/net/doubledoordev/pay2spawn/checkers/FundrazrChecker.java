@@ -57,7 +57,6 @@ public class FundrazrChecker extends AbstractChecker implements Runnable
     public static final String          URL_     = "https://fundrazr.com/api/campaigns/%s/donations?max-results=10";
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-    DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
     String  id       = "";
     boolean enabled  = false;
     int     interval = 10;
@@ -76,9 +75,6 @@ public class FundrazrChecker extends AbstractChecker implements Runnable
     @Override
     public void init()
     {
-        Hud.INSTANCE.set.add(topDonationsBasedHudEntry);
-        Hud.INSTANCE.set.add(recentDonationsBasedHudEntry);
-
         new Thread(this, getName()).start();
     }
 
@@ -97,15 +93,6 @@ public class FundrazrChecker extends AbstractChecker implements Runnable
         interval = configuration.get(CAT, "interval", interval, "The time in between polls (in seconds).").getInt();
         min_donation = configuration.get(CAT, "min_donation", min_donation, "Donations below this amount will only be added to statistics and will not spawn rewards").getDouble();
         id = configuration.get(CAT, "id", id, "Your campain ID").getString();
-
-        recentDonationsBasedHudEntry = new DonationsBasedHudEntry("recent" + NAME + ".txt", CAT + ".recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
-        topDonationsBasedHudEntry = new DonationsBasedHudEntry("top" + NAME + ".txt", CAT + ".topDonations", -1, 1, 5, "$name: $$amount", "-- Top donations --", CheckerHandler.AMOUNT_DONATION_COMPARATOR);
-    }
-
-    @Override
-    public DonationsBasedHudEntry[] getDonationsBasedHudEntries()
-    {
-        return new DonationsBasedHudEntry[]{topDonationsBasedHudEntry, recentDonationsBasedHudEntry};
     }
 
     @Override
@@ -140,7 +127,8 @@ public class FundrazrChecker extends AbstractChecker implements Runnable
                 if (donation != null && firstRun)
                 {
                     // This is a first run so add to current list/done ids
-                    topDonationsBasedHudEntry.add(donation);
+                    Hud.INSTANCE.topDonationsBasedHudEntry.add(donation);
+                    Hud.INSTANCE.recentDonationsBasedHudEntry.add(donation);
                     doneIDs.add(donation.id);
                 }
                 else if (donation != null)
@@ -159,7 +147,8 @@ public class FundrazrChecker extends AbstractChecker implements Runnable
                     if (donation != null && firstRun)
                     {
                         // This is a first run so add to current list/done ids
-                        topDonationsBasedHudEntry.add(donation);
+                        Hud.INSTANCE.topDonationsBasedHudEntry.add(donation);
+                        Hud.INSTANCE.recentDonationsBasedHudEntry.add(donation);
                         doneIDs.add(donation.id);
                     }
                     else if (donation != null)

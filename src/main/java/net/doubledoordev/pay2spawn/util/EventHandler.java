@@ -31,11 +31,16 @@
 package net.doubledoordev.pay2spawn.util;
 
 import com.google.gson.JsonObject;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
+import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.network.NbtRequestMessage;
+import net.doubledoordev.pay2spawn.network.UpdateMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
@@ -51,18 +56,11 @@ import java.util.ArrayList;
 public class EventHandler
 {
     static boolean entityTracking = false, blockTracking = false;
-    private JsonObject perks;
 
     public EventHandler()
     {
-        try
-        {
-            MinecraftForge.EVENT_BUS.register(this);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        FMLCommonHandler.instance().bus().register(this);
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     public static void addEntityTracking()
@@ -76,7 +74,16 @@ public class EventHandler
     }
 
     @SubscribeEvent
-    public void event(PlayerInteractEvent e)
+    public void eventLogIn(PlayerEvent.PlayerLoggedInEvent event)
+    {
+        if (FMLCommonHandler.instance().getSide().isServer())
+        {
+            Pay2Spawn.getSnw().sendTo(new UpdateMessage(Statistics.getDonationAmount(), Hud.INSTANCE.recentDonationsBasedHudEntry.getDonations(), Hud.INSTANCE.topDonationsBasedHudEntry.getDonations()), ((EntityPlayerMP) event.player));
+        }
+    }
+
+    @SubscribeEvent
+    public void eventPlayerInteract(PlayerInteractEvent e)
     {
         if (blockTracking)
         {
@@ -89,7 +96,7 @@ public class EventHandler
     }
 
     @SubscribeEvent
-    public void event(EntityInteractEvent event)
+    public void eventEntityEvent(EntityInteractEvent event)
     {
         if (entityTracking)
         {

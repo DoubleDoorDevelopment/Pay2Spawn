@@ -58,7 +58,6 @@ public class ImrasingChecker extends AbstractChecker implements Runnable
     public final static String           URL               = "https://imraising.tv/api/v1/donations";
     public final static String           HEADER            = "APIKey apikey=\"%s\"";
 
-    DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
     String  APIKey   = "";
     boolean enabled  = false;
     int     interval = 20;
@@ -76,9 +75,6 @@ public class ImrasingChecker extends AbstractChecker implements Runnable
     @Override
     public void init()
     {
-        Hud.INSTANCE.set.add(topDonationsBasedHudEntry);
-        Hud.INSTANCE.set.add(recentDonationsBasedHudEntry);
-
         new Thread(this, getName()).start();
     }
 
@@ -98,9 +94,6 @@ public class ImrasingChecker extends AbstractChecker implements Runnable
         interval = configuration.get(CAT, "interval", interval, "The time in between polls (in seconds).").getInt();
         min_donation = configuration.get(CAT, "min_donation", min_donation, "Donations below this amount will only be added to statistics and will not spawn rewards").getDouble();
 
-        recentDonationsBasedHudEntry = new DonationsBasedHudEntry("recent" + NAME + ".txt", CAT + ".recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
-        topDonationsBasedHudEntry = new DonationsBasedHudEntry("top" + NAME + ".txt", CAT + ".topDonations", -1, 1, 5, "$name: $$amount", "-- Top donations --", CheckerHandler.AMOUNT_DONATION_COMPARATOR);
-
         // Donation tracker doesn't allow a poll interval faster than 5 seconds
         // They will IP ban anyone using a time below 5 so force the value to be safe
         if (interval < 5)
@@ -109,12 +102,6 @@ public class ImrasingChecker extends AbstractChecker implements Runnable
             // Now force the config setting to 5
             configuration.get(CAT, "interval", "The time in between polls minimum 5 (in seconds).").set(interval);
         }
-    }
-
-    @Override
-    public DonationsBasedHudEntry[] getDonationsBasedHudEntries()
-    {
-        return new DonationsBasedHudEntry[]{topDonationsBasedHudEntry, recentDonationsBasedHudEntry};
     }
 
     @Override
@@ -152,7 +139,8 @@ public class ImrasingChecker extends AbstractChecker implements Runnable
                 if (donation != null && firstRun)
                 {
                     // This is a first run so add to current list/done ids
-                    topDonationsBasedHudEntry.add(donation);
+                    Hud.INSTANCE.topDonationsBasedHudEntry.add(donation);
+                    Hud.INSTANCE.recentDonationsBasedHudEntry.add(donation);
                     doneIDs.add(donation.id);
                 }
                 else if (donation != null)

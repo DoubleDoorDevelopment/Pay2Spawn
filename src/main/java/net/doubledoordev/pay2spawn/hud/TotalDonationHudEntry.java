@@ -119,6 +119,11 @@ public class TotalDonationHudEntry implements IHudEntry
         this.amount += amount;
     }
 
+    public void setDonationamount(double amount)
+    {
+        this.amount = amount;
+    }
+
     public double getDonated()
     {
         return amount;

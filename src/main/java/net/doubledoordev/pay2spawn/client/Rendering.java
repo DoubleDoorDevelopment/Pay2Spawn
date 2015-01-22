@@ -55,15 +55,6 @@ public class Rendering
     public static void init()
     {
         MinecraftForge.EVENT_BUS.register(new Rendering());
-//        Render render = RenderManager.instance.getEntityClassRenderObject(EntityZombie.class);
-//        if (render instanceof RenderBiped)
-//        {
-//            RenderManager.instance.entityRenderMap.put(EntityZombie.class, new CustomRender((RenderBiped) render));
-//        }
-//        else
-//        {
-//            Pay2Spawn.getLogger().warn("Zombie reskining won't work because the zombie renderer has been overridden by another mod. Class: " + render.getClass());
-//        }
     }
 
     @SubscribeEvent

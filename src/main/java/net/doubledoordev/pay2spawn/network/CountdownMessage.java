@@ -1,5 +1,6 @@
 package net.doubledoordev.pay2spawn.network;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -30,13 +31,17 @@ public class CountdownMessage implements IMessage
     @Override
     public void fromBytes(ByteBuf buf)
     {
-
+        name = ByteBufUtils.readUTF8String(buf);
+        remaining = buf.readInt();
+        addToHUD = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-
+        ByteBufUtils.writeUTF8String(buf, name);
+        buf.writeInt(remaining);
+        buf.writeBoolean(addToHUD);
     }
 
     public static class Handler implements IMessageHandler<CountdownMessage, IMessage>

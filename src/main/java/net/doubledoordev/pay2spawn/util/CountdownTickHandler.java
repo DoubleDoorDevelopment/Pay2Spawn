@@ -97,16 +97,17 @@ public class CountdownTickHandler
             Iterator<QueEntry> rewardIterator = entries.iterator();
             while (rewardIterator.hasNext())
             {
-                QueEntry serverQueEntry = rewardIterator.next();
-                if (serverQueEntry.remaining == 0)
+                QueEntry queEntry = rewardIterator.next();
+                if (queEntry.remaining == 0)
                 {
-                    if (serverQueEntry instanceof ServerQueEntry) ((ServerQueEntry) serverQueEntry).send();
+                    queEntry.end();
                     rewardIterator.remove();
                 }
                 else
                 {
-                    if (event.type == TickEvent.Type.CLIENT && countDownHudEntry.getPosition() != 0 && serverQueEntry.addToHUD) countDownHudEntry.lines.add(countDownHudEntry.getFormat().replace("$name", serverQueEntry.name).replace("$time", String.valueOf(serverQueEntry.remaining)));
-                    serverQueEntry.remaining--;
+                    if (event.type == TickEvent.Type.CLIENT && countDownHudEntry.getPosition() != 0 && queEntry.addToHUD)
+                        countDownHudEntry.lines.add(countDownHudEntry.getFormat().replace("$name", queEntry.name).replace("$time", String.valueOf(queEntry.remaining)));
+                    queEntry.remaining--;
                 }
             }
         }
@@ -149,6 +150,11 @@ public class CountdownTickHandler
             this.remaining = remaining;
             this.addToHUD = addToHUD;
         }
+
+        public void end()
+        {
+
+        }
     }
 
     public static class ServerQueEntry extends QueEntry
@@ -165,7 +171,7 @@ public class CountdownTickHandler
             this.actualReward = actualReward;
         }
 
-        public void send()
+        public void end()
         {
             EntityPlayerMP playerMP = MinecraftServer.getServer().getConfigurationManager().func_152612_a(donation.target);
             if (playerMP == null)

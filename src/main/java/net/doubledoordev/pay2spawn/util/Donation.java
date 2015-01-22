@@ -30,6 +30,8 @@
 
 package net.doubledoordev.pay2spawn.util;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayer;
@@ -134,6 +136,7 @@ public class Donation
         if (!id.equals(donation.id)) return false;
         if (!note.equals(donation.note)) return false;
         if (!username.equals(donation.username)) return false;
+        if (!target.equals(donation.target)) return false;
 
         return true;
     }
@@ -141,6 +144,23 @@ public class Donation
     @Override
     public String toString()
     {
-        return "Donation[" + id + ", " + amount + ", " + username + ", " + note + ", " + time + ']';
+        return "Donation[" + id + ", " + amount + ", " + username + ", " + note + ", " + time + ", " + target + ']';
+    }
+
+    public static Donation readFrom(ByteBuf buf)
+    {
+        Donation donation = new Donation(ByteBufUtils.readUTF8String(buf), buf.readDouble(), buf.readLong(), ByteBufUtils.readUTF8String(buf), ByteBufUtils.readUTF8String(buf));
+        donation.target = ByteBufUtils.readUTF8String(buf);
+        return donation;
+    }
+
+    public static void writeTo(Donation donation, ByteBuf buf)
+    {
+        ByteBufUtils.writeUTF8String(buf, donation.id);
+        buf.writeDouble(donation.amount);
+        buf.writeLong(donation.time);
+        ByteBufUtils.writeUTF8String(buf, donation.username);
+        ByteBufUtils.writeUTF8String(buf, donation.note);
+        ByteBufUtils.writeUTF8String(buf, donation.target);
     }
 }
