@@ -38,6 +38,7 @@ import com.google.gson.JsonObject;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
+import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.network.DonationMessage;
 import net.doubledoordev.pay2spawn.network.SaleMessage;
 import net.doubledoordev.pay2spawn.random.RandomRegistry;
@@ -166,6 +167,9 @@ public class RewardsDB
                 donation.target = RandomRegistry.getRandomFromSet(Arrays.asList(MinecraftServer.getServer().getAllUsernames()));
             }
         }
+
+        Hud.INSTANCE.topDonationsBasedHudEntry.add(donation);
+        Hud.INSTANCE.recentDonationsBasedHudEntry.add(donation);
 
         double amount = donation.amount; // Keep original value for stats and display purposes.
 

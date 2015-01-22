@@ -30,6 +30,7 @@
 
 package net.doubledoordev.pay2spawn.checkers;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.hud.DonationsBasedHudEntry;
 import net.doubledoordev.pay2spawn.hud.Hud;
@@ -99,10 +100,9 @@ public abstract class AbstractChecker
                 Statistics.addToDonationAmount(donation.amount);
                 if (donation.amount < min_donation) return;
             }
+
             try
             {
-                Hud.INSTANCE.topDonationsBasedHudEntry.add(donation);
-                Hud.INSTANCE.recentDonationsBasedHudEntry.add(donation);
                 Pay2Spawn.getRewardsDB().process(donation, msg);
             }
             catch (Exception e)

@@ -31,6 +31,7 @@
 package net.doubledoordev.pay2spawn.hud;
 
 import com.google.common.base.Strings;
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.checkers.CheckerHandler;
 import net.doubledoordev.pay2spawn.util.Donation;
