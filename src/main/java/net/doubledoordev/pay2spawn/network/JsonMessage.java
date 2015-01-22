@@ -37,6 +37,7 @@ import io.netty.buffer.ByteBuf;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.configurator.ConfiguratorManager;
 import net.doubledoordev.pay2spawn.util.Constants;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import org.apache.commons.io.FileUtils;
@@ -44,39 +45,108 @@ import org.apache.commons.io.FileUtils;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
+import static net.doubledoordev.pay2spawn.util.Constants.*;
 
 /**
  * @author Dries007
  */
 public class JsonMessage implements IMessage
 {
-    private String data;
+    public static final int MAX_SIZE = 32000;
 
-    public JsonMessage(String data)
+    private static int lastID;
+    private static int countGot;
+    private static byte[] temp;
+
+    private int id;
+    private int count;
+    private int size;
+    private int offset;
+    private int end;
+    private byte[] bytes;
+
+    public JsonMessage(int id, int count, int size, byte[] bytes, int offset, int end)
     {
-        this.data = data;
+        this.id = id;
+        this.count = count;
+        this.size = size;
+        this.bytes = bytes;
+        this.offset = offset;
+        this.end = end;
     }
 
     public JsonMessage()
     {
-
     }
 
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        byte[] data = new byte[buf.readInt()];
-        buf.readBytes(data);
-        this.data = new String(data, Charset.forName("utf-8"));
+        this.id = buf.readInt();
+        this.count = buf.readInt();
+        this.size = buf.readInt();
+        this.offset = buf.readInt();
+        this.end = buf.readInt();
+        bytes = new byte[end - offset];
+
+        buf.readBytes(bytes);
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
+        buf.writeInt(id);
+        buf.writeInt(count);
+        buf.writeInt(size);
+        buf.writeInt(offset);
+        buf.writeInt(end);
+        buf.writeBytes(bytes, offset, end - offset);
+    }
+
+    public static void sendToClient(EntityPlayerMP target) throws IOException
+    {
+        int id = RANDOM.nextInt();
+        while (id == 0) id = RANDOM.nextInt();
+        byte[] bytes = GSON_NOPP.toJson(JSON_PARSER.parse(FileUtils.readFileToString(Pay2Spawn.getRewardDBFile()))).getBytes(Charset.forName("utf-8"));
+        int count = 1 + (bytes.length / MAX_SIZE);
+        for (int offset = 0; offset < bytes.length; offset += MAX_SIZE)
+        {
+            int end = Math.min(offset + MAX_SIZE, bytes.length);
+            Pay2Spawn.getSnw().sendTo(new JsonMessage(id, count, bytes.length, bytes, offset, end), target);
+        }
+    }
+
+    public static void sendToServer(String data)
+    {
+        int id = RANDOM.nextInt();
+        while (id == 0) id = RANDOM.nextInt();
         byte[] bytes = data.getBytes(Charset.forName("utf-8"));
-        buf.writeInt(bytes.length);
-        buf.writeBytes(bytes);
+        int count = 1 + (bytes.length / MAX_SIZE);
+        for (int offset = 0; offset < bytes.length; offset += MAX_SIZE)
+        {
+            int end = Math.min(offset + MAX_SIZE, bytes.length);
+            Pay2Spawn.getSnw().sendToServer(new JsonMessage(id, count, bytes.length, bytes, offset, end));
+        }
+    }
+
+    public static String assemble(JsonMessage part)
+    {
+        String out = null;
+        if (lastID != part.id)
+        {
+            countGot = 0;
+            lastID = part.id;
+            temp = new byte[part.size];
+        }
+        countGot ++;
+        System.arraycopy(part.bytes, 0, temp, part.offset,part.bytes.length);
+        if (part.count == countGot) // last packet
+        {
+            out = new String(temp, Charset.forName("utf-8"));
+            temp = null;
+            lastID = 0;
+        }
+        return out;
     }
 
     public static class Handler implements IMessageHandler<JsonMessage, IMessage>
@@ -84,12 +154,14 @@ public class JsonMessage implements IMessage
         @Override
         public IMessage onMessage(JsonMessage message, MessageContext ctx)
         {
+            String data = assemble(message);
+            if (data == null) return null;
             if (ctx.side.isServer())
             {
                 try
                 {
                     // Makes json file Pretty Print & prevents Json syntax errors.
-                    FileUtils.writeStringToFile(Pay2Spawn.getRewardDBFile(), Constants.GSON.toJson(JSON_PARSER.parse(message.data)));
+                    FileUtils.writeStringToFile(Pay2Spawn.getRewardDBFile(), Constants.GSON.toJson(JSON_PARSER.parse(data)));
                     Pay2Spawn.reloadDB();
                     MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("Pay2Spawn configuration updated by " + ctx.getServerHandler().playerEntity.getDisplayName()));
                 }
@@ -100,8 +172,7 @@ public class JsonMessage implements IMessage
             }
             else if (ctx.side.isClient())
             {
-                System.out.println(message.data);
-                ConfiguratorManager.openCfg(message.data);
+                ConfiguratorManager.openCfg(data);
             }
             return null;
         }

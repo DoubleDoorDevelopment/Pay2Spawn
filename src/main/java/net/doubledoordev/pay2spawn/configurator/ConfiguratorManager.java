@@ -70,6 +70,7 @@ public class ConfiguratorManager
         }
         catch (Exception e)
         {
+            System.out.println(data);
             e.printStackTrace();
         }
     }

@@ -52,6 +52,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import static net.doubledoordev.pay2spawn.util.Constants.GSON_NOPP;
 import static net.doubledoordev.pay2spawn.util.Constants.JOINER_COMMA_SPACE;
 import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
 
@@ -388,7 +389,7 @@ public class Configurator implements IIHasCallback
 
     public void saveMainJsonToFile()
     {
-        Pay2Spawn.getSnw().sendToServer(new JsonMessage(Constants.GSON_NOPP.toJson(rootArray)));
+        JsonMessage.sendToServer(GSON_NOPP.toJson(rootArray));
 //        try
 //        {
 //            BufferedWriter bw = new BufferedWriter(new FileWriter(Pay2Spawn.getRewardDBFile()));

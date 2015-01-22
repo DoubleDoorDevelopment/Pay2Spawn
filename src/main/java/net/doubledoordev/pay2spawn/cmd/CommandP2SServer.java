@@ -107,7 +107,7 @@ public class CommandP2SServer extends CommandBase
             case "configure":
                 try
                 {
-                    Pay2Spawn.getSnw().sendTo(new JsonMessage(FileUtils.readFileToString(Pay2Spawn.getRewardDBFile())), getCommandSenderAsPlayer(sender));
+                    JsonMessage.sendToClient(getCommandSenderAsPlayer(sender));
                 }
                 catch (IOException e)
                 {
