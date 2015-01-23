@@ -52,7 +52,7 @@ public class DonationMessage implements IMessage
     {
     }
 
-    public DonationMessage(Donation donation, Reward reward)
+    public DonationMessage(Donation donation)
     {
         this.donation = donation;
     }

@@ -189,11 +189,10 @@ public class RewardsDB
         }
 
         boolean messageHasBeenSend = false;
-
+        Pay2Spawn.getSnw().sendToAll(new DonationMessage(donation));
         if (reward != null)
         {
             Statistics.handleSpawn(reward.getName());
-            Pay2Spawn.getSnw().sendToAll(new DonationMessage(donation, reward));
             reward.addToCountdown(donation, true, null);
             messageHasBeenSend = reward.sendMessage(donation);
         }

@@ -154,7 +154,6 @@ public class CommandP2SServer extends CommandBase
                 {
                     double amount = CommandBase.parseDouble(sender, args[1]);
                     Statistics.addToDonationAmount(amount);
-                    System.out.println(amount + " - " + Statistics.getDonationAmount());
                     Pay2Spawn.getSnw().sendToAll(new UpdateMessage(Statistics.getDonationAmount()));
                 }
                 break;
