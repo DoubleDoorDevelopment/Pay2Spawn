@@ -126,8 +126,8 @@ public class Helper
         if (format.contains("$amount")) format = format.replace("$amount", donation.amount + "");
         if (format.contains("$note")) format = format.replace("$note", donation.note);
 
-        if (format.contains("$streamer")) format = format.replace("$streamer", donation.target);
         if (format.contains("$streameruuid")) format = format.replace("$streameruuid", MinecraftServer.getServer().getConfigurationManager().func_152612_a(donation.target).getGameProfile().getId().toString());
+        if (format.contains("$streamer")) format = format.replace("$streamer", donation.target);
 
         if (reward != null)
         {
