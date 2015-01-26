@@ -170,6 +170,7 @@ public class RewardsDB
 
         Hud.INSTANCE.topDonationsBasedHudEntry.add(donation);
         Hud.INSTANCE.recentDonationsBasedHudEntry.add(donation);
+        Hud.INSTANCE.topDonatorsHudEntry.add(donation);
 
         double amount = donation.amount; // Keep original value for stats and display purposes.
 

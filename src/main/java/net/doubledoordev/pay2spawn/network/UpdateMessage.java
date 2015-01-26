@@ -34,7 +34,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import net.doubledoordev.pay2spawn.Pay2Spawn;
+import net.doubledoordev.pay2spawn.hud.DonatorBasedHudEntry;
 import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.util.Donation;
 import net.doubledoordev.pay2spawn.util.Statistics;
@@ -49,13 +49,15 @@ import java.util.Collection;
 public class UpdateMessage implements IMessage
 {
     double amount;
-    Collection<Donation> recent, top;
+    Collection<Donation> recent, topDonations;
+    Collection<DonatorBasedHudEntry.Donator> topDonators;
 
-    public UpdateMessage(double amount, Collection<Donation> recent, Collection<Donation> top)
+    public UpdateMessage(double amount, Collection<Donation> recent, Collection<Donation> topDonations, Collection<DonatorBasedHudEntry.Donator> topDonators)
     {
         this.amount = amount;
         this.recent = recent;
-        this.top = top;
+        this.topDonations = topDonations;
+        this.topDonators = topDonators;
     }
 
     public UpdateMessage()
@@ -78,10 +80,16 @@ public class UpdateMessage implements IMessage
             recent.add(Donation.readFrom(buf));
         }
         size = buf.readInt();
-        top = new ArrayList<>(size);
+        topDonations = new ArrayList<>(size);
         for (int i = 0; i < size; i++)
         {
-            top.add(Donation.readFrom(buf));
+            topDonations.add(Donation.readFrom(buf));
+        }
+        size = buf.readInt();
+        topDonators = new ArrayList<>(size);
+        for (int i = 0; i < size; i++)
+        {
+            topDonators.add(DonatorBasedHudEntry.Donator.readFrom(buf));
         }
     }
 
@@ -98,13 +106,22 @@ public class UpdateMessage implements IMessage
                 Donation.writeTo(donation, buf);
             }
         }
-        if (top == null) buf.writeInt(0);
+        if (topDonations == null) buf.writeInt(0);
         else
         {
-            buf.writeInt(top.size());
-            for (Donation donation : top)
+            buf.writeInt(topDonations.size());
+            for (Donation donation : topDonations)
             {
                 Donation.writeTo(donation, buf);
+            }
+        }
+        if (topDonators == null) buf.writeInt(0);
+        else
+        {
+            buf.writeInt(topDonators.size());
+            for (DonatorBasedHudEntry.Donator donation : topDonators)
+            {
+                DonatorBasedHudEntry.Donator.writeTo(donation, buf);
             }
         }
     }
@@ -117,8 +134,13 @@ public class UpdateMessage implements IMessage
             if (ctx.side.isClient())
             {
                 Statistics.setDonationAmount(message.amount);
+                Hud.INSTANCE.recentDonationsBasedHudEntry.clear();
+                Hud.INSTANCE.topDonationsBasedHudEntry.clear();
+                Hud.INSTANCE.topDonatorsHudEntry.clear();
+
                 for (Donation donation : message.recent) Hud.INSTANCE.recentDonationsBasedHudEntry.add(donation);
-                for (Donation donation : message.top) Hud.INSTANCE.topDonationsBasedHudEntry.add(donation);
+                for (Donation donation : message.topDonations) Hud.INSTANCE.topDonationsBasedHudEntry.add(donation);
+                for (DonatorBasedHudEntry.Donator donator : message.topDonators) Hud.INSTANCE.topDonatorsHudEntry.add(donator);
             }
             return null;
         }

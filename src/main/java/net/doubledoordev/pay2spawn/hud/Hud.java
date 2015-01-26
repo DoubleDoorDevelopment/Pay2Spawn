@@ -56,6 +56,7 @@ import static net.doubledoordev.pay2spawn.util.Constants.MODID;
 public class Hud
 {
     public DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
+    public DonatorBasedHudEntry topDonatorsHudEntry;
 
     public static final Hud                INSTANCE = new Hud();
     public final        HashSet<IHudEntry> set      = new HashSet<>();
@@ -65,11 +66,13 @@ public class Hud
 
     private Hud()
     {
-        topDonationsBasedHudEntry = new DonationsBasedHudEntry("top.txt", MODID + ".hud.topDonations", -1, 1, 5, "$name: $$amount", "-- Top donations --", CheckerHandler.AMOUNT_DONATION_COMPARATOR);
+        topDonationsBasedHudEntry = new DonationsBasedHudEntry("topDonations.txt", MODID + ".hud.topDonations", -1, 1, 5, "$name: $$amount", "-- Top donations --", CheckerHandler.AMOUNT_DONATION_COMPARATOR);
         recentDonationsBasedHudEntry = new DonationsBasedHudEntry("recent.txt", MODID + "hud.recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
+        topDonatorsHudEntry = new DonatorBasedHudEntry("topDonators.txt", MODID + "hud.topDonators", -1, 2, 5, "$name: $$amount", "-- Top Donators --");
 
         set.add(topDonationsBasedHudEntry);
         set.add(recentDonationsBasedHudEntry);
+        set.add(topDonatorsHudEntry);
 
         FMLCommonHandler.instance().bus().register(this);
         folder = new File(Pay2Spawn.getFolder(), "textFiles");

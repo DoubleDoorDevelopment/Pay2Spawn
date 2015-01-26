@@ -50,7 +50,6 @@ public abstract class AbstractChecker
 {
     public    double            min_donation = 1;
     protected HashSet<String>   doneIDs      = new HashSet<>();
-    protected HashSet<Donation> backlog      = new HashSet<>();
 
     protected AbstractChecker()
     {
@@ -86,12 +85,6 @@ public abstract class AbstractChecker
 
     protected void process(Donation donation, boolean msg, AbstractChecker tracker)
     {
-        if (Minecraft.getMinecraft().thePlayer == null)
-        {
-            if (!backlog.contains(donation)) backlog.add(donation);
-            return;
-        }
-
         if (!doneIDs.contains(donation.id))
         {
             doneIDs.add(donation.id);

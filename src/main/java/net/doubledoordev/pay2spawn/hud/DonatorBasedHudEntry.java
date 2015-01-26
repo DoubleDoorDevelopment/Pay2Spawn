@@ -31,33 +31,70 @@
 package net.doubledoordev.pay2spawn.hud;
 
 import com.google.common.base.Strings;
-import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.checkers.CheckerHandler;
 import net.doubledoordev.pay2spawn.util.Donation;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.minecraftforge.common.config.Configuration;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Base class for all on screen things that have to do with donation data directly
  *
  * @author Dries007
  */
-public class DonationsBasedHudEntry implements IHudEntry
+public class DonatorBasedHudEntry implements IHudEntry
 {
     final ArrayList<String> strings = new ArrayList<>();
     int position, amount, maxAmount, defaultPosition, defaultAmount;
     String header = "", format = "", configCat = "", defaultFormat = "", defaultHeader = "", filename = "";
-    Comparator<Donation> comparator  = CheckerHandler.AMOUNT_DONATION_COMPARATOR;
-    List<Donation>       donations   = new ArrayList<>();
+    HashMap<String, Donator> donators   = new HashMap<>();
     boolean              writeToFile = true;
+    private Comparator<? super Donator> comparator = new Comparator<Donator>()
+    {
+        @Override
+        public int compare(Donator o1, Donator o2)
+        {
+            if (o1.amount == o2.amount) return 0;
+            return o1.amount > o2.amount ? -1 : 1;
+        }
+    };
 
-    public DonationsBasedHudEntry(String filename, String configCat, int maxAmount, int defaultPosition, int defaultAmount, String defaultFormat, String defaultHeader, Comparator<Donation> comparator)
+    public void clear()
+    {
+        donators.clear();
+        update();
+    }
+
+    public static class Donator
+    {
+        public Donator(String name)
+        {
+            this.name = name;
+        }
+
+        final String name;
+        double amount = 0;
+
+        public static Donator readFrom(ByteBuf buf)
+        {
+            Donator donator = new Donator(ByteBufUtils.readUTF8String(buf));
+            donator.amount = buf.readDouble();
+            return donator;
+        }
+
+        public static void writeTo(Donator donator, ByteBuf buf)
+        {
+            ByteBufUtils.writeUTF8String(buf, donator.name);
+            buf.writeDouble(donator.amount);
+        }
+    }
+
+    public DonatorBasedHudEntry(String filename, String configCat, int maxAmount, int defaultPosition, int defaultAmount, String defaultFormat, String defaultHeader)
     {
         this.filename = filename;
         this.configCat = configCat;
@@ -66,8 +103,6 @@ public class DonationsBasedHudEntry implements IHudEntry
         this.defaultAmount = defaultAmount;
         this.defaultFormat = defaultFormat;
         this.defaultHeader = defaultHeader;
-
-        this.comparator = comparator;
 
         updateConfig();
     }
@@ -132,38 +167,44 @@ public class DonationsBasedHudEntry implements IHudEntry
         return writeToFile;
     }
 
+    public void add(Donator donator)
+    {
+        donators.put(donator.name, donator);
+
+        update();
+    }
+
     public void add(Donation donation)
     {
-        if (donations.contains(donation)) return;
-        donations.add(donation);
-        Collections.sort(donations, comparator);
+        if (!donators.containsKey(donation.username)) donators.put(donation.username, new Donator(donation.username));
+        donators.get(donation.username).amount += donation.amount;
+
         update();
     }
 
     private void update()
     {
-        while (donations.size() > getAmount())
+        List<Donator> donators1List = new ArrayList<>(donators.values());
+        Collections.sort(donators1List, comparator);
+
+        ListIterator<Donator> i = donators1List.listIterator(donators1List.size());
+        while (i.hasPrevious() && donators1List.size() > getAmount())
         {
-            donations.remove(donations.size() - 1);
+            i.previous();
+            i.remove();
         }
 
         strings.clear();
         if (!Strings.isNullOrEmpty(this.getHeader())) Helper.addWithEmptyLines(this.strings, this.getHeader());
-        for (Donation donation : donations)
+        for (Donator donator : donators1List)
         {
-            strings.add(Helper.formatText(this.getFormat(), donation, null));
+            strings.add(getFormat().replace("$name", donator.name).replace("$amount", String.format("%.2f", donator.amount)));
         }
     }
 
-    public List<Donation> getDonations()
+    public Collection<Donator> getDonators()
     {
-        return donations;
-    }
-
-    public void clear()
-    {
-        donations.clear();
-        update();
+        return donators.values();
     }
 }
 

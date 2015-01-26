@@ -127,16 +127,16 @@ public class Donation
     public boolean equals(Object o)
     {
         if (this == o) return true;
-        if (!(o instanceof Donation)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         Donation donation = (Donation) o;
 
         if (Double.compare(donation.amount, amount) != 0) return false;
         if (time != donation.time) return false;
-        if (!id.equals(donation.id)) return false;
-        if (!note.equals(donation.note)) return false;
-        if (!username.equals(donation.username)) return false;
-        if (!target.equals(donation.target)) return false;
+        if (id != null ? !id.equals(donation.id) : donation.id != null) return false;
+        if (note != null ? !note.equals(donation.note) : donation.note != null) return false;
+        if (target != null ? !target.equals(donation.target) : donation.target != null) return false;
+        if (username != null ? !username.equals(donation.username) : donation.username != null) return false;
 
         return true;
     }

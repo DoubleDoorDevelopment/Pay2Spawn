@@ -81,6 +81,7 @@ public class DonationMessage implements IMessage
 
                 Hud.INSTANCE.topDonationsBasedHudEntry.add(message.donation);
                 Hud.INSTANCE.recentDonationsBasedHudEntry.add(message.donation);
+                Hud.INSTANCE.topDonatorsHudEntry.add(message.donation);
             }
             return null;
         }

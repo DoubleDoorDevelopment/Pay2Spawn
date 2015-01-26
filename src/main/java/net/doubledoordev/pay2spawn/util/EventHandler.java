@@ -30,7 +30,6 @@
 
 package net.doubledoordev.pay2spawn.util;
 
-import com.google.gson.JsonObject;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
@@ -78,7 +77,7 @@ public class EventHandler
     {
         if (FMLCommonHandler.instance().getSide().isServer())
         {
-            Pay2Spawn.getSnw().sendTo(new UpdateMessage(Statistics.getDonationAmount(), Hud.INSTANCE.recentDonationsBasedHudEntry.getDonations(), Hud.INSTANCE.topDonationsBasedHudEntry.getDonations()), ((EntityPlayerMP) event.player));
+            Pay2Spawn.getSnw().sendTo(new UpdateMessage(Statistics.getDonationAmount(), Hud.INSTANCE.recentDonationsBasedHudEntry.getDonations(), Hud.INSTANCE.topDonationsBasedHudEntry.getDonations(), Hud.INSTANCE.topDonatorsHudEntry.getDonators()), ((EntityPlayerMP) event.player));
         }
     }
 

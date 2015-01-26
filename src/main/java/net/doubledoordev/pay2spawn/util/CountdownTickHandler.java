@@ -53,8 +53,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import static net.doubledoordev.pay2spawn.util.Constants.JSON_PARSER;
 
@@ -69,7 +71,7 @@ public class CountdownTickHandler
     public static final CountdownTickHandler INSTANCE = new CountdownTickHandler();
     public DonationTrainEntry donationTrainEntry;
     public SaleEntry          saleEntry;
-    final HashSet<QueEntry> entries = new HashSet<>();
+    final Set<QueEntry> entries = new HashSet<QueEntry>();
     private CountDownHudEntry countDownHudEntry;
     private int i = 0;
 
@@ -120,7 +122,10 @@ public class CountdownTickHandler
     public void add(QueEntry entry)
     {
         if (FMLCommonHandler.instance().getSide().isServer()) Pay2Spawn.getSnw().sendToAll(new CountdownMessage(entry));
-        entries.add(entry);
+        synchronized (entries)
+        {
+            entries.add(entry);
+        }
     }
 
     public void init()
