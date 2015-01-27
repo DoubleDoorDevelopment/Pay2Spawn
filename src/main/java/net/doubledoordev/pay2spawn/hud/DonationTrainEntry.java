@@ -83,7 +83,7 @@ public class DonationTrainEntry implements IHudEntry
     @Override
     public void addToList(ArrayList<String> list)
     {
-        list.add(line);
+        Helper.addWithEmptyLines(list, line);
     }
 
     @Override

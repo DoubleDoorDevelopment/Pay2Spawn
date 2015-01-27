@@ -89,7 +89,7 @@ public class TotalDonationHudEntry implements IHudEntry
     {
         if (position != 0)
         {
-            list.add(format.replace("$amount", Constants.CURRENCY_FORMATTER.format(amount)));
+            Helper.addWithEmptyLines(list, format.replace("$amount", Constants.CURRENCY_FORMATTER.format(amount)));
         }
     }
 
