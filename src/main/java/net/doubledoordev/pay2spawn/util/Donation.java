@@ -53,7 +53,7 @@ public class Donation
     public String username;
     public String note;
     public long   time;
-    public String target;
+    public String target = "";
 
     public Donation(String id, double amount, long time)
     {
