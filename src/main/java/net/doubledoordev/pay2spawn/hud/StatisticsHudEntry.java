@@ -76,7 +76,7 @@ public class StatisticsHudEntry implements IHudEntry
     @Override
     public String getHeader()
     {
-        return "";
+        return header;
     }
 
     @Override

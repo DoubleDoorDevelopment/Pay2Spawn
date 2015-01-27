@@ -93,7 +93,7 @@ public class DonationTrainEntry implements IHudEntry
         String configCat = "DonationTrain";
         position = config.get(P2SConfig.HUD + "." + configCat, "position", 2, "0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt(2);
         format = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "format", "Donationtrain! $amount donations already! Expires in $time.").getString());
-        line = timeoutMessage = config.get(P2SConfig.HUD + "." + configCat, "timeoutMessage", "No donation train going :(").getString();
+        line = timeoutMessage = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "timeoutMessage", "No donation train going :(").getString());
         timeout = config.get(P2SConfig.HUD + "." + configCat, "timeout", 60 * 3).getInt();
         writeToFile = config.getBoolean("writeToFile", configCat, writeToFile, "Write to a file for external use.");
     }

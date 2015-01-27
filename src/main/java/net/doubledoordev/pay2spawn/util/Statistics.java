@@ -141,12 +141,12 @@ public class Statistics
             }
         }
 
+        totalDonationHudEntry = new TotalDonationHudEntry("totalDonation", 1, "Total amount donated: $$amount", root.hasKey("donated") ? root.getDouble("donated") : 0);
+        Hud.INSTANCE.set.add(totalDonationHudEntry);
+
         spawnsStatisticsHudEntry = new StatisticsHudEntry("topSpawned", -1, 2, 5, "$amount x $name", "-- Top spawned rewards: --");
         Hud.INSTANCE.set.add(spawnsStatisticsHudEntry);
         update(sortedSpawnsMap, spawnsStatisticsHudEntry);
-
-        totalDonationHudEntry = new TotalDonationHudEntry("totalDonation", 1, "Total amount donated: $$amount", root.hasKey("donated") ? root.getDouble("donated") : 0);
-        Hud.INSTANCE.set.add(totalDonationHudEntry);
     }
 
     private static void update(TreeMap<String, Integer> map, StatisticsHudEntry hudEntry)
@@ -157,7 +157,7 @@ public class Statistics
         if (!Strings.isNullOrEmpty(hudEntry.getHeader())) Helper.addWithEmptyLines(hudEntry.strings, hudEntry.getHeader());
         for (Map.Entry<String, Integer> entry : map.entrySet())
         {
-            if (i > hudEntry.getAmount()) break;
+            if (i >= hudEntry.getAmount()) break;
             i++;
 
             String key = entry.getKey();

@@ -45,6 +45,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static net.doubledoordev.pay2spawn.util.Constants.MODID;
 
@@ -59,7 +61,7 @@ public class Hud
     public DonatorBasedHudEntry topDonatorsHudEntry;
 
     public static final Hud                INSTANCE = new Hud();
-    public final        HashSet<IHudEntry> set      = new HashSet<>();
+    public final Set<IHudEntry> set      = new LinkedHashSet<>();
     private final File folder;
     private String lineSeperator = " | ";
     private Joiner joiner;
@@ -67,12 +69,12 @@ public class Hud
     private Hud()
     {
         topDonationsBasedHudEntry = new DonationsBasedHudEntry("topDonations.txt", MODID + ".hud.topDonations", -1, 1, 5, "$name: $$amount", "-- Top donations --", CheckerHandler.AMOUNT_DONATION_COMPARATOR);
-        recentDonationsBasedHudEntry = new DonationsBasedHudEntry("recent.txt", MODID + "hud.recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
         topDonatorsHudEntry = new DonatorBasedHudEntry("topDonators.txt", MODID + "hud.topDonators", -1, 2, 5, "$name: $$amount", "-- Top Donators --");
+        recentDonationsBasedHudEntry = new DonationsBasedHudEntry("recent.txt", MODID + "hud.recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
 
         set.add(topDonationsBasedHudEntry);
-        set.add(recentDonationsBasedHudEntry);
         set.add(topDonatorsHudEntry);
+        set.add(recentDonationsBasedHudEntry);
 
         FMLCommonHandler.instance().bus().register(this);
         folder = new File(Pay2Spawn.getFolder(), "textFiles");
