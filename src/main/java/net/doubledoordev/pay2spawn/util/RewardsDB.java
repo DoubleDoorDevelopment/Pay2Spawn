@@ -162,7 +162,7 @@ public class RewardsDB
                     }
                 }
             }
-            if (donation.target == null)
+            if (Strings.isNullOrEmpty(donation.target))
             {
                 donation.target = RandomRegistry.getRandomFromSet(Arrays.asList(MinecraftServer.getServer().getAllUsernames()));
             }

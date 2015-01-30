@@ -198,18 +198,7 @@ public class CountdownTickHandler
                 {
                     NBTTagCompound nbt = rewardNtb.getCompoundTag("data");
                     type.addConfigTags(nbt, donation, actualReward == null ? this.reward : actualReward);
-                    Node node = type.getPermissionNode(playerMP, nbt);
-                    if (BanHelper.isBanned(node))
-                    {
-                        Helper.sendChatToPlayer(playerMP, "This node (" + node + ") is banned.", EnumChatFormatting.RED);
-                        Pay2Spawn.getLogger().warn(playerMP.getCommandSenderName() + " tried using globally banned node " + node + ".");
-                        continue;
-                    }
-                    if (PermissionsHandler.needPermCheck(playerMP) && !PermissionsHandler.hasPermissionNode(playerMP, node))
-                    {
-                        Pay2Spawn.getLogger().warn(playerMP.getDisplayName() + " doesn't have perm node " + node.toString());
-                        continue;
-                    }
+
                     type.spawnServerSide(playerMP, nbt, rewardData);
                 }
                 catch (Exception e)

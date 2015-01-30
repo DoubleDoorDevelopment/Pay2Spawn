@@ -105,19 +105,7 @@ public class TestMessage implements IMessage
                 Helper.sendChatToPlayer(ctx.getServerHandler().playerEntity, "Testing reward " + message.name + ".");
                 Pay2Spawn.getLogger().info("Test by " + ctx.getServerHandler().playerEntity.getCommandSenderName() + " Type: " + message.name + " Data: " + message.data);
                 TypeBase type = TypeRegistry.getByName(message.name);
-
-                Node node = type.getPermissionNode(ctx.getServerHandler().playerEntity, message.data);
-                if (BanHelper.isBanned(node))
-                {
-                    Helper.sendChatToPlayer(ctx.getServerHandler().playerEntity, "This node (" + node + ") is banned.", EnumChatFormatting.RED);
-                    Pay2Spawn.getLogger().warn(ctx.getServerHandler().playerEntity.getCommandSenderName() + " tried using globally banned node " + node + ".");
-                    return null;
-                }
-                if (PermissionsHandler.needPermCheck(ctx.getServerHandler().playerEntity) && !PermissionsHandler.hasPermissionNode(ctx.getServerHandler().playerEntity, node))
-                {
-                    Pay2Spawn.getLogger().warn(ctx.getServerHandler().playerEntity.getDisplayName() + " doesn't have perm node " + node.toString());
-                    return null;
-                }
+                
                 type.spawnServerSide(ctx.getServerHandler().playerEntity, message.data, rewardData);
             }
             return null;
