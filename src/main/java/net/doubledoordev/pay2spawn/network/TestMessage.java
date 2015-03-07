@@ -105,7 +105,7 @@ public class TestMessage implements IMessage
                 Helper.sendChatToPlayer(ctx.getServerHandler().playerEntity, "Testing reward " + message.name + ".");
                 Pay2Spawn.getLogger().info("Test by " + ctx.getServerHandler().playerEntity.getCommandSenderName() + " Type: " + message.name + " Data: " + message.data);
                 TypeBase type = TypeRegistry.getByName(message.name);
-                
+
                 type.spawnServerSide(ctx.getServerHandler().playerEntity, message.data, rewardData);
             }
             return null;
