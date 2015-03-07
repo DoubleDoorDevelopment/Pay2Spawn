@@ -127,8 +127,8 @@ public class Helper
         if (format.contains("$note")) format = format.replace("$note", donation.note);
         if (Minecraft.getMinecraft().thePlayer != null)
         {
-            if (format.contains("$streamer")) format = format.replace("$streamer", Minecraft.getMinecraft().thePlayer.getCommandSenderName());
             if (format.contains("$streameruuid")) format = format.replace("$streameruuid", Minecraft.getMinecraft().thePlayer.getGameProfile().getId().toString());
+            if (format.contains("$streamer")) format = format.replace("$streamer", Minecraft.getMinecraft().thePlayer.getCommandSenderName());
         }
 
         if (reward != null)
