@@ -145,7 +145,10 @@ public class CustomEntityType extends TypeBase
                 if (dataFromClient.hasKey(RIDETHISMOB_KEY) && dataFromClient.getBoolean(RIDETHISMOB_KEY)) player.mountEntity(entity);
                 if (dataFromClient.hasKey(THROWTOWARDSPLAYER_KEY) && dataFromClient.getBoolean(THROWTOWARDSPLAYER_KEY))
                 {
-                    new Vector3(entity, player).normalize().setAsVelocity(entity, 2);
+                    Vector3 v = new Vector3(entity, player).normalize();
+                    entity.motionX = 2 * v.x;
+                    entity.motionY = 2 * v.y;
+                    entity.motionZ = 2 * v.z;
                 }
             }
         }
