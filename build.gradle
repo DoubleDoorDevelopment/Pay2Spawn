@@ -102,10 +102,10 @@ artifacts {
 }
 
 uploadArchives {
-    if (project.hasProperty("dddUser") && project.hasProperty("dddPass")) {
+    if (project.hasProperty("dddUser") && project.hasProperty("dddUrl") && project.hasProperty("dddPass")) {
         repositories {
             mavenDeployer {
-                repository(url: "http://doubledoordev.net:8082/artifactory/mods") {
+                repository(url: dddUrl) {
                     authentication(userName: dddUser, password: dddPass)
                 }
                 pom {
