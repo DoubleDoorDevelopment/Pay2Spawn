@@ -212,28 +212,23 @@
                       <text value="Rotate based on player"/>
                     </properties>
                   </component>
-                  <component id="47200" class="javax.swing.JComboBox" binding="baseRotation">
-                    <constraints>
-                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <model>
-                        <item value="0: South"/>
-                        <item value="1: West"/>
-                        <item value="2: North"/>
-                        <item value="3: East"/>
-                      </model>
-                    </properties>
-                  </component>
                   <component id="49b14" class="javax.swing.JLabel">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                       <gridbag top="0" left="15" bottom="0" right="15" weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
-                      <text value="Base rotaion:"/>
+                      <text value="Base rotaion (0: South 1: West 2: North 3: East):"/>
                     </properties>
+                  </component>
+                  <component id="a4ab6" class="javax.swing.JTextField" binding="baseRotation">
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                      <gridbag weightx="1.0" weighty="0.0"/>
+                    </constraints>
+                    <properties/>
                   </component>
                 </children>
               </grid>

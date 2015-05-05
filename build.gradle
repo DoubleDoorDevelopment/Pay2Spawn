@@ -77,9 +77,6 @@ task sourcesJar(type: Jar) {
 task deobfJar(type: Jar) {
     from "LICENSE.txt"
     from sourceSets.main.output
-    from (sourceSets.main.allSource.srcDirs) {
-        include '**/*.java'
-    }
 	classifier = 'dev'
     appendix = project.minecraft.version
     manifest {

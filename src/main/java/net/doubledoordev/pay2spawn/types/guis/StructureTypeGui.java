@@ -87,8 +87,8 @@ public class StructureTypeGui extends HelperGuiBase
     public JCheckBox     renderSelectedShapeInCheckBox;
     public JsonArray shapes   = new JsonArray();
     public boolean   disabled = false;
-    private JCheckBox         rotateBasedOnPlayerCheckBox;
-    private JComboBox<String> baseRotation;
+    private JCheckBox  rotateBasedOnPlayerCheckBox;
+    private JTextField baseRotation;
 
     public StructureTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
     {
@@ -134,7 +134,7 @@ public class StructureTypeGui extends HelperGuiBase
         shapeList.updateUI();
 
         rotateBasedOnPlayerCheckBox.setSelected(readValue(ROTATE_KEY, data).equals(TRUE_BYTE));
-        baseRotation.setSelectedIndex(data.has(BASEROTATION_KEY) ? Integer.parseInt(readValue(BASEROTATION_KEY, data)) : -1);
+        baseRotation.setText(readValue(BASEROTATION_KEY, data));
 
         jsonPane.setText(GSON.toJson(data));
     }
@@ -146,7 +146,7 @@ public class StructureTypeGui extends HelperGuiBase
 
         data.add(SHAPES_KEY, shapes);
         storeValue(ROTATE_KEY, data, rotateBasedOnPlayerCheckBox.isSelected() ? TRUE_BYTE : FALSE_BYTE);
-        storeValue(BASEROTATION_KEY, data, baseRotation.getSelectedIndex());
+        storeValue(BASEROTATION_KEY, data, baseRotation.getText());
 
         synchronized (ishapes)
         {
@@ -307,8 +307,6 @@ public class StructureTypeGui extends HelperGuiBase
                 return instance.readValue(Shapes.SHAPE_KEY, object) + ": " + object.toString();
             }
         });
-
-        baseRotation.setModel(new DefaultComboBoxModel<>(new String[]{"0: South", "1: West", "2: North", "3: East"}));
     }
 
     @SubscribeEvent
@@ -331,22 +329,29 @@ public class StructureTypeGui extends HelperGuiBase
 
         if (rotateBasedOnPlayerCheckBox.isSelected())
         {
-            if (baseRotation.getSelectedIndex() != -1)
+            try
             {
-                GL11.glRotated(90 * baseRotation.getSelectedIndex(), 0, -1, 0);
-
-                switch (baseRotation.getSelectedIndex())
+                int i = Integer.parseInt(baseRotation.getText());
+                if (i != -1)
                 {
-                    case 1:
-                        GL11.glTranslated(-1, 0, 0);
-                        break;
-                    case 2:
-                        GL11.glTranslated(-1, 0, 1);
-                        break;
-                    case 3:
-                        GL11.glTranslated(0, 0, 1);
-                        break;
+                    GL11.glRotated(90 * i, 0, -1, 0);
+
+                    switch (i)
+                    {
+                        case 1:
+                            GL11.glTranslated(-1, 0, 0);
+                            break;
+                        case 2:
+                            GL11.glTranslated(-1, 0, 1);
+                            break;
+                        case 3:
+                            GL11.glTranslated(0, 0, 1);
+                            break;
+                    }
                 }
+            }
+            catch (Exception ignored)
+            {
             }
 
             int rot = Helper.getHeading(Minecraft.getMinecraft().thePlayer);
@@ -586,27 +591,22 @@ public class StructureTypeGui extends HelperGuiBase
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
         panel7.add(rotateBasedOnPlayerCheckBox, gbc);
-        baseRotation = new JComboBox();
-        final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
-        defaultComboBoxModel1.addElement("0: South");
-        defaultComboBoxModel1.addElement("1: West");
-        defaultComboBoxModel1.addElement("2: North");
-        defaultComboBoxModel1.addElement("3: East");
-        baseRotation.setModel(defaultComboBoxModel1);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel7.add(baseRotation, gbc);
         final JLabel label6 = new JLabel();
-        label6.setText("Base rotaion:");
+        label6.setText("Base rotaion (0: South 1: West 2: North 3: East):");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(0, 15, 0, 15);
         panel7.add(label6, gbc);
+        baseRotation = new JTextField();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel7.add(baseRotation, gbc);
         final JLabel label7 = new JLabel();
         label7.setHorizontalAlignment(0);
         label7.setHorizontalTextPosition(0);
