@@ -61,7 +61,6 @@ public class ClassyChecker extends AbstractChecker implements Runnable
     public final static String BASEURL = "https://www.classy.org/api1/donations";
     public final static SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss", Locale.US);
 
-    DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
     String url = "", apiToken = "", charityId = "", eid = "", fcid = "", ftid = "";
     boolean enabled  = false;
     int     interval = 5;
@@ -80,9 +79,6 @@ public class ClassyChecker extends AbstractChecker implements Runnable
     @Override
     public void init()
     {
-        Hud.INSTANCE.set.add(topDonationsBasedHudEntry);
-        Hud.INSTANCE.set.add(recentDonationsBasedHudEntry);
-
         new Thread(this, getName()).start();
     }
 
@@ -107,9 +103,6 @@ public class ClassyChecker extends AbstractChecker implements Runnable
         fcid = configuration.get(CAT, "fcid", fcid, "Fundraising page ID to filter results by. (Optional filter)").getString();
         ftid = configuration.get(CAT, "ftid", ftid, "Fundraising team page ID to filter results by. (Optional filter)").getString();
 
-        recentDonationsBasedHudEntry = new DonationsBasedHudEntry("recent" + NAME + ".txt", CAT + ".recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
-        topDonationsBasedHudEntry = new DonationsBasedHudEntry("top" + NAME + ".txt", CAT + ".topDonations", -1, 1, 5, "$name: $$amount", "-- Top donations --", CheckerHandler.AMOUNT_DONATION_COMPARATOR);
-
         // Donation tracker doesn't allow a poll interval faster than 5 seconds
         // They will IP ban anyone using a time below 5 so force the value to be safe
         if (interval < 5)
@@ -125,12 +118,6 @@ public class ClassyChecker extends AbstractChecker implements Runnable
         if (!Strings.isNullOrEmpty(fcid)) s.append("&fcid=").append(fcid);
         if (!Strings.isNullOrEmpty(ftid)) s.append("&ftid=").append(ftid);
         url = s.toString();
-    }
-
-    @Override
-    public DonationsBasedHudEntry[] getDonationsBasedHudEntries()
-    {
-        return new DonationsBasedHudEntry[]{topDonationsBasedHudEntry, recentDonationsBasedHudEntry};
     }
 
     @Override
@@ -171,7 +158,8 @@ public class ClassyChecker extends AbstractChecker implements Runnable
                     if (donation != null && firstRun == true)
                     {
                         // This is a first run so add to current list/done ids
-                        topDonationsBasedHudEntry.add(donation);
+                        Hud.INSTANCE.topDonationsBasedHudEntry.add(donation);
+                        Hud.INSTANCE.recentDonationsBasedHudEntry.add(donation);
                         doneIDs.add(donation.id);
                     }
                     else if (donation != null)
