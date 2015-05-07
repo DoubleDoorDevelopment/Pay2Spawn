@@ -124,7 +124,7 @@ public class ClassyChecker extends AbstractChecker implements Runnable
     public void run()
     {
         // Process any current donations from the API
-        // processDonationAPI(true);
+        processDonationAPI(true);
 
         // Start the processing loop
         while (true)
