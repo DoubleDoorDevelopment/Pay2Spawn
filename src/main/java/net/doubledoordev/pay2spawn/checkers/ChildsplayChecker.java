@@ -140,7 +140,7 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
     {
         try
         {
-            JsonObject root = get(recentDonationsBasedHudEntry.getAmount());
+            JsonObject root = get();
             if (root.get("ack").getAsString().equalsIgnoreCase("Success"))
             {
                 JsonArray donations = root.getAsJsonArray("donations");
@@ -162,7 +162,7 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
             doWait(interval);
             try
             {
-                JsonObject root = get(5);
+                JsonObject root = get();
                 if (root.get("ack").getAsString().equalsIgnoreCase("Success"))
                 {
                     JsonArray donations = root.getAsJsonArray("donations");
@@ -195,9 +195,9 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
         return new Donation(jsonObject.get("id").toString(), jsonObject.get("amount").getAsDouble(), time, name, jsonObject.get("custom").getAsString());
     }
 
-    private JsonObject get(int amount) throws Exception
+    private JsonObject get() throws Exception
     {
-        String uri = "/api/donations/" + recentDonationsBasedHudEntry.getAmount() + "/json";
+        String uri = "/api/donations/10/json";
         String date = SIMPLE_DATE_FORMAT.format(new Date());
         String sig = getSignature("GET\n\n\n" + date + "\n" + uri);
 
