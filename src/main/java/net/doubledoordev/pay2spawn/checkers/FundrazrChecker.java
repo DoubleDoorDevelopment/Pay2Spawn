@@ -184,13 +184,12 @@ public class FundrazrChecker extends AbstractChecker implements Runnable
             jsonObject = jsonObject.getAsJsonObject("donation");
             String timestamp = jsonObject.get("created").getAsString();
             timestamp = timestamp.substring(0, timestamp.lastIndexOf(':')) + timestamp.substring(timestamp.lastIndexOf(':') + 1);
-            Donation donation = new Donation(jsonObject.get("activityId").getAsString(), jsonObject.get("amount").getAsDouble(), sdf.parse(timestamp).getTime());
 
-            donation.username = jsonObject.getAsJsonObject("owner").get("name").getAsString();
-
-            if (jsonObject.has("message")) donation.note = jsonObject.get("message").getAsString();
-
-            return donation;
+            return new Donation(jsonObject.get("activityId").getAsString(),
+                    jsonObject.get("amount").getAsDouble(),
+                    sdf.parse(timestamp).getTime(),
+                    jsonObject.getAsJsonObject("owner").get("name").getAsString(),
+                    jsonObject.has("message") ? jsonObject.get("message").getAsString() : "");
         }
         catch (Exception e)
         {

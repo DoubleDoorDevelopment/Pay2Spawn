@@ -37,6 +37,7 @@ import net.minecraft.item.Item;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import static net.doubledoordev.pay2spawn.util.Constants.RANDOM;
 
@@ -72,6 +73,7 @@ public class RandomRegistry
                 return GameData.getBlockRegistry();
             }
         });
+        addRandomResolver(new ASCIIFilter());
     }
 
     /**

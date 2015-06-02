@@ -43,11 +43,11 @@ import static net.doubledoordev.pay2spawn.util.Constants.ANONYMOUS;
  */
 public class Donation
 {
-    public String id;
-    public double amount;
-    public String username;
-    public String note;
-    public long   time;
+    public final String id;
+    public final double amount;
+    public final String username;
+    public final String note;
+    public final long time;
 
     public Donation(String id, double amount, long time)
     {
@@ -61,20 +61,7 @@ public class Donation
 
     public Donation(String id, double amount, long time, String username)
     {
-        this.id = id;
-        this.amount = amount;
-        this.time = time;
-
-        for (Pattern p : Pay2Spawn.getConfig().blacklist_Name_p)
-        {
-            if (p.matcher(username).matches())
-            {
-                username = ANONYMOUS;
-                break;
-            }
-        }
-        this.username = username;
-        this.note = "";
+        this(id, amount, time, username, "");
     }
 
     public Donation(String id, double amount, long time, String username, String note)

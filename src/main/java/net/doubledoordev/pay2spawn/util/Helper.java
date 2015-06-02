@@ -122,7 +122,7 @@ public class Helper
     public static String formatText(String format, Donation donation, Reward reward)
     {
         if (format.contains("$name")) format = format.replace("$name", donation.username);
-        if (format.contains("$uuid")) format = format.replace("$uuid", getGameProfileFromName(donation.username).getId().toString());
+        if (format.contains("$uuid")) format = format.replace("$uuid", getGameProfileFromName(donation.username.replaceAll("[^ -~]", "")).getId().toString());
         if (format.contains("$amount")) format = format.replace("$amount", donation.amount + "");
         if (format.contains("$note")) format = format.replace("$note", donation.note);
         if (Minecraft.getMinecraft().thePlayer != null)
