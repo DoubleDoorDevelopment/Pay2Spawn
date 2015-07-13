@@ -91,6 +91,13 @@ public class RandomItemType extends TypeBase
         try
         {
             ItemStack is = ItemStack.loadItemStackFromNBT(dataFromClient);
+
+            if (is == null)
+            {
+                Pay2Spawn.getLogger().error("ItemStack from reward was null? NBT: {}", dataFromClient.toString());
+                return;
+            }
+
             EntityItem entity = player.dropPlayerItemWithRandomChoice(is, false);
             entity.delayBeforeCanPickup = 0;
             entity.func_145797_a(player.getCommandSenderName());

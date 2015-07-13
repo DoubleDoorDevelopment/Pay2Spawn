@@ -89,6 +89,11 @@ public class ItemsType extends TypeBase
     public static void setConfigTags(NBTTagCompound tagCompound, Donation donation, Reward reward)
     {
         ItemStack itemStack = ItemStack.loadItemStackFromNBT(tagCompound);
+        if (itemStack == null)
+        {
+            Pay2Spawn.getLogger().error("ItemStack from reward was null? NBT: {}", tagCompound.toString());
+            return;
+        }
         if (!itemStack.hasDisplayName() && !Strings.isNullOrEmpty(Pay2Spawn.getConfig().allItemName))
         {
             itemStack.setStackDisplayName(Helper.formatText(Pay2Spawn.getConfig().allItemName, donation, reward));
@@ -114,6 +119,13 @@ public class ItemsType extends TypeBase
         try
         {
             ItemStack itemStack = ItemStack.loadItemStackFromNBT(dataFromClient);
+
+            if (itemStack == null)
+            {
+                Pay2Spawn.getLogger().error("ItemStack from reward was null? NBT: {}", dataFromClient.toString());
+                return;
+            }
+
             itemStack.stackSize = ((NBTBase.NBTPrimitive) dataFromClient.getTag("Count")).func_150287_d();
             while (itemStack.stackSize != 0)
             {
@@ -237,7 +249,14 @@ public class ItemsType extends TypeBase
                 StringBuilder sb = new StringBuilder(array.size() * 20);
                 for (int i = 0; i < array.size(); i++)
                 {
-                    sb.append(ItemStack.loadItemStackFromNBT(JsonNBTHelper.parseJSON(array.get(i).getAsJsonObject())));
+                    NBTTagCompound tagCompound = JsonNBTHelper.parseJSON(array.get(i).getAsJsonObject());
+                    ItemStack itemStack = ItemStack.loadItemStackFromNBT(tagCompound);
+                    if (itemStack == null)
+                    {
+                        Pay2Spawn.getLogger().error("ItemStack from reward was null? NBT: {}", tagCompound.toString());
+                        continue;
+                    }
+                    sb.append(itemStack);
                 }
                 return sb.toString();
         }

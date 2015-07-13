@@ -32,6 +32,7 @@ package net.doubledoordev.pay2spawn.types;
 
 import com.google.common.base.Throwables;
 import com.google.gson.JsonObject;
+import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.permissions.Node;
 import net.doubledoordev.pay2spawn.types.guis.FireworksTypeGui;
 import net.minecraft.entity.item.EntityFireworkRocket;
@@ -154,6 +155,13 @@ public class FireworksType extends TypeBase
     public void spawnServerSide(EntityPlayerMP player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
     {
         ItemStack itemStack = ItemStack.loadItemStackFromNBT(dataFromClient);
+
+        if (itemStack == null)
+        {
+            Pay2Spawn.getLogger().error("ItemStack from reward was null? NBT: {}", dataFromClient.toString());
+            return;
+        }
+
         int flight = 0;
         NBTTagCompound nbttagcompound1 = itemStack.getTagCompound().getCompoundTag(FIREWORKS_KEY);
         if (nbttagcompound1 != null) flight += nbttagcompound1.getByte(FLIGHT_KEY);

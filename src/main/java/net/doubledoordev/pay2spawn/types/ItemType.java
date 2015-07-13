@@ -31,6 +31,7 @@
 package net.doubledoordev.pay2spawn.types;
 
 import com.google.gson.JsonObject;
+import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.permissions.Node;
 import net.doubledoordev.pay2spawn.types.guis.ItemTypeGui;
 import net.doubledoordev.pay2spawn.util.Donation;
@@ -155,7 +156,13 @@ public class ItemType extends TypeBase
     @Override
     public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
     {
-        return new Node(NAME, ItemStack.loadItemStackFromNBT(dataFromClient).getUnlocalizedName().replace(".", "_"));
+        ItemStack itemStack = ItemStack.loadItemStackFromNBT(dataFromClient);
+        if (itemStack == null)
+        {
+            Pay2Spawn.getLogger().error("ItemStack from reward was null? NBT: {}", dataFromClient.toString());
+            return new Node(NAME, "null");
+        }
+        return new Node(NAME, itemStack.getUnlocalizedName().replace(".", "_"));
     }
 
     @Override
@@ -166,7 +173,13 @@ public class ItemType extends TypeBase
             case "stacksize":
                 return jsonObject.get("Count").getAsString().replace("BYTE:", "");
             case "itemname":
-                ItemStack is = ItemStack.loadItemStackFromNBT(JsonNBTHelper.parseJSON(jsonObject));
+                NBTTagCompound tagCompound = JsonNBTHelper.parseJSON(jsonObject);
+                ItemStack is = ItemStack.loadItemStackFromNBT(tagCompound);
+                if (is == null)
+                {
+                    Pay2Spawn.getLogger().error("ItemStack from reward was null? NBT: {}", tagCompound.toString());
+                    return "null";
+                }
                 return is.getItem().getItemStackDisplayName(is);
         }
         return id;
