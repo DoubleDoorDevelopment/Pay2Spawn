@@ -148,10 +148,10 @@ public class PlayerModificationType extends TypeBase
                         switch (dataFromClient.getInteger(OPERATION_KEY))
                         {
                             case ADD:
-                                player.heal(dataFromClient.getFloat(AMOUNT_KEY));
+                                player.setHealth(player.getHealth() + dataFromClient.getFloat(AMOUNT_KEY));
                                 break;
                             case SUBTRACT:
-                                player.heal(-dataFromClient.getFloat(AMOUNT_KEY));
+                                player.setHealth(player.getHealth() - dataFromClient.getFloat(AMOUNT_KEY));
                                 break;
                             case SET:
                                 player.setHealth(dataFromClient.getFloat(AMOUNT_KEY));
