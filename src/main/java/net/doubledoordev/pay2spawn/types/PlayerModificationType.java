@@ -36,7 +36,7 @@ import net.doubledoordev.pay2spawn.types.guis.PlayerModificationTypeGui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.FoodStats;
+import net.minecraft.util.*;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -138,7 +138,7 @@ public class PlayerModificationType extends TypeBase
         return id;
     }
 
-    public static enum Type
+    public enum Type
     {
         HEALTH(false)
                 {
@@ -212,8 +212,10 @@ public class PlayerModificationType extends TypeBase
                                 player.addExperience((int) dataFromClient.getFloat(AMOUNT_KEY));
                                 break;
                             case SUBTRACT:
-                                player.addExperience((int) -dataFromClient.getFloat(AMOUNT_KEY));
+                                player.addExperience((int) MathHelper.clamp_float(-dataFromClient.getFloat(AMOUNT_KEY), -player.experienceTotal, 0));
                                 break;
+                            case SET:
+                                player.addChatComponentMessage(new ChatComponentText("You can't set the XP amount with pay2spawn. Only add and subtract.").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.AQUA)));
                         }
                     }
                 },
@@ -230,6 +232,9 @@ public class PlayerModificationType extends TypeBase
                             case SUBTRACT:
                                 player.addExperienceLevel((int) -dataFromClient.getFloat(AMOUNT_KEY));
                                 break;
+                            case SET:// Trickery
+                                player.addExperienceLevel(Integer.MIN_VALUE);
+                                player.addExperienceLevel((int) dataFromClient.getFloat(AMOUNT_KEY));
                         }
                     }
                 },

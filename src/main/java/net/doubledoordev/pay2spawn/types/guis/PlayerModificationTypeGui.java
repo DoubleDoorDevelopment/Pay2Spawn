@@ -279,7 +279,7 @@ public class PlayerModificationTypeGui extends HelperGuiBase
     {
         boolean timable = Type.values()[i].isTimable();
 
-        setRadioButton.setEnabled(!timable);
+        setRadioButton.setEnabled(!timable && Type.values()[i] !=  Type.XP);
         addRadioButton.setEnabled(!timable);
         subtractRadioButton.setEnabled(!timable);
         enableRadioButton.setEnabled(timable);
