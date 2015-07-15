@@ -33,8 +33,8 @@ package net.doubledoordev.pay2spawn.types;
 import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.permissions.Node;
-import net.doubledoordev.pay2spawn.random.RandomRegistry;
 import net.doubledoordev.pay2spawn.types.guis.RandomItemTypeGui;
+import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
@@ -158,6 +158,6 @@ public class RandomItemType extends TypeBase
             itemStacks.add(new ItemStack(Block.getBlockFromName(blockName.toString())));
         }
 
-        return RandomRegistry.getRandomFromSet(itemStacks);
+        return Helper.getRandomFromSet(itemStacks);
     }
 }

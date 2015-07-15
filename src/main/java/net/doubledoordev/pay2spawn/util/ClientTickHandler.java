@@ -42,6 +42,7 @@ import net.doubledoordev.pay2spawn.hud.DonationTrainEntry;
 import net.doubledoordev.pay2spawn.hud.Hud;
 import net.doubledoordev.pay2spawn.hud.SaleEntry;
 import net.doubledoordev.pay2spawn.network.RewardMessage;
+import net.doubledoordev.pay2spawn.types.CrashType;
 import net.doubledoordev.pay2spawn.types.TypeBase;
 import net.doubledoordev.pay2spawn.types.TypeRegistry;
 import net.minecraft.nbt.NBTTagCompound;
@@ -102,6 +103,12 @@ public class ClientTickHandler
         if (countDownHudEntry.getPosition() != 0 && !countDownHudEntry.lines.isEmpty())
         {
             if (!Strings.isNullOrEmpty(countDownHudEntry.getHeader())) Helper.addWithEmptyLines(countDownHudEntry.lines, countDownHudEntry.getHeader());
+        }
+
+        if (CrashType.crash != null)
+        {
+            Pay2Spawn.getLogger().fatal("** \\/ Don't report this error. It is fake. \\/ **");
+            throw CrashType.crash;
         }
     }
 

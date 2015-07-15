@@ -28,37 +28,58 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.doubledoordev.pay2spawn.random;
+package net.doubledoordev.pay2spawn.network;
 
+import com.google.common.base.Throwables;
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import io.netty.buffer.ByteBuf;
+import net.doubledoordev.pay2spawn.types.CrashType;
+import net.doubledoordev.pay2spawn.util.DramaException;
 import net.doubledoordev.pay2spawn.util.Helper;
-import net.minecraft.entity.EntityList;
-
-import java.util.regex.Pattern;
-
-import static net.doubledoordev.pay2spawn.util.Constants.STRING;
 
 /**
- * Picks a random entity name (see EntityList.txt)
- * Expected syntax: $randomEntity
- * Outcome: The name (id) of 1 random entity
- * Works with: STRING
- *
  * @author Dries007
  */
-public class RndEntity implements IRandomResolver
+public class CrashMessage implements IMessage
 {
-    public static final  String  TAG     = "$randomEntity";
-    private static final Pattern PATTERN = Pattern.compile("\\$randomEntity");
+    private String message;
 
-    @Override
-    public String solverRandom(int type, String value)
+    public CrashMessage()
     {
-        return PATTERN.matcher(value).replaceFirst(EntityList.getStringFromID((Integer) Helper.getRandomFromSet(EntityList.entityEggs.keySet())));
+    }
+
+    public CrashMessage(String message)
+    {
+        this.message = message;
     }
 
     @Override
-    public boolean matches(int type, String value)
+    public void fromBytes(ByteBuf buf)
     {
-        return type == STRING && PATTERN.matcher(value).find();
+        message = ByteBufUtils.readUTF8String(buf);
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf)
+    {
+        ByteBufUtils.writeUTF8String(buf, message);
+    }
+
+    public static class Handler implements IMessageHandler<CrashMessage, IMessage>
+    {
+        @Override
+        public IMessage onMessage(CrashMessage message, MessageContext ctx)
+        {
+            if (ctx.side.isClient())
+            {
+                DramaException exception = new DramaException(message.message);
+                exception.setStackTrace(CrashType.getRandomStackTrace());
+                CrashType.crash = exception;
+            }
+            return null;
+        }
     }
 }

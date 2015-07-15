@@ -30,6 +30,8 @@
 
 package net.doubledoordev.pay2spawn.random;
 
+import net.doubledoordev.pay2spawn.util.Helper;
+
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,7 +56,7 @@ public class RndListValue implements IRandomResolver
     {
         Matcher matcher = PATTERN.matcher(value);
         matcher.find();
-        return matcher.replaceFirst(RandomRegistry.getRandomFromSet(Arrays.asList(matcher.group(1).split(", ?"))));
+        return matcher.replaceFirst(Helper.getRandomFromSet(Arrays.asList(matcher.group(1).split(", ?"))));
     }
 
     @Override

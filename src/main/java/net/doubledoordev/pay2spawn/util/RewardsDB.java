@@ -36,7 +36,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.network.MessageMessage;
-import net.doubledoordev.pay2spawn.random.RandomRegistry;
 import net.doubledoordev.pay2spawn.types.TypeBase;
 import net.doubledoordev.pay2spawn.types.TypeRegistry;
 
@@ -143,12 +142,12 @@ public class RewardsDB
 
         double highestmatch = 0d;
         Reward reward = null;
-        if (map.containsKey(amount)) reward = RandomRegistry.getRandomFromSet(map.get(amount));
+        if (map.containsKey(amount)) reward = Helper.getRandomFromSet(map.get(amount));
         else
         {
             for (double key : map.keySet()) if (key < amount && highestmatch < key) highestmatch = key;
 
-            if (map.containsKey(highestmatch)) reward = RandomRegistry.getRandomFromSet(map.get(highestmatch));
+            if (map.containsKey(highestmatch)) reward = Helper.getRandomFromSet(map.get(highestmatch));
         }
 
         if (reward != null)
@@ -163,7 +162,7 @@ public class RewardsDB
          */
         if (map.containsKey(-1D))
         {
-            RandomRegistry.getRandomFromSet(map.get(-1D)).addToCountdown(donation, false, reward);
+            Helper.getRandomFromSet(map.get(-1D)).addToCountdown(donation, false, reward);
         }
 
         if (reward != null) Pay2Spawn.getSnw().sendToServer(new MessageMessage(reward, donation));

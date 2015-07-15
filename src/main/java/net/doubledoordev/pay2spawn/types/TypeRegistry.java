@@ -144,5 +144,6 @@ public class TypeRegistry
         TypeRegistry.register(new StructureType());
         TypeRegistry.register(new SaleType());
         TypeRegistry.register(new ItemsType());
+        TypeRegistry.register(new CrashType());
     }
 }

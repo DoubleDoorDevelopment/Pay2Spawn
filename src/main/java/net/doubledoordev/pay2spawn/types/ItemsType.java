@@ -35,7 +35,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.permissions.Node;
-import net.doubledoordev.pay2spawn.random.RandomRegistry;
 import net.doubledoordev.pay2spawn.types.guis.ItemsTypeGui;
 import net.doubledoordev.pay2spawn.util.Donation;
 import net.doubledoordev.pay2spawn.util.Helper;
@@ -206,7 +205,7 @@ public class ItemsType extends TypeBase
                 if (!tag.hasKey(WEIGHT_KEY)) stacks.add(tag);
                 else for (int j = 0; j < tag.getInteger(WEIGHT_KEY); j++) stacks.add(tag);
             }
-            spawnItemStackOnPlayer(player, RandomRegistry.getRandomFromSet(stacks));
+            spawnItemStackOnPlayer(player, Helper.getRandomFromSet(stacks));
         }
     }
 

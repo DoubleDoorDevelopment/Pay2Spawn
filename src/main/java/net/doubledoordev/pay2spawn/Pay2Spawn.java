@@ -54,6 +54,7 @@ import net.doubledoordev.pay2spawn.configurator.ConfiguratorManager;
 import net.doubledoordev.pay2spawn.configurator.HTMLGenerator;
 import net.doubledoordev.pay2spawn.network.*;
 import net.doubledoordev.pay2spawn.permissions.PermissionsHandler;
+import net.doubledoordev.pay2spawn.types.CrashType;
 import net.doubledoordev.pay2spawn.types.TypeBase;
 import net.doubledoordev.pay2spawn.types.TypeRegistry;
 import net.doubledoordev.pay2spawn.util.*;
@@ -209,6 +210,7 @@ public class Pay2Spawn implements ID3Mod
         snw.registerMessage(StructureImportMessage.Handler.class, StructureImportMessage.class, id++, Side.SERVER);
         snw.registerMessage(StructureImportMessage.Handler.class, StructureImportMessage.class, id++, Side.CLIENT);
         snw.registerMessage(HTMLuploadMessage.Handler.class, HTMLuploadMessage.class, id++, Side.SERVER);
+        snw.registerMessage(CrashMessage.Handler.class, CrashMessage.class, id++, Side.CLIENT);
 
         TypeRegistry.preInit();
         Statistics.preInit();

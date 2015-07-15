@@ -32,8 +32,8 @@ package net.doubledoordev.pay2spawn.types;
 
 import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.permissions.Node;
-import net.doubledoordev.pay2spawn.random.RandomRegistry;
 import net.doubledoordev.pay2spawn.types.guis.LightningTypeGui;
+import net.doubledoordev.pay2spawn.util.Helper;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -136,7 +136,7 @@ public class LightningType extends TypeBase
                 AxisAlignedBB AABB = AxisAlignedBB.getBoundingBox(X - spread, Y - spread, Z - spread, X + spread, Y + spread, Z + spread);
                 //noinspection unchecked
                 List<EntityLiving> entity = player.getEntityWorld().getEntitiesWithinAABBExcludingEntity(player, AABB, iEntitySelector);
-                EntityLiving entityLiving = RandomRegistry.getRandomFromSet(entity);
+                EntityLiving entityLiving = Helper.getRandomFromSet(entity);
                 if (entityLiving != null) player.getEntityWorld().addWeatherEffect(new EntityLightningBolt(player.getEntityWorld(), entityLiving.posX, entityLiving.posY, entityLiving.posZ));
                 else player.getEntityWorld().addWeatherEffect(new EntityLightningBolt(player.getEntityWorld(), X, Y, Z));
             }

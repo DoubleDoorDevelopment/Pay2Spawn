@@ -40,6 +40,7 @@ import net.minecraft.server.MinecraftServer;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 
 import static net.doubledoordev.pay2spawn.util.Constants.NBTTypes;
@@ -96,7 +97,7 @@ public class DeleteworldType extends TypeBase
     @Override
     public Collection<Node> getPermissionNodes()
     {
-        return Arrays.asList(new Node(NAME));
+        return Collections.singletonList(new Node(NAME));
     }
 
     @Override

@@ -517,6 +517,28 @@ public class Helper
         return checkTooBigForNetwork(JsonNBTHelper.parseJSON(object));
     }
 
+    /**
+     * Get a random element from a collection
+     *
+     * @param collection the collection
+     * @param <T>        the type that makes up the collection
+     * @return the random element
+     */
+    public static <T> T getRandomFromSet(Collection<T> collection)
+    {
+        if (collection.isEmpty()) return null;
+        if (collection.size() == 1) //noinspection unchecked
+            return (T) collection.toArray()[0];
+        int item = RANDOM.nextInt(collection.size());
+        int i = 0;
+        for (T obj : collection)
+        {
+            if (i == item) return obj;
+            i = i + 1;
+        }
+        return null;
+    }
+
     public static final class TableData
     {
         public  String            header;
