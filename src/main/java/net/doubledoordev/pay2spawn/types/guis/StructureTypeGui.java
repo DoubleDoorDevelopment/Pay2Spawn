@@ -379,16 +379,20 @@ public class StructureTypeGui extends HelperGuiBase
             {
                 ishape.render(tess);
             }
-        }
 
-        if (renderSelectedShapeInCheckBox.isSelected())
-        {
-            GL11.glLineWidth(2f);
-            GL11.glColor3d(0, 0, 1);
-            for (int i : shapeList.getSelectedIndices())
+            if (renderSelectedShapeInCheckBox.isSelected())
             {
-                if (i < ishapes.size()) // Fuck event based bullshit that causes IndexOutOfBoundsException out of nowhere.
-                    ishapes.get(i).render(tess);
+                GL11.glLineWidth(2f);
+                GL11.glColor3d(0, 0, 1);
+                for (int i : shapeList.getSelectedIndices())
+                {
+                    // Fuck event based bullshit that causes IndexOutOfBoundsExceptions & NullPointerExceptions out of nowhere.
+                    if (i < ishapes.size())
+                    {
+                        IShape shape = ishapes.get(i);
+                        if (shape != null) shape.render(tess);
+                    }
+                }
             }
         }
 
