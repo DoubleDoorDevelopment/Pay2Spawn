@@ -104,7 +104,16 @@ public class Constants
             double amount = getOrThrow(json, "amount").getAsDouble();
             String name = getOrDefault(json, "Anonymous", "name", "username").getAsString();
             String note = getOrDefault(json, "", "note").getAsString();
-            long time = ((Date) context.deserialize(getOrThrow(json, "time", "timestamp"), new TypeToken<Date>(){}.getType())).getTime();
+            JsonElement date = getOrThrow(json, "time", "timestamp");
+            long time;
+            try
+            {
+                time = date.getAsLong();
+            }
+            catch (NumberFormatException e)
+            {
+                time = ((Date) context.deserialize(date, new TypeToken<Date>(){}.getType())).getTime();
+            }
             return new Donation(id, amount, time, name, note);
         }
 
