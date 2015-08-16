@@ -136,7 +136,7 @@ public class Pay2Spawn implements ID3Mod
 
     public static void reloadDB()
     {
-        instance.rewardsDB = new RewardsDB(new File(instance.configFolder, NAME + ".json"));
+        instance.rewardsDB = new RewardsDB(getRewardDBFile());
         ConfiguratorManager.reload();
         try
         {
@@ -150,7 +150,7 @@ public class Pay2Spawn implements ID3Mod
 
     public static void reloadDB_Server() throws Exception
     {
-        StatusMessage.serverConfig = GSON_NOPP.toJson(JSON_PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))));
+        StatusMessage.serverConfig = GSON_NOPP.toJson(JSON_PARSER.parse(new FileReader(getRewardDBFile())));
         StatusMessage.sendConfigToAllPlayers();
     }
 

@@ -78,6 +78,7 @@ public class CheckerHandler
         register(FundrazrChecker.INSTANCE);
         register(TwitchalertsChecker.INSTANCE);
         register(ClassyChecker.INSTANCE);
+        register(FileSystemChecker.INSTANCE);
     }
 
     public static Collection<AbstractChecker> getAbstractCheckers()

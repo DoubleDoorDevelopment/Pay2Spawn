@@ -31,12 +31,15 @@
 package net.doubledoordev.pay2spawn.util;
 
 import com.google.common.base.Joiner;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
+import com.google.common.base.Strings;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.Random;
 
 /**
@@ -67,7 +70,7 @@ public class Constants
     public static final Joiner JOINER_DOT         = Joiner.on(".").skipNulls();
 
     public static final JsonParser JSON_PARSER = new JsonParser();
-    public static final Gson       GSON        = new GsonBuilder().setPrettyPrinting().create();
+    public static final Gson       GSON        = new GsonBuilder().registerTypeHierarchyAdapter(Donation.class, new DonationJson()).setPrettyPrinting().create();
     public static final Gson       GSON_NOPP   = new GsonBuilder().create();
 
     public static final NumberFormat NUMBER_FORMATTER   = new DecimalFormat("#.##");
@@ -89,4 +92,32 @@ public class Constants
     public static final int      LIST       = 9;
     public static final int      COMPOUND   = 10;
     public static final int      INT_ARRAY  = 11;
+
+    private static final class DonationJson implements JsonDeserializer<Donation>
+    {
+        @Override
+        public Donation deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+        {
+            if (!element.isJsonObject()) throw new JsonParseException("a Donation needs to be an object");
+            JsonObject json = element.getAsJsonObject();
+            String id = getOrThrow(json, "id").getAsString();
+            double amount = getOrThrow(json, "amount").getAsDouble();
+            String name = getOrDefault(json, "Anonymous", "name", "username").getAsString();
+            String note = getOrDefault(json, "", "note").getAsString();
+            long time = ((Date) context.deserialize(getOrThrow(json, "time", "timestamp"), new TypeToken<Date>(){}.getType())).getTime();
+            return new Donation(id, amount, time, name, note);
+        }
+
+        private static JsonElement getOrDefault(JsonObject json, String def, String... names)
+        {
+            for (String name : names) if (json.has(name)) return json.get(name);
+            return new JsonPrimitive(def);
+        }
+
+        private static JsonElement getOrThrow(JsonObject json, String... names) throws JsonParseException
+        {
+            for (String name : names) if (json.has(name)) return json.get(name);
+            throw new JsonParseException("Missing filed! You need one of: " + Arrays.toString(names));
+        }
+    }
 }
