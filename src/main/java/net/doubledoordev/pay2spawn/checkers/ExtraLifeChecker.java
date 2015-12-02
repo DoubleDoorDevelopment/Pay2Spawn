@@ -120,12 +120,6 @@ public class ExtraLifeChecker extends AbstractChecker implements Runnable
     }
 
     @Override
-    public DonationsBasedHudEntry[] getDonationsBasedHudEntries()
-    {
-        return new DonationsBasedHudEntry[]{recentDonationsBasedHudEntry};
-    }
-
-    @Override
     public void run()
     {
         try
