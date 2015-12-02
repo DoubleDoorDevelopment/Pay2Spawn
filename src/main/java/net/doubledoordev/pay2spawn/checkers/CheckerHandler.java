@@ -79,6 +79,7 @@ public class CheckerHandler
         register(TwitchalertsChecker.INSTANCE);
         register(ClassyChecker.INSTANCE);
         register(FileSystemChecker.INSTANCE);
+        register(ExtraLifeChecker.INSTANCE);
     }
 
     public static Collection<AbstractChecker> getAbstractCheckers()
