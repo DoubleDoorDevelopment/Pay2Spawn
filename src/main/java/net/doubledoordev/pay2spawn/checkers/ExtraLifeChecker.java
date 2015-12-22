@@ -41,6 +41,7 @@ import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
 import net.minecraftforge.common.config.Configuration;
 
+import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -66,8 +67,6 @@ public class ExtraLifeChecker extends AbstractChecker implements Runnable
         SIMPLE_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
-    DonationsBasedHudEntry recentDonationsBasedHudEntry;
-
     String           url      = "";
     boolean          enabled  = false;
     int              interval = 20;
@@ -86,8 +85,6 @@ public class ExtraLifeChecker extends AbstractChecker implements Runnable
     @Override
     public void init()
     {
-        Hud.INSTANCE.set.add(recentDonationsBasedHudEntry);
-
         new Thread(this, getName()).start();
     }
 
@@ -106,43 +103,47 @@ public class ExtraLifeChecker extends AbstractChecker implements Runnable
         url = configuration.get(CAT, "url", url, "Your pages url. Must be donorDrive.participantDonations").getString();
         interval = configuration.get(CAT, "interval", interval, "The time in between polls (in seconds).").getInt();
         min_donation = configuration.get(CAT, "min_donation", min_donation, "Donations below this amount will only be added to statistics and will not spawn rewards").getDouble();
-
-        recentDonationsBasedHudEntry = new DonationsBasedHudEntry("recent" + NAME + ".txt", CAT + ".recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
     }
 
     @Override
     public void run()
+    {
+        processDonationAPI(true);
+
+        while (true)
+        {
+            doWait(interval);
+            processDonationAPI(false);
+        }
+    }
+
+    /**
+     * Connects to the API and attempt to process any donations
+     *
+     * @param firstRun <code>boolean</code> used to identify previous donations that should not be processed.
+     */
+    private void processDonationAPI(boolean firstRun)
     {
         try
         {
             for (JsonElement jsonElement : get())
             {
                 Donation donation = getDonation(JsonNBTHelper.fixNulls(jsonElement.getAsJsonObject()));
-                recentDonationsBasedHudEntry.add(donation);
-                doneIDs.add(donation.id);
+                if (firstRun)
+                {
+                    Hud.INSTANCE.topDonationsBasedHudEntry.add(donation);
+                    Hud.INSTANCE.recentDonationsBasedHudEntry.add(donation);
+                    doneIDs.add(donation.id);
+                }
+                else
+                {
+                    process(donation, true, this);
+                }
             }
         }
         catch (Exception e)
         {
             e.printStackTrace();
-        }
-
-        while (true)
-        {
-            doWait(interval);
-            try
-            {
-                for (JsonElement jsonElement : get())
-                {
-                    Donation donation = getDonation(JsonNBTHelper.fixNulls(jsonElement.getAsJsonObject()));
-                    recentDonationsBasedHudEntry.add(donation);
-                    doneIDs.add(donation.id);
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
         }
     }
 

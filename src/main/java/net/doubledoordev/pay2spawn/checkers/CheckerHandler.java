@@ -30,13 +30,12 @@
 
 package net.doubledoordev.pay2spawn.checkers;
 
-import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.util.Donation;
-import net.doubledoordev.pay2spawn.util.Helper;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.config.Configuration;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
 
 /**
  * Registers and polls all donation checkers
