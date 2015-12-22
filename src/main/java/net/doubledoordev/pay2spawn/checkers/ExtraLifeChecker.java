@@ -36,25 +36,16 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.doubledoordev.pay2spawn.hud.DonationsBasedHudEntry;
 import net.doubledoordev.pay2spawn.hud.Hud;
-import net.doubledoordev.pay2spawn.util.Base64;
 import net.doubledoordev.pay2spawn.util.Donation;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.JsonNBTHelper;
 import net.minecraftforge.common.config.Configuration;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.UUID;
 
 import static net.doubledoordev.pay2spawn.util.Constants.*;
 
@@ -109,7 +100,7 @@ public class ExtraLifeChecker extends AbstractChecker implements Runnable
     @Override
     public void doConfig(Configuration configuration)
     {
-        configuration.addCustomCategoryComment(CAT, "This is the checker for ChildsPlay Charity\nYou need to get your API key from them.");
+        configuration.addCustomCategoryComment(CAT, "This is the checker for Extra Life\nYou need to get your API key from them.");
 
         enabled = configuration.get(CAT, "enabled", enabled).getBoolean(enabled);
         url = configuration.get(CAT, "url", url, "Your pages url. Must be donorDrive.participantDonations").getString();
@@ -124,16 +115,11 @@ public class ExtraLifeChecker extends AbstractChecker implements Runnable
     {
         try
         {
-            JsonObject root = get();
-            if (root.get("ack").getAsString().equalsIgnoreCase("Success"))
+            for (JsonElement jsonElement : get())
             {
-                JsonArray donations = root.getAsJsonArray("donations");
-                for (JsonElement jsonElement : donations)
-                {
-                    Donation donation = getDonation(JsonNBTHelper.fixNulls(jsonElement.getAsJsonObject()));
-                    recentDonationsBasedHudEntry.add(donation);
-                    doneIDs.add(donation.id);
-                }
+                Donation donation = getDonation(JsonNBTHelper.fixNulls(jsonElement.getAsJsonObject()));
+                recentDonationsBasedHudEntry.add(donation);
+                doneIDs.add(donation.id);
             }
         }
         catch (Exception e)
@@ -146,14 +132,11 @@ public class ExtraLifeChecker extends AbstractChecker implements Runnable
             doWait(interval);
             try
             {
-                JsonObject root = get();
-                if (root.get("ack").getAsString().equalsIgnoreCase("Success"))
+                for (JsonElement jsonElement : get())
                 {
-                    JsonArray donations = root.getAsJsonArray("donations");
-                    for (JsonElement jsonElement : donations)
-                    {
-                        process(getDonation(JsonNBTHelper.fixNulls(jsonElement.getAsJsonObject())), true, this);
-                    }
+                    Donation donation = getDonation(JsonNBTHelper.fixNulls(jsonElement.getAsJsonObject()));
+                    recentDonationsBasedHudEntry.add(donation);
+                    doneIDs.add(donation.id);
                 }
             }
             catch (Exception e)
@@ -180,8 +163,8 @@ public class ExtraLifeChecker extends AbstractChecker implements Runnable
         return new Donation(id, jsonObject.get("donationAmount").getAsDouble(), time, name, jsonObject.get("message").getAsString());
     }
 
-    private JsonObject get() throws Exception
+    private JsonArray get() throws Exception
     {
-        return JSON_PARSER.parse(Helper.readUrl(new URL(url))).getAsJsonObject();
+        return JSON_PARSER.parse(Helper.readUrl(new URL(url))).getAsJsonArray();
     }
 }
