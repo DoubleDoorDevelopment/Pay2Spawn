@@ -59,7 +59,7 @@ public class ExtraLifeChecker extends AbstractChecker implements Runnable
     public final static ExtraLifeChecker INSTANCE           = new ExtraLifeChecker();
     public final static String            NAME               = "extra-life";
     public final static String            CAT                = BASECAT_TRACKERS + '.' + NAME;
-    public final static SimpleDateFormat  SIMPLE_DATE_FORMAT = new SimpleDateFormat("E, F y H:m:s", Locale.US);
+    public final static SimpleDateFormat  SIMPLE_DATE_FORMAT = new SimpleDateFormat("MMMMM, F y H:m:s", Locale.US);
 
     static
     {
