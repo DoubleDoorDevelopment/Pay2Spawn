@@ -160,8 +160,14 @@ public class ExtraLifeChecker extends AbstractChecker implements Runnable
         }
         String name = jsonObject.get("donorName").getAsString();
         if (Strings.isNullOrEmpty(name)) name = ANONYMOUS;
-        String id = jsonObject.get("createdOn").getAsString().replace(" ", "") + jsonObject.get("donationAmount").getAsDouble() + "" + name;
-        return new Donation(id, jsonObject.get("donationAmount").getAsDouble(), time, name, jsonObject.get("message").getAsString());
+        double amount = 0;
+        if (jsonObject.has("donationAmount"))
+        {
+            String amountString = jsonObject.get("donationAmount").getAsString();
+            if (!Strings.isNullOrEmpty(amountString)) amount = Double.parseDouble(amountString);
+        }
+        String id = jsonObject.get("createdOn").getAsString().replace(" ", "") + amount + "" + name;
+        return new Donation(id, amount, time, name, jsonObject.get("message").getAsString());
     }
 
     private JsonArray get() throws Exception
