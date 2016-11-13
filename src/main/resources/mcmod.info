@@ -1,0 +1,18 @@
+[
+  {
+    "modid": "Pay2Spawn",
+    "name": "Pay2Spawn",
+    "description": "Pay2Spawn",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://doubledoordev.net/",
+    "updateUrl": "https://doubledoordev.net/Pay2Spawn.json",
+    "authorList": [
+      "Dries007"
+    ],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
