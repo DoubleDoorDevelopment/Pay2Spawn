@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Pay2Spawn.iml" filepath="$PROJECT_DIR$/.idea/modules/Pay2Spawn.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Pay2Spawn_api.iml" filepath="$PROJECT_DIR$/.idea/modules/Pay2Spawn_api.iml" group="Pay2Spawn" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Pay2Spawn_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Pay2Spawn_main.iml" group="Pay2Spawn" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Pay2Spawn_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Pay2Spawn_test.iml" group="Pay2Spawn" />
     </modules>
   </component>
 </project>

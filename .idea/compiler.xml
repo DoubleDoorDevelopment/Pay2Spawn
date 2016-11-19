@@ -19,9 +19,9 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Pay2Spawn_api" target="1.6" />
-      <module name="Pay2Spawn_main" target="1.6" />
-      <module name="Pay2Spawn_test" target="1.6" />
+      <module name="Pay2Spawn_api" target="1.8" />
+      <module name="Pay2Spawn_main" target="1.8" />
+      <module name="Pay2Spawn_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
