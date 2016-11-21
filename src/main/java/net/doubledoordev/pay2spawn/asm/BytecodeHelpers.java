@@ -42,9 +42,8 @@ import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 /**
- * Anything in this class is only used to make use "view bytecode".
- *
  * DO NOT EVER LOAD THIS CLASS.
+ * Anything in this class is only used to make use "view bytecode".
  *
  * @author Dries007
  */
@@ -62,7 +61,7 @@ public class BytecodeHelpers
     {
         if (sender instanceof EntityPlayerMP)
         {
-            return (EntityPlayerMP)sender;
+            return (EntityPlayerMP) sender;
         }
         else
         {
@@ -75,7 +74,7 @@ public class BytecodeHelpers
     {
         if (sender instanceof EntityPlayerMP)
         {
-            return (EntityPlayerMP)sender;
+            return (EntityPlayerMP) sender;
         }
         else if (sender.getCommandSenderEntity() instanceof EntityPlayerMP)
         {

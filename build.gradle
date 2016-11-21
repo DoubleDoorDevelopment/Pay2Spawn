@@ -78,8 +78,13 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    embed
+    compile.extendsFrom(embed)
+}
+
 dependencies {
-    compile "com.googlecode.soundlibs:jlayer:1.0.1.4"
+    embed "com.googlecode.soundlibs:jlayer:1.0.1.4"
 }
 
 processResources {
@@ -139,7 +144,7 @@ task deobfJar(type: Jar, dependsOn: 'jar') {
     manifest {
         attributes 'FMLCorePluginContainsFMLMod': 'true', 'FMLCorePlugin': 'net.doubledoordev.pay2spawn.asm.Plugin'
     }
-    from { (configurations.compile).filter { it.name.contains("jlayer") }.collect { zipTree(it) }}
+    from { configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }}
 }
 sourceJar {
     exclude("com/**")
@@ -148,7 +153,7 @@ sourceJar {
     manifest {
         attributes 'FMLCorePluginContainsFMLMod': 'true', 'FMLCorePlugin': 'net.doubledoordev.pay2spawn.asm.Plugin'
     }
-    from { (configurations.compile).filter { it.name.contains("jlayer") }.collect { zipTree(it) }}
+    from { configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }}
 }
 jar {
     exclude("com/**")
@@ -156,7 +161,7 @@ jar {
     manifest {
         attributes 'FMLCorePluginContainsFMLMod': 'true', 'FMLCorePlugin': 'net.doubledoordev.pay2spawn.asm.Plugin'
     }
-    from { (configurations.compile).filter { it.name.contains("jlayer") }.collect { zipTree(it) }}
+    from { configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }}
 }
 
 artifacts {

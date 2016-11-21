@@ -98,8 +98,6 @@ public class Transformer implements IClassTransformer
 
         for (MethodNode method : classNode.methods)
         {
-            Plugin.LOGGER.info("Found {} {}", method.name, method.desc);
-
             if (method.name.equals(TARGET_NAME) && method.desc.equals(TARGET_DESC))
             {
                 Plugin.LOGGER.info("Found getCommandSenderAsPlayer");

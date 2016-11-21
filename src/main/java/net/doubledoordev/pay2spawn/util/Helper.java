@@ -72,6 +72,8 @@ public class Helper
 
     public static final JsonParser JSON_PARSER = new JsonParser();
     public static final Joiner SPACE_JOINER = Joiner.on(' ');
+    public static final Joiner COMMA_JOINER = Joiner.on(',');
+    public static final Joiner SEMICOLON_JOINER = Joiner.on(';');
     public static final DecimalFormat FORMAT_2_POINT = new DecimalFormat("0.00");
     public static final Charset UTF8 = Charset.forName("UTF-8");
     public static final Random RANDOM = new Random();
@@ -122,5 +124,12 @@ public class Helper
         URLConnection connection = new URL(url).openConnection();
         for (String[] header : headers) connection.addRequestProperty(header[0], header[1]);
         return IOUtils.toString(connection.getInputStream());
+    }
+
+    public static void error(String message)
+    {
+        Error up = new Error(message);
+        up.setStackTrace(new StackTraceElement[0]);
+        throw up; // ;-)
     }
 }

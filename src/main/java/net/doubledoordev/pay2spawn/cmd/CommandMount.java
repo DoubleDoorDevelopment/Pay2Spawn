@@ -35,97 +35,80 @@
  *
  */
 
-package net.doubledoordev.pay2spawn.util;
+package net.doubledoordev.pay2spawn.cmd;
 
-import net.minecraft.command.CommandResultStats;
+import net.doubledoordev.pay2spawn.util.Helper;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * @author Dries007
  */
-public class TargetCommandSender implements ICommandSender
+public class CommandMount extends CommandBase
 {
-    private final EntityPlayer player;
-
-    public TargetCommandSender(EntityPlayer player)
-    {
-        this.player = player;
-    }
-
     @Override
     public String getName()
     {
-        return player.getName();
+        return "mount";
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public String getUsage(ICommandSender sender)
     {
-        return player.getDisplayName();
+        return "/mount <top> <...> <bottom> -> Mount 2 (or more) entities";
     }
 
     @Override
-    public void sendMessage(ITextComponent component)
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
-        player.sendMessage(component);
+        List<String> options = new ArrayList<>();
+        Collections.addAll(options, server.getOnlinePlayerNames());
+        for (int i = 0; i < args.length - 1; i++) options.remove(args[i]);
+        return getListOfStringsMatchingLastWord(args, options);
     }
 
     @Override
-    public boolean canUseCommand(int permLevel, String commandName)
+    public boolean isUsernameIndex(String[] args, int index)
     {
         return true;
     }
 
     @Override
-    public BlockPos getPosition()
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        return player.getPosition();
-    }
-
-    @Override
-    public Vec3d getPositionVector()
-    {
-        return player.getPositionVector();
-    }
-
-    @Override
-    public World getEntityWorld()
-    {
-        return player.getEntityWorld();
-    }
-
-    @Nullable
-    @Override
-    public Entity getCommandSenderEntity()
-    {
-        return player;
-    }
-
-    @Override
-    public boolean sendCommandFeedback()
-    {
-        return false;
-    }
-
-    @Override
-    public void setCommandStat(CommandResultStats.Type type, int amount)
-    {
-        player.setCommandStat(type, amount);
-    }
-
-    @Nullable
-    @Override
-    public MinecraftServer getServer()
-    {
-        return player.getServer();
+        List<EntityLivingBase> entities = new ArrayList<>(args.length);
+        for (String arg : args)
+        {
+            EntityLivingBase entity = getEntity(server, sender, arg, EntityLivingBase.class);
+            if (entities.contains(entity))
+            {
+                Helper.chat(sender, "Skipping duplicate entity " + entity.getName(), TextFormatting.GRAY);
+                continue;
+            }
+            entities.add(entity);
+        }
+        if (entities.size() < 2) throw new WrongUsageException("You must provide 2 or more entities.");
+        ListIterator<EntityLivingBase> i = entities.listIterator(1);
+        Entity e1 = entities.get(0);
+        Entity e2;
+        while (i.hasNext())
+        {
+            e2 = i.next();
+            e1.startRiding(e2, true);
+            e1 = e2;
+        }
     }
 }

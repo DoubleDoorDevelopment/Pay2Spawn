@@ -35,14 +35,15 @@
  *
  */
 
-package net.doubledoordev.pay2spawn.util;
+package net.doubledoordev.pay2spawn.client;
 
 import com.google.common.collect.ImmutableList;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
-import net.doubledoordev.pay2spawn.trackers.Trackers;
+import net.doubledoordev.pay2spawn.util.Donation;
+import net.doubledoordev.pay2spawn.util.Helper;
+import net.doubledoordev.pay2spawn.util.RewardDB;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -141,13 +142,6 @@ public class CommandPay2Spawn extends CommandBase
             RewardDB.process(sender, new Donation(name, amount, System.currentTimeMillis(), note));
         }
         else help(sender);
-//
-//        //fixme: remove example!
-//
-//        String name = Helper.randomString(5 + Helper.RANDOM.nextInt(10));
-//        double amount = Math.round(Helper.RANDOM.nextDouble() * 10000.0) / 100.0;
-//        String note = Helper.randomString(25 + Helper.RANDOM.nextInt(25));
-//        RewardDB.process(new Donation(name, amount, System.currentTimeMillis(), note));
     }
 
     private void help(ICommandSender sender)

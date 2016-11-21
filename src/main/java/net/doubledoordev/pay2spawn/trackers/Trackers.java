@@ -40,9 +40,12 @@ package net.doubledoordev.pay2spawn.trackers;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.ICrashCallable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Dries007
@@ -52,10 +55,29 @@ public class Trackers
     private Trackers() {}
 
     private static final Map<String, Tracker> TRACKERS = new HashMap<>();
+    private static final Map<Tracker, Thread> TRACKER_THREADS = new HashMap<>();
 
     static
     {
         register(StreamLabsTracker.INSTANCE);
+
+        FMLCommonHandler.instance().registerCrashCallable(new ICrashCallable()
+        {
+            @Override
+            public String getLabel()
+            {
+                return Helper.MOD_NAME + "-Trackers";
+            }
+
+            @Override
+            public String call() throws Exception
+            {
+                return Helper.SEMICOLON_JOINER.join(TRACKERS.values().stream().map((e) ->
+                        e.getName() + " is " + (e.isEnabled() ? "enabled" : "disabled") + " and " +
+                                (TRACKER_THREADS.containsKey(e) ? (TRACKER_THREADS.get(e).isAlive() ? "alive" : "dead") : "unused")
+                ).collect(Collectors.toList()));
+            }
+        });
     }
 
     private static void register(Tracker tracker)
@@ -68,29 +90,26 @@ public class Trackers
     {
         for (final Tracker tracker : TRACKERS.values())
         {
-            boolean wasEnabled = tracker.isEnabled();
             tracker.config(cfg);
-            Pay2Spawn.getLogger().info("Tracker cfg: {} {} {}", tracker.getName(), wasEnabled, tracker.isEnabled());
-
-            if (!wasEnabled && tracker.isEnabled())
+            if (tracker.isEnabled())
             {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run()
+                Thread thread = TRACKER_THREADS.get(tracker);
+                if (thread == null)
+                {
+                    thread = new Thread(tracker, Helper.MOD_NAME + "-Tracker-" + tracker.getName());
+                    TRACKER_THREADS.put(tracker, thread);
+                    thread.setDaemon(true);
+                    thread.setUncaughtExceptionHandler((t, e) ->
                     {
-                        try
-                        {
-                            tracker.run();
-                            Pay2Spawn.getLogger().info("Tracker thread ended: {}", tracker.getName());
-                        }
-                        catch (Exception e)
-                        {
-                            Pay2Spawn.getLogger().error("Tracker thread ended: {}", tracker.getName());
-                            Pay2Spawn.getLogger().catching(e);
-                        }
-                    }
-                }, Helper.MOD_NAME + "-Tracker-" + tracker.getName()).start();
-                Pay2Spawn.getLogger().info("Started tracker: {}", tracker.getName());
+                        Pay2Spawn.getLogger().error("Tracker thread ended with error {}", tracker.getName());
+                        Pay2Spawn.getLogger().catching(e);
+                    });
+                }
+                if (!thread.isAlive())
+                {
+                    thread.start();
+                    Pay2Spawn.getLogger().info("Started tracker: {}", tracker.getName());
+                }
             }
         }
     }

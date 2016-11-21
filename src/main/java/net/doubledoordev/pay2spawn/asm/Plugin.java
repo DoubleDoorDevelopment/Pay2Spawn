@@ -59,7 +59,7 @@ public class Plugin implements IFMLLoadingPlugin
     @Override
     public String[] getASMTransformerClass()
     {
-        return new String[] {"net.doubledoordev.pay2spawn.asm.Transformer"};
+        return new String[]{"net.doubledoordev.pay2spawn.asm.Transformer"};
     }
 
     @Override
@@ -68,10 +68,13 @@ public class Plugin implements IFMLLoadingPlugin
         return null;
     }
 
+    /**
+     * @see CallHook
+     */
     @Override
     public String getSetupClass()
     {
-        return null;
+        return "net.doubledoordev.pay2spawn.asm.CallHook";
     }
 
     @Override

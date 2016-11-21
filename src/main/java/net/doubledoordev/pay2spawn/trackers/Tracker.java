@@ -37,27 +37,21 @@
 
 package net.doubledoordev.pay2spawn.trackers;
 
-import net.doubledoordev.pay2spawn.Pay2Spawn;
-import net.doubledoordev.pay2spawn.client.Pay2SpawnClient;
-import net.doubledoordev.pay2spawn.network.RewardMessage;
 import net.doubledoordev.pay2spawn.util.Donation;
-import net.doubledoordev.pay2spawn.util.Reward;
 import net.doubledoordev.pay2spawn.util.RewardDB;
-import net.doubledoordev.pay2spawn.util.ScriptHelper;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Class will be wrapped in a thread if enabled.
+ *
  * @author Dries007
  */
 public abstract class Tracker implements Runnable
 {
     protected final Set<Donation> done = new HashSet<>();
-    protected boolean enabled = false;
 
     public abstract String getName();
 

@@ -43,10 +43,10 @@ import net.doubledoordev.pay2spawn.client.Pay2SpawnClient;
 import net.doubledoordev.pay2spawn.network.RewardMessage;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.ICrashCallable;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
@@ -60,17 +60,29 @@ public class RewardDB
 
     private RewardDB() {}
 
+    static
+    {
+        FMLCommonHandler.instance().registerCrashCallable(new ICrashCallable()
+        {
+            @Override
+            public String getLabel()
+            {
+                return Helper.MOD_NAME + "-RewardDB";
+            }
+
+            @Override
+            public String call() throws Exception
+            {
+                return DONATION_MAP.toString();
+            }
+        });
+    }
+
     public static void populate() throws IOException
     {
         DONATION_MAP.clear();
 
-        File[] files = getRewardsFolder().listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File pathname)
-            {
-                return pathname.isFile();
-            }
-        });
+        File[] files = getRewardsFolder().listFiles(File::isFile);
         if (files == null) throw new IOException("Error listing files in " + getRewardsFolder().getAbsolutePath());
         if (files.length == 0) makeExample();
         for (File file : files) parse(file);
@@ -125,13 +137,7 @@ public class RewardDB
 
         if (FMLCommonHandler.instance().getSide().isClient())
         {
-            Pay2SpawnClient.runInClientThread(new Runnable() {
-                @Override
-                public void run()
-                {
-                    Pay2Spawn.getSNW().sendToServer(new RewardMessage(reward, donation));
-                }
-            });
+            Pay2SpawnClient.runInClientThread(() -> Pay2Spawn.getSNW().sendToServer(new RewardMessage(reward, donation)));
         }
         else
         {

@@ -38,12 +38,13 @@
 package net.doubledoordev.pay2spawn;
 
 import com.google.common.io.Files;
+import net.doubledoordev.pay2spawn.client.CommandPay2Spawn;
 import net.doubledoordev.pay2spawn.client.Pay2SpawnClient;
+import net.doubledoordev.pay2spawn.cmd.CommandMount;
 import net.doubledoordev.pay2spawn.network.Mp3FileMessage;
 import net.doubledoordev.pay2spawn.network.RequestMp3Message;
 import net.doubledoordev.pay2spawn.network.RewardMessage;
 import net.doubledoordev.pay2spawn.trackers.Trackers;
-import net.doubledoordev.pay2spawn.util.CommandPay2Spawn;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.RewardDB;
 import net.doubledoordev.pay2spawn.util.ScriptHelper;
@@ -74,7 +75,8 @@ public class Pay2Spawn
     @Mod.Instance(Helper.MOD_ID)
     public static Pay2Spawn instance;
 
-    public static boolean allowTargeting = true;
+    public static boolean allowTargeting;
+    public static boolean cmdMount;
 
     private Logger logger;
     private File configDir;
@@ -131,6 +133,7 @@ public class Pay2Spawn
     public void serverStarting(FMLServerStartingEvent event)
     {
         event.registerServerCommand(new CommandPay2Spawn(Side.SERVER, "pay2spawn", "p2s"));
+        if (cmdMount) event.registerServerCommand(new CommandMount());
     }
 
     @SubscribeEvent
@@ -143,7 +146,8 @@ public class Pay2Spawn
     {
         configuration.addCustomCategoryComment(CATEGORY_GENERAL, "Make sure you read in README file!");
 
-        allowTargeting = configuration.getBoolean("allowTargeting", CATEGORY_GENERAL, allowTargeting, "Allow '@<username>' in a note to target a specific player.");
+        allowTargeting = configuration.getBoolean("allowTargeting", CATEGORY_GENERAL, true, "Allow '@<username>' in a note to target a specific player.");
+        cmdMount = configuration.getBoolean("cmdMount", CATEGORY_GENERAL, true, "Register the /mount command");
 
         Trackers.config(configuration);
 

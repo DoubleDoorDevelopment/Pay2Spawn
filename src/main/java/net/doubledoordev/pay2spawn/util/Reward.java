@@ -42,16 +42,12 @@ import com.google.common.base.Strings;
 import io.netty.buffer.ByteBuf;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.LineIterator;
 
-import javax.script.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -76,14 +72,9 @@ public class Reward
         this.language = language;
         this.script = script;
 
-        if (ScriptHelper.get(language) == null)
-        {
-            Pay2Spawn.getLogger().fatal("Scripting Language {} (for reward {}) not available.", language, name);
-            ScriptHelper.dump();
-            throw new IllegalArgumentException("Scripting language not available. See long for a list of available options.");
-        }
+        if (ScriptHelper.get(language) == null) Helper.error(String.format("\n\nScripting language %s (for reward %s) not available. See log for a list of available options.\n\n", language, name));
 
-        Pay2Spawn.getLogger().info("Reward {} (for ${}, in {}) full script: \n{}", name, amount, language, script);
+        Pay2Spawn.getLogger().info("Reward {} (for ${}, in {}) full script: \n{}", name, amount, language, script); //todo remove
     }
 
     @Override
@@ -210,7 +201,14 @@ public class Reward
 
         byte script[] = new byte[buf.readInt()];
         buf.readBytes(script);
-        return new Reward(name, amount, language, new String(script, Helper.UTF8));
+        try
+        {
+            return new Reward(name, amount, language, new String(script, Helper.UTF8));
+        }
+        catch (Error e)
+        {
+            return null;
+        }
     }
 
     public void toBytes(ByteBuf buf)

@@ -35,64 +35,53 @@
  *
  */
 
-package net.doubledoordev.pay2spawn.client;
+package net.doubledoordev.pay2spawn.asm;
 
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.IFMLCallHook;
+import org.apache.commons.io.FileUtils;
 
+import javax.script.ScriptEngineManager;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.net.URL;
+import java.util.Map;
 
 /**
  * @author Dries007
  */
-public class Pay2SpawnClient
+public class CallHook implements IFMLCallHook
 {
-    private static final Pay2SpawnClient INSTANCE = new Pay2SpawnClient();
+    private ClassLoader cl;
+    private File mcLocation;
 
-    private Pay2SpawnClient() {}
-
-    public static void preInit(FMLPreInitializationEvent event)
+    @Override
+    public void injectData(Map<String, Object> data)
     {
-        MinecraftForge.EVENT_BUS.register(INSTANCE);
+        cl = ((ClassLoader) data.get("classLoader"));
+        mcLocation = ((File) data.get("mcLocation"));
+
+        Plugin.LOGGER.info("injectData: {}", data);
     }
 
-    public static void init(FMLInitializationEvent event)
+    @Override
+    public Void call() throws Exception
     {
-        ClientCommandHandler.instance.registerCommand(new CommandPay2Spawn(Side.CLIENT, "pay2spawnclient", "p2sclient", "p2c"));
-    }
-
-    public static void doConfig(Configuration configuration)
-    {
-
-    }
-
-    public static void runInClientThread(Runnable runnable)
-    {
-        //noinspection MethodCallSideOnly
-        Minecraft.getMinecraft().addScheduledTask(runnable);
-    }
-
-    public static void playMP3(final File file)
-    {
-        new Thread(() ->
+        Plugin.LOGGER.info("CallHook doing ScriptEngine test");
+        if (new ScriptEngineManager().getEngineByName("javascript") == null)
         {
+            Plugin.LOGGER.info("\n\nMissing JavaScript engine. Downloading now...\n\n");
             try
             {
-                new Player(new FileInputStream(file)).play();
+                File mods = new File(mcLocation, "mods");
+                mods.mkdirs();
+                FileUtils.copyURLToFile(new URL("http://doubledoordev.net/p2s/nashorn-openjdk8.jar"), new File(mods, "Pay2Spawn-Library-Nashorn.jar"));
             }
-            catch (JavaLayerException | FileNotFoundException e)
+            catch (Exception e)
             {
-                e.printStackTrace();
+                Plugin.LOGGER.fatal("\n\nDownload failed! Download and add to classpath or mods folder manually.\n\n");
+                Plugin.LOGGER.catching(e);
+                throw e;
             }
-        }, "Pay2Spawn-MP3").start();
+        }
+        return null;
     }
 }

@@ -84,13 +84,10 @@ public class ScriptUtils
      */
     public void speak(final String... parts) throws ExecutionException, InterruptedException
     {
-        server.addScheduledTask(new Runnable() {
-            @Override
-            public void run()
-            {
-                String s = Helper.SPACE_JOINER.join(parts);
-                server.getPlayerList().sendChatMsgImpl(new TextComponentTranslation("chat.type.text", target.getDisplayName(), newChatWithLinks(s)), false);
-            }
+        server.addScheduledTask(() ->
+        {
+            String s = Helper.SPACE_JOINER.join(parts);
+            server.getPlayerList().sendChatMsgImpl(new TextComponentTranslation("chat.type.text", target.getDisplayName(), newChatWithLinks(s)), false);
         });
     }
 
@@ -99,13 +96,7 @@ public class ScriptUtils
      */
     public void chat(final String... parts) throws ExecutionException, InterruptedException
     {
-        server.addScheduledTask(new Runnable() {
-            @Override
-            public void run()
-            {
-                Helper.chat(target, Helper.SPACE_JOINER.join(parts));
-            }
-        });
+        server.addScheduledTask(() -> Helper.chat(target, Helper.SPACE_JOINER.join(parts)));
     }
 
     /**
@@ -113,25 +104,12 @@ public class ScriptUtils
      */
     public int cmd(final String... parts) throws ExecutionException, InterruptedException
     {
-        return run(new Callable<Integer>()
-        {
-            @Override
-            public Integer call() throws Exception
-            {
-                return server.getCommandManager().executeCommand(targetCommandSender, Helper.SPACE_JOINER.join(parts));
-            }
-        });
+        return run(() -> server.getCommandManager().executeCommand(targetCommandSender, Helper.SPACE_JOINER.join(parts)));
     }
 
     public void mp3(final String name)
     {
-        server.addScheduledTask(new Runnable() {
-            @Override
-            public void run()
-            {
-                Pay2Spawn.getSNW().sendTo(new RequestMp3Message(name), target);
-            }
-        });
+        server.addScheduledTask(() -> Pay2Spawn.getSNW().sendTo(new RequestMp3Message(name), target));
     }
 
     /**

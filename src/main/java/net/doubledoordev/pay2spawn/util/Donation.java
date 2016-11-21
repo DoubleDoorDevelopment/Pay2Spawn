@@ -39,16 +39,7 @@ package net.doubledoordev.pay2spawn.util;
 
 import com.google.common.base.Strings;
 import io.netty.buffer.ByteBuf;
-import net.doubledoordev.pay2spawn.client.Pay2SpawnClient;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.relauncher.Side;
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.UUID;
-import java.util.regex.Matcher;
 
 /**
  * @author Dries007

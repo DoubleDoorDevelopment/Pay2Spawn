@@ -35,9 +35,6 @@
  *
  */
 
-//todo: write more docs
-//todo: make wiki page, see example.js
-
 /**
  * Only a partial document. Feel free to contribute.
  *

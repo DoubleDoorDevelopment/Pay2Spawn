@@ -46,11 +46,9 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 
 /**
  * @author Dries007
@@ -135,8 +133,8 @@ public class Mp3FileMessage implements IMessage
             lastName = part.name;
             temp = new byte[part.size];
         }
-        countGot ++;
-        System.arraycopy(part.bytes, 0, temp, part.offset,part.bytes.length);
+        countGot++;
+        System.arraycopy(part.bytes, 0, temp, part.offset, part.bytes.length);
         if (part.count == countGot) // last packet
         {
             File file = new File(new File(Pay2Spawn.getConfigDir(), "mp3"), part.name);

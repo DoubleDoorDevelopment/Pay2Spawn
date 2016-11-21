@@ -41,7 +41,6 @@ import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.doubledoordev.pay2spawn.util.Donation;
 import net.doubledoordev.pay2spawn.util.Helper;
 import net.minecraftforge.common.config.Configuration;
@@ -110,7 +109,7 @@ public class StreamLabsTracker extends Tracker
     {
         try
         {
-            JsonObject root = JSON_PARSER.parse(Helper.readUrl(url, new String[] {"User-Agent", "Pay2Spawn/3"})).getAsJsonObject();
+            JsonObject root = JSON_PARSER.parse(Helper.readUrl(url, new String[]{"User-Agent", "Pay2Spawn/3"})).getAsJsonObject();
             JsonArray donations = root.getAsJsonArray("donations");
             for (JsonElement jsonElement : donations)
             {

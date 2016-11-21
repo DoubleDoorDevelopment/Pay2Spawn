@@ -40,17 +40,18 @@ package net.doubledoordev.pay2spawn.util;
 import com.google.common.base.Joiner;
 import net.doubledoordev.pay2spawn.Pay2Spawn;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.ICrashCallable;
 
 import javax.script.*;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 /**
  * @author Dries007
@@ -61,9 +62,35 @@ public class ScriptHelper
 
     private ScriptHelper() {}
 
+    static
+    {
+        FMLCommonHandler.instance().registerCrashCallable(new ICrashCallable()
+        {
+            @Override
+            public String getLabel()
+            {
+                return Helper.MOD_NAME + "-ScriptHelper";
+            }
+
+            @Override
+            public String call() throws Exception
+            {
+                return Helper.SEMICOLON_JOINER.join(new ScriptEngineManager().getEngineFactories().stream().map(factory ->
+                        factory.getEngineName() + " (" + factory.getEngineVersion() + ") -> " +
+                                factory.getLanguageName() + " (" + factory.getLanguageVersion() + ")" +
+                                " Names: " + Helper.COMMA_JOINER.join(factory.getNames()) +
+                                " Extensions: " + Helper.COMMA_JOINER.join(factory.getExtensions()))
+                        .collect(Collectors.toList()));
+            }
+        });
+    }
+
     public static void init()
     {
         mgr = new ScriptEngineManager();
+
+        if (get("javascript") == null) Helper.error("\n\nThere is no JavaScript script engine loaded. Download one from the Pay2Spawn github!\n\n");
+
         dump();
     }
 
@@ -100,7 +127,8 @@ public class ScriptHelper
         {
             EntityPlayerMP target = null;
             if (runner instanceof EntityPlayerMP) target = (EntityPlayerMP) runner;
-            else if (runner.getCommandSenderEntity() instanceof EntityPlayerMP) target = (EntityPlayerMP) runner.getCommandSenderEntity();
+            else if (runner.getCommandSenderEntity() instanceof EntityPlayerMP)
+                target = (EntityPlayerMP) runner.getCommandSenderEntity();
 
             if (Pay2Spawn.allowTargeting)
             {
@@ -127,8 +155,12 @@ public class ScriptHelper
                     String out = new String(cbuf, off, len).trim();
                     if (!out.isEmpty()) Pay2Spawn.getLogger().info(out);
                 }
-                @Override public void flush() throws IOException {}
-                @Override public void close() throws IOException {}
+
+                @Override
+                public void flush() throws IOException {}
+
+                @Override
+                public void close() throws IOException {}
             });
 
             context.setErrorWriter(new Writer()
@@ -139,8 +171,12 @@ public class ScriptHelper
                     String out = new String(cbuf, off, len).trim();
                     if (!out.isEmpty()) Pay2Spawn.getLogger().warn(out);
                 }
-                @Override public void flush() throws IOException {}
-                @Override public void close() throws IOException {}
+
+                @Override
+                public void flush() throws IOException {}
+
+                @Override
+                public void close() throws IOException {}
             });
 
             new Thread(new CatchingRunnable(reward, donation, runner)

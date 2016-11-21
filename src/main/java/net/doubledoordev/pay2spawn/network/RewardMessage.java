@@ -39,8 +39,10 @@ package net.doubledoordev.pay2spawn.network;
 
 import io.netty.buffer.ByteBuf;
 import net.doubledoordev.pay2spawn.util.Donation;
+import net.doubledoordev.pay2spawn.util.Helper;
 import net.doubledoordev.pay2spawn.util.Reward;
 import net.doubledoordev.pay2spawn.util.ScriptHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -84,7 +86,12 @@ public class RewardMessage implements IMessage
         public IMessage onMessage(RewardMessage message, MessageContext ctx)
         {
             if (ctx.side.isClient()) return null;
-            ScriptHelper.execute(ctx.getServerHandler().playerEntity, message.reward, message.donation);
+            if (message.reward == null)
+            {
+                Helper.chat(ctx.getServerHandler().playerEntity, "The server could not load the reward script.", TextFormatting.RED);
+                Helper.chat(ctx.getServerHandler().playerEntity, "The scripting language is most likely not supported.", TextFormatting.RED);
+            }
+            else ScriptHelper.execute(ctx.getServerHandler().playerEntity, message.reward, message.donation);
             return null;
         }
     }
