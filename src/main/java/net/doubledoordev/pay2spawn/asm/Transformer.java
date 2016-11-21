@@ -52,6 +52,10 @@ public class Transformer implements IClassTransformer
 {
     private final static boolean DEOBF = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
 
+    private static final boolean RECALC_FRAMES = Boolean.parseBoolean(System.getProperty("FORGE_FORCE_FRAME_RECALC", "false"));
+    private static final int WRITER_FLAGS = ClassWriter.COMPUTE_MAXS | (RECALC_FRAMES ? ClassWriter.COMPUTE_FRAMES : 0);
+    private static final int READER_FLAGS = RECALC_FRAMES ? ClassReader.SKIP_FRAMES : ClassReader.EXPAND_FRAMES;
+
     private static final String COMMANDBASE_NAME = "net.minecraft.command.CommandBase";
     private static final String ICOMMANDSENDER_TYPE = "net/minecraft/command/ICommandSender";
     private static final String ENTITYPLAYERMP_TYPE = "net/minecraft/entity/player/EntityPlayerMP";
@@ -94,7 +98,7 @@ public class Transformer implements IClassTransformer
 
         ClassNode classNode = new ClassNode();
         ClassReader classReader = new ClassReader(basicClass);
-        classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
+        classReader.accept(classNode, READER_FLAGS);
 
         for (MethodNode method : classNode.methods)
         {
@@ -125,12 +129,19 @@ public class Transformer implements IClassTransformer
                 list.insertBefore(node, inject);
                 Plugin.LOGGER.info("Done injecting!");
 
-                final ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+                final ClassWriter writer = new ClassWriter(WRITER_FLAGS);
                 classNode.accept(writer);
                 return writer.toByteArray();
             }
         }
 
-        throw new RuntimeException("Could not complete injection for CommandBase.");
+        Plugin.LOGGER.fatal("Could not complete injection for CommandBase!");
+        Plugin.LOGGER.fatal("\n\nDEBUG INFO: INCLUDE IN BUG REPORT!\n\n");
+        Plugin.LOGGER.info("Needle: {}({})", TARGET_NAME, TARGET_DESC);
+        StringBuilder sb = new StringBuilder();
+        for (MethodNode method : classNode.methods) sb.append(method.name).append('(').append(method.desc).append(')').append('\n');
+        Plugin.LOGGER.info("Haystack:\n{}", sb.toString());
+
+        throw new Error("Could not complete injection for CommandBase.");
     }
 }

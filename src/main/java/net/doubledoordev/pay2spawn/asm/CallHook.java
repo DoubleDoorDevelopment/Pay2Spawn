@@ -68,18 +68,23 @@ public class CallHook implements IFMLCallHook
         Plugin.LOGGER.info("CallHook doing ScriptEngine test");
         if (new ScriptEngineManager().getEngineByName("javascript") == null)
         {
-            Plugin.LOGGER.info("\n\nMissing JavaScript engine. Downloading now...\n\n");
-            try
+            File mods = new File(mcLocation, "mods");
+            mods.mkdirs();
+            File target = new File(mods, "Pay2Spawn-Library-Nashorn.jar");
+
+            if (!target.isFile())
             {
-                File mods = new File(mcLocation, "mods");
-                mods.mkdirs();
-                FileUtils.copyURLToFile(new URL("http://doubledoordev.net/p2s/nashorn-openjdk8.jar"), new File(mods, "Pay2Spawn-Library-Nashorn.jar"));
-            }
-            catch (Exception e)
-            {
-                Plugin.LOGGER.fatal("\n\nDownload failed! Download and add to classpath or mods folder manually.\n\n");
-                Plugin.LOGGER.catching(e);
-                throw e;
+                Plugin.LOGGER.info("\n\nMissing JavaScript engine. Downloading now...\n");
+                try
+                {
+                    FileUtils.copyURLToFile(new URL("http://doubledoordev.net/p2s/nashorn-openjdk8.jar"), target);
+                }
+                catch (Exception e)
+                {
+                    Plugin.LOGGER.fatal("\n\nDownload failed! Download and add to classpath or mods folder manually.\n\n");
+                    Plugin.LOGGER.catching(e);
+                    throw e;
+                }
             }
         }
         return null;

@@ -47,7 +47,7 @@ import java.util.Map;
  * @author Dries007
  */
 @IFMLLoadingPlugin.Name("Pay2SpawnASM")
-@IFMLLoadingPlugin.SortingIndex(1001)
+@IFMLLoadingPlugin.SortingIndex(Integer.MAX_VALUE)
 @IFMLLoadingPlugin.TransformerExclusions("net.doubledoordev.pay2spawn")
 public class Plugin implements IFMLLoadingPlugin
 {
